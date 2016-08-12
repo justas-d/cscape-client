@@ -5976,6 +5976,20 @@ public class client extends RSApplet {
 				login(s, s1, flag);
 				return;
 			}
+			if(k == 22)
+			{
+				loginMessage1 = "Username is too long.";
+				loginMessage2 = "Max length: 12";
+				return;
+			}
+
+			if(k == 23)
+			{
+				loginMessage1 = "Password is too long.";
+				loginMessage2 = "Max length: 128";
+				return;
+			}
+
 			if(k == -1)
 			{
 				if(i1 == 0)
