@@ -137,7 +137,8 @@ public final class Stream extends NodeSub {
 	public int readUnsignedWord()
 	{
 		currentOffset += 2;
-		return ((buffer[currentOffset - 2] & 0xff) << 8) + (buffer[currentOffset - 1] & 0xff);
+		return ((buffer[currentOffset - 2] & 0xff) << 8) +
+				(buffer[currentOffset - 1] & 0xff);
 	}
 
 	public int readSignedWord()
@@ -252,7 +253,7 @@ public final class Stream extends NodeSub {
 
 	public void method424(int i)
 	{
-		buffer[currentOffset++] = (byte)(-i);
+		buffer[currentOffset++] = (byte)(i);
 	}
 
 	public void method425(int j)
@@ -261,13 +262,14 @@ public final class Stream extends NodeSub {
 	}
 
 	public int method426()
-	{
-			return buffer[currentOffset++] - 128 & 0xff;
-	}
+    {
+        return buffer[currentOffset++] & 0xff;
+    }
 
 	public int method427()
 	{
-		return -buffer[currentOffset++] & 0xff;
+		return buffer[currentOffset++] & 0xff;
+		//return -buffer[currentOffset++] & 0xff;
 	}
 
 	public int method428()
@@ -287,26 +289,34 @@ public final class Stream extends NodeSub {
 
 	public void method431(int i)
 	{
-		buffer[currentOffset++] = (byte)i;
 		buffer[currentOffset++] = (byte)(i >> 8);
+		buffer[currentOffset++] = (byte)i;
 	}
 
 	public void method432(int j)
 	{
 		buffer[currentOffset++] = (byte)(j >> 8);
-		buffer[currentOffset++] = (byte)(j + 128);
+		buffer[currentOffset++] = (byte)j;
+
+	//	buffer[currentOffset++] = (byte)(j >> 8);
+	//	buffer[currentOffset++] = (byte)(j + 128);
 	}
 
 	public void method433(int j)
 	{
-		buffer[currentOffset++] = (byte)(j + 128);
 		buffer[currentOffset++] = (byte)(j >> 8);
+		buffer[currentOffset++] = (byte)j;
+
+	//	buffer[currentOffset++] = (byte)(j + 128);
+	///	buffer[currentOffset++] = (byte)(j >> 8);
 	}
 
 	public int method434()
 	{
-		currentOffset += 2;
-			return ((buffer[currentOffset - 1] & 0xff) << 8) + (buffer[currentOffset - 2] & 0xff);
+		//currentOffset += 2;
+		//	return ((buffer[currentOffset - 1] & 0xff) << 8) + (buffer[currentOffset - 2] & 0xff);
+        currentOffset += 2;
+        return ((buffer[currentOffset - 2] & 0xff) << 8) + (buffer[currentOffset - 1] & 0xff);
 	}
 
 	public int method435()
@@ -317,8 +327,12 @@ public final class Stream extends NodeSub {
 
 	public int method436()
 	{
-		currentOffset += 2;
-		return ((buffer[currentOffset - 1] & 0xff) << 8) + (buffer[currentOffset - 2] - 128 & 0xff);
+        currentOffset += 2;
+        return ((buffer[currentOffset - 2] & 0xff) << 8) + (buffer[currentOffset - 1] & 0xff);
+
+		//currentOffset += 2;
+		//return ((buffer[currentOffset - 1] & 0xff) << 8) +
+        //        (buffer[currentOffset - 2] - 128 & 0xff);
 	}
 
 	public int method437()

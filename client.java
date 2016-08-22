@@ -1066,7 +1066,7 @@ public class client extends RSApplet {
 	private void updateNPCs(Stream stream, int i)
 	{
 		anInt839 = 0;
-		anInt893 = 0;
+		localPlayerCount = 0;
 		method139(stream);
 		method46(i, stream);
 		method86(stream);
@@ -1934,7 +1934,7 @@ public class client extends RSApplet {
 			npc.desc = EntityDef.forID(stream.readBits(12));
 			int k1 = stream.readBits(1);
 			if(k1 == 1)
-				anIntArray894[anInt893++] = k;
+				localPlayerToGlobal[localPlayerCount++] = k;
 			npc.anInt1540 = npc.desc.aByte68;
 			npc.anInt1504 = npc.desc.anInt79;
 			npc.anInt1554 = npc.desc.anInt67;
@@ -2122,15 +2122,16 @@ public class client extends RSApplet {
 
 	private void method49(Stream stream)
 	{
-		for(int j = 0; j < anInt893; j++)
+		for(int j = 0; j < localPlayerCount; j++)
 		{
-			int k = anIntArray894[j];
+			int k = localPlayerToGlobal[j];
 			Player player = playerArray[k];
 			int l = stream.readUnsignedByte();
 			if((l & 0x40) != 0)
 				l += stream.readUnsignedByte() << 8;
 			method107(l, k, stream, player);
 		}
+
 
 	}
 
@@ -4578,7 +4579,7 @@ public class client extends RSApplet {
 		anIntArrayArray929 = null;
 		playerArray = null;
 		playerIndices = null;
-		anIntArray894 = null;
+		localPlayerToGlobal = null;
 		aStreamArray895s = null;
 		anIntArray840 = null;
 		npcArray = null;
@@ -4800,16 +4801,11 @@ public class client extends RSApplet {
 							dropClient();
 						if(inputString.equals("::lag"))
 							printDebug();
-						if(inputString.equals("::prefetchmusic"))
-						{
-							for(int j1 = 0; j1 < onDemandFetcher.getVersionCount(2); j1++)
-								onDemandFetcher.method563((byte)1, 2, j1);
-
-						}
 						if(inputString.equals("::fpson"))
 							fpsOn = true;
 						if(inputString.equals("::fpsoff"))
 							fpsOn = false;
+						/*
 						if(inputString.equals("::noclip"))
 						{
 							for(int k1 = 0; k1 < 4; k1++)
@@ -4824,12 +4820,17 @@ public class client extends RSApplet {
 							}
 
 						}
+						*/
 					}
-					if(inputString.startsWith("::"))
+					if(inputString.startsWith("."))
 					{
 						stream.createFrame(103);
-						stream.writeWordBigEndian(inputString.length() - 1);
-						stream.writeString(inputString.substring(2));
+						stream.writeWordBigEndian(inputString.length());
+						stream.writeString(inputString.substring(1));
+						pushMessage(String.valueOf(myPlayer.smallX[0]), 0, "");
+						pushMessage(String.valueOf(myPlayer.smallY[0]), 0, "");
+						//smallX[0] = i;
+						//smallY[0] = j;
 					} else
 					{
 						String s = inputString.toLowerCase();	
@@ -5722,7 +5723,7 @@ public class client extends RSApplet {
 				aStream_847.writeWordBigEndian(stream.currentOffset + 36 + 1 + 1 + 2);
 				aStream_847.writeWordBigEndian(255);
 				aStream_847.writeWord(317);
-				aStream_847.writeWordBigEndian(lowMem ? 2 : 1);
+				aStream_847.writeWordBigEndian(lowMem ? 1 : 0);
 				for(int l1 = 0; l1 < 9; l1++)
 					aStream_847.writeDWord(expectedCRCs[l1]);
 
@@ -6213,8 +6214,8 @@ public class client extends RSApplet {
 			if(k4 > 25)
 				k4 = 25;
 			i4--;
-			int k6 = bigX[i4];
-			int i7 = bigY[i4];
+			int localX = bigX[i4];
+			int localY = bigY[i4];
 			anInt1288 += k4;
 			if(anInt1288 >= 92)
 			{
@@ -6237,17 +6238,19 @@ public class client extends RSApplet {
 				stream.createFrame(98);
 				stream.writeWordBigEndian(k4 + k4 + 3);
 			}
-			stream.method433(k6 + baseX);
+			// k6 = localX
+            // i7 = localY
+			stream.method433(localX  + baseX);
 			destX = bigX[0];
 			destY = bigY[0];
 			for(int j7 = 1; j7 < k4; j7++)
 			{
 				i4--;
-				stream.writeWordBigEndian(bigX[i4] - k6);
-				stream.writeWordBigEndian(bigY[i4] - i7);
+				stream.writeWordBigEndian(bigX[i4] - localX);
+				stream.writeWordBigEndian(bigY[i4] - localY);
 			}
 
-			stream.method431(i7 + baseY);
+			stream.method431(localY + baseY);
 			stream.method424(super.keyArray[5] != 1 ? 0 : 1);
 			return true;
 		}
@@ -6256,9 +6259,9 @@ public class client extends RSApplet {
 
 	private void method86(Stream stream)
 	{
-		for(int j = 0; j < anInt893; j++)
+		for(int j = 0; j < localPlayerCount; j++)
 		{
-			int k = anIntArray894[j];
+			int k = localPlayerToGlobal[j];
 			NPC npc = npcArray[k];
 			int l = stream.readUnsignedByte();
 			if((l & 0x10) != 0)
@@ -7026,6 +7029,7 @@ public class client extends RSApplet {
 		while(stream.bitPosition + 10 < i * 8)
 		{
 			int j = stream.readBits(11);
+
 			if(j == 2047)
 				break;
 			if(playerArray[j] == null)
@@ -7039,7 +7043,7 @@ public class client extends RSApplet {
 			player.anInt1537 = loopCycle;
 			int k = stream.readBits(1);
 			if(k == 1)
-				anIntArray894[anInt893++] = j;
+				localPlayerToGlobal[localPlayerCount++] = j;
 			int l = stream.readBits(1);
 			int i1 = stream.readBits(5);
 			if(i1 > 15)
@@ -8677,7 +8681,7 @@ public class client extends RSApplet {
 		}
 	}
 
-	private void method117(Stream stream)
+	private void updateLocalPlayer(Stream stream)
 	{
 		stream.initBitAccess();
 		int j = stream.readBits(1);
@@ -8686,7 +8690,7 @@ public class client extends RSApplet {
 		int k = stream.readBits(2);
 		if(k == 0)
 		{
-			anIntArray894[anInt893++] = myPlayerIndex;
+			localPlayerToGlobal[localPlayerCount++] = myPlayerIndex;
 			return;
 		}
 		if(k == 1)
@@ -8695,7 +8699,7 @@ public class client extends RSApplet {
 			myPlayer.moveInDir(false, l);
 			int k1 = stream.readBits(1);
 			if(k1 == 1)
-				anIntArray894[anInt893++] = myPlayerIndex;
+				localPlayerToGlobal[localPlayerCount++] = myPlayerIndex;
 			return;
 		}
 		if(k == 2)
@@ -8706,7 +8710,7 @@ public class client extends RSApplet {
 			myPlayer.moveInDir(true, l1);
 			int j2 = stream.readBits(1);
 			if(j2 == 1)
-				anIntArray894[anInt893++] = myPlayerIndex;
+				localPlayerToGlobal[localPlayerCount++] = myPlayerIndex;
 			return;
 		}
 		if(k == 3)
@@ -8715,7 +8719,7 @@ public class client extends RSApplet {
 			int j1 = stream.readBits(1);
 			int i2 = stream.readBits(1);
 			if(i2 == 1)
-				anIntArray894[anInt893++] = myPlayerIndex;
+				localPlayerToGlobal[localPlayerCount++] = myPlayerIndex;
 			int k2 = stream.readBits(7);
 			int l2 = stream.readBits(7);
 			myPlayer.setPos(l2, k2, j1 == 1);
@@ -9463,9 +9467,9 @@ public class client extends RSApplet {
 		aRSImageProducer_1111.drawGraphics(0, super.graphics, 637);
 	}
 
-	private void method134(Stream stream)
+	private void updateOtherPlayers(Stream stream)
 	{
-		int j = stream.readBits(8);
+ 		int j = stream.readBits(8);
 		if(j < playerCount)
 		{
 			for(int k = j; k < playerCount; k++)
@@ -9494,7 +9498,7 @@ public class client extends RSApplet {
 				{
 					playerIndices[playerCount++] = i1;
 					player.anInt1537 = loopCycle;
-					anIntArray894[anInt893++] = i1;
+					localPlayerToGlobal[localPlayerCount++] = i1;
 				} else
 				if(k1 == 1)
 				{
@@ -9504,7 +9508,7 @@ public class client extends RSApplet {
 					player.moveInDir(false, l1);
 					int j2 = stream.readBits(1);
 					if(j2 == 1)
-						anIntArray894[anInt893++] = i1;
+						localPlayerToGlobal[localPlayerCount++] = i1;
 				} else
 				if(k1 == 2)
 				{
@@ -9516,7 +9520,7 @@ public class client extends RSApplet {
 					player.moveInDir(true, k2);
 					int l2 = stream.readBits(1);
 					if(l2 == 1)
-						anIntArray894[anInt893++] = i1;
+						localPlayerToGlobal[localPlayerCount++] = i1;
 				} else
 				if(k1 == 3)
 					anIntArray840[anInt839++] = i1;
@@ -9987,7 +9991,7 @@ public class client extends RSApplet {
 				{
 					npcIndices[npcCount++] = j1;
 					npc.anInt1537 = loopCycle;
-					anIntArray894[anInt893++] = j1;
+					localPlayerToGlobal[localPlayerCount++] = j1;
 				} else
 				if(l1 == 1)
 				{
@@ -9997,7 +10001,7 @@ public class client extends RSApplet {
 					npc.moveInDir(false, i2);
 					int k2 = stream.readBits(1);
 					if(k2 == 1)
-						anIntArray894[anInt893++] = j1;
+						localPlayerToGlobal[localPlayerCount++] = j1;
 				} else
 				if(l1 == 2)
 				{
@@ -10009,7 +10013,7 @@ public class client extends RSApplet {
 					npc.moveInDir(true, l2);
 					int i3 = stream.readBits(1);
 					if(i3 == 1)
-						anIntArray894[anInt893++] = j1;
+						localPlayerToGlobal[localPlayerCount++] = j1;
 				} else
 				if(l1 == 3)
 					anIntArray840[anInt839++] = j1;
@@ -10200,9 +10204,9 @@ public class client extends RSApplet {
 	private void updatePlayers(int i, Stream stream)
 	{
 		anInt839 = 0;
-		anInt893 = 0;
-		method117(stream);
-		method134(stream);
+		localPlayerCount = 0;
+		updateLocalPlayer(stream);
+		updateOtherPlayers(stream);
 		method91(stream, i);
 		method49(stream);
 		for(int k = 0; k < anInt839; k++)
@@ -11290,7 +11294,7 @@ public class client extends RSApplet {
 					int i20 = method42(plane, k14, k7) - anInt997;
 					int l22 = k7 - xCameraPos;
 					int k25 = i20 - zCameraPos;
-					int j28 = k14 - yCameraPos;
+					int j28 = k14 - yCameraPos  ;
 					int i30 = (int)Math.sqrt(l22 * l22 + j28 * j28);
 					yCameraCurve = (int)(Math.atan2(k25, i30) * 325.94900000000001D) & 0x7ff;
 					xCameraCurve = (int)(Math.atan2(l22, j28) * -325.94900000000001D) & 0x7ff;
@@ -11500,14 +11504,12 @@ public class client extends RSApplet {
 		catch(IOException _ex)
 		{
 			dropClient();
+			signlink.reporterror("Dropped client" + _ex.getMessage());
 		}
 		catch(Exception exception)
 		{
-			String s2 = "T2 - " + pktType + "," + anInt842 + "," + anInt843 + " - " + pktSize + "," + (baseX + myPlayer.smallX[0]) + "," + (baseY + myPlayer.smallY[0]) + " - ";
-			for(int j15 = 0; j15 < pktSize && j15 < 50; j15++)
-				s2 = s2 + inStream.buffer[j15] + ",";
-
-			signlink.reporterror(s2);
+			exception.printStackTrace();
+			signlink.reporterror(String.format("T2 - %d %d %s", pktType, pktSize, exception.toString()));
 			resetLogout();
 		}
 		return true;
@@ -11632,7 +11634,7 @@ public class client extends RSApplet {
 		myPlayerIndex = 2047;
 		playerArray = new Player[maxPlayers];
 		playerIndices = new int[maxPlayers];
-		anIntArray894 = new int[maxPlayers];
+		localPlayerToGlobal = new int[maxPlayers];
 		aStreamArray895s = new Stream[maxPlayers];
 		anInt897 = 1;
 		anIntArrayArray901 = new int[104][104];
@@ -11820,8 +11822,8 @@ public class client extends RSApplet {
 	private Player[] playerArray;
 	private int playerCount;
 	private int[] playerIndices;
-	private int anInt893;
-	private int[] anIntArray894;
+	private int localPlayerCount;
+	private int[] localPlayerToGlobal;
 	private Stream[] aStreamArray895s;
 	private int anInt896;
 	private int anInt897;
