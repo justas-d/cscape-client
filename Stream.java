@@ -144,7 +144,8 @@ public final class Stream extends NodeSub {
 	public int readSignedWord()
 	{
 		currentOffset += 2;
-		int i = ((buffer[currentOffset - 2] & 0xff) << 8) + (buffer[currentOffset - 1] & 0xff);
+		int i = ((buffer[currentOffset - 2] & 0xff) << 8) +
+				 (buffer[currentOffset - 1] & 0xff);
 		if(i > 32767)
 			i -= 0x10000;
 		return i;
@@ -258,7 +259,8 @@ public final class Stream extends NodeSub {
 
 	public void method425(int j)
 	{
-		buffer[currentOffset++] = (byte)(128 - j);
+		buffer[currentOffset++] = (byte)(j);
+		//buffer[currentOffset++] = (byte)(128 - j);
 	}
 
 	public int method426()
@@ -274,7 +276,8 @@ public final class Stream extends NodeSub {
 
 	public int method428()
 	{
-		return 128 - buffer[currentOffset++] & 0xff;
+		return buffer[currentOffset++] & 0xff;
+		//return 128 - buffer[currentOffset++] & 0xff;
 	}
 
 	public byte method429()
@@ -321,14 +324,20 @@ public final class Stream extends NodeSub {
 
 	public int method435()
 	{
+		/*
 		currentOffset += 2;
-		return ((buffer[currentOffset - 2] & 0xff) << 8) + (buffer[currentOffset - 1] - 128 & 0xff);
+		return ((buffer[currentOffset - 2] & 0xff) << 8)
+				+ (buffer[currentOffset - 1] - 128 & 0xff);
+				*/
+		currentOffset += 2;
+		return ((buffer[currentOffset - 2] & 0xff) << 8) + (buffer[currentOffset - 1] & 0xff);
 	}
 
 	public int method436()
 	{
         currentOffset += 2;
-        return ((buffer[currentOffset - 2] & 0xff) << 8) + (buffer[currentOffset - 1] & 0xff);
+        return ((buffer[currentOffset - 2] & 0xff) << 8) +
+				(buffer[currentOffset - 1] & 0xff);
 
 		//currentOffset += 2;
 		//return ((buffer[currentOffset - 1] & 0xff) << 8) +
@@ -338,7 +347,10 @@ public final class Stream extends NodeSub {
 	public int method437()
 	{
 		currentOffset += 2;
-		int j = ((buffer[currentOffset - 1] & 0xff) << 8) + (buffer[currentOffset - 2] & 0xff);
+		//int j = ((buffer[currentOffset - 1] & 0xff) << 8)
+		//		+ (buffer[currentOffset - 2] & 0xff);
+		int j = ((buffer[currentOffset - 2] & 0xff) << 8)
+				+ (buffer[currentOffset - 1] & 0xff);
 		if(j > 32767)
 			j -= 0x10000;
 		return j;
@@ -368,7 +380,8 @@ public final class Stream extends NodeSub {
 	public void method441(int i, byte abyte0[], int j)
 	{
 		for(int k = (i + j) - 1; k >= i; k--)
-			buffer[currentOffset++] = (byte)(abyte0[k] + 128);
+			buffer[currentOffset++] = abyte0[k];
+		//	buffer[currentOffset++] = (byte)(abyte0[k] + 128);
 
 	}
 
