@@ -162,16 +162,16 @@ public final class OnDemandFetcher extends OnDemandFetcherParent
 		abyte2 = streamLoader.getDataForName("map_index");
 		Stream stream2 = new Stream(abyte2);
 		j1 = abyte2.length / 7;
-		mapIndices1 = new int[j1];
-		mapIndices2 = new int[j1];
-		mapIndices3 = new int[j1];
-		mapIndices4 = new int[j1];
+		mapHashcodes = new int[j1];
+		tileMapIndices = new int[j1];
+		objectMapIndices = new int[j1];
+		mapIsMembers = new int[j1];
 		for(int i2 = 0; i2 < j1; i2++)
 		{
-			mapIndices1[i2] = stream2.readUnsignedWord();
-			mapIndices2[i2] = stream2.readUnsignedWord();
-			mapIndices3[i2] = stream2.readUnsignedWord();
-			mapIndices4[i2] = stream2.readUnsignedByte();
+			mapHashcodes[i2] = stream2.readUnsignedWord();
+			tileMapIndices[i2] = stream2.readUnsignedWord();
+			objectMapIndices[i2] = stream2.readUnsignedWord();
+			mapIsMembers[i2] = stream2.readUnsignedByte();
 		}
 
 		abyte2 = streamLoader.getDataForName("anim_index");
@@ -208,12 +208,12 @@ public final class OnDemandFetcher extends OnDemandFetcherParent
 
 	public void method554(boolean flag)
 	{
-		int j = mapIndices1.length;
+		int j = mapHashcodes.length;
 		for(int k = 0; k < j; k++)
-			if(flag || mapIndices4[k] != 0)
+			if(flag || mapIsMembers[k] != 0)
 			{
-				method563((byte)2, 3, mapIndices3[k]);
-				method563((byte)2, 3, mapIndices2[k]);
+				method563((byte)2, 3, objectMapIndices[k]);
+				method563((byte)2, 3, tileMapIndices[k]);
 			}
 
 	}
@@ -275,21 +275,21 @@ public final class OnDemandFetcher extends OnDemandFetcherParent
 		return anIntArray1360.length;
 	}
 
-	public void method558(int i, int j)
+	public void queueFileForDownload(int archiveIndex, int fileDescriptor)
 	{
-		if(i < 0 || i > versions.length || j < 0 || j > versions[i].length)
+		if(archiveIndex < 0 || archiveIndex > versions.length || fileDescriptor < 0 || fileDescriptor > versions[archiveIndex].length)
 			return;
-		if(versions[i][j] == 0)
+		if(versions[archiveIndex][fileDescriptor] == 0)
 			return;
 		synchronized(nodeSubList)
 		{
 			for(OnDemandData onDemandData = (OnDemandData) nodeSubList.reverseGetFirst(); onDemandData != null; onDemandData = (OnDemandData) nodeSubList.reverseGetNext())
-				if(onDemandData.dataType == i && onDemandData.ID == j)
+				if(onDemandData.dataType == archiveIndex && onDemandData.ID == fileDescriptor)
 					return;
 
 			OnDemandData onDemandData_1 = new OnDemandData();
-			onDemandData_1.dataType = i;
-			onDemandData_1.ID = j;
+			onDemandData_1.dataType = archiveIndex;
+			onDemandData_1.ID = fileDescriptor;
 			onDemandData_1.incomplete = true;
 			synchronized(aClass19_1370)
 			{
@@ -468,33 +468,33 @@ public final class OnDemandFetcher extends OnDemandFetcherParent
 		return onDemandData;
 	}
 
-	public int method562(int i, int k, int l)
+	public int getMapIndexForRegion(int mapType, int regionY, int regionX)
 	{
-		int i1 = (l << 8) + k;
-		for(int j1 = 0; j1 < mapIndices1.length; j1++)
-			if(mapIndices1[j1] == i1)
-				if(i == 0)
-					return mapIndices2[j1];
+		int mapHashcode = (regionX << 8) + regionY;
+		for(int j1 = 0; j1 < mapHashcodes.length; j1++)
+			if(mapHashcodes[j1] == mapHashcode)
+				if(mapType == 0)
+					return tileMapIndices[j1];
 				else
-					return mapIndices3[j1];
+					return objectMapIndices[j1];
 		return -1;
 	}
 
 	public void method548(int i)
 	{
-		method558(0, i);
+		queueFileForDownload(0, i);
 	}
 
-	public void method563(byte byte0, int i, int j)
+	public void method563(byte byte0, int archiveIndex, int fdIndex)
 	{
 		if(clientInstance.decompressors[0] == null)
 			return;
-		if(versions[i][j] == 0)
+		if(versions[archiveIndex][fdIndex] == 0)
 			return;
-		byte abyte0[] = clientInstance.decompressors[i + 1].decompress(j);
-		if(crcMatches(versions[i][j], crcs[i][j], abyte0))
+		byte abyte0[] = clientInstance.decompressors[archiveIndex + 1].decompress(fdIndex);
+		if(crcMatches(versions[archiveIndex][fdIndex], crcs[archiveIndex][fdIndex], abyte0))
 			return;
-		fileStatus[i][j] = byte0;
+		fileStatus[archiveIndex][fdIndex] = byte0;
 		if(byte0 > anInt1332)
 			anInt1332 = byte0;
 		totalFiles++;
@@ -502,8 +502,8 @@ public final class OnDemandFetcher extends OnDemandFetcherParent
 
 	public boolean method564(int i)
 	{
-		for(int k = 0; k < mapIndices1.length; k++)
-			if(mapIndices3[k] == i)
+		for(int k = 0; k < mapHashcodes.length; k++)
+			if(objectMapIndices[k] == i)
 				return true;
 		return false;
 	}
@@ -664,7 +664,7 @@ public final class OnDemandFetcher extends OnDemandFetcherParent
 	public String statusString;
 	private int writeLoopCycle;
 	private long openSocketTime;
-	private int[] mapIndices3;
+	private int[] objectMapIndices;
 	private final CRC32 crc32;
 	private final byte[] ioBuffer;
 	public int onDemandCycle;
@@ -675,11 +675,11 @@ public final class OnDemandFetcher extends OnDemandFetcherParent
 	private int expectedSize;
 	private int[] anIntArray1348;
 	public int anInt1349;
-	private int[] mapIndices2;
+	private int[] tileMapIndices;
 	private int filesLoaded;
 	private boolean running;
 	private OutputStream outputStream;
-	private int[] mapIndices4;
+	private int[] mapIsMembers;
 	private boolean waiting;
 	private final NodeList aClass19_1358;
 	private final byte[] gzipInputBuffer;
@@ -694,7 +694,7 @@ public final class OnDemandFetcher extends OnDemandFetcherParent
 	private final NodeList aClass19_1368;
 	private OnDemandData current;
 	private final NodeList aClass19_1370;
-	private int[] mapIndices1;
+	private int[] mapHashcodes;
 	private byte[] modelIndices;
 	private int loopCycle;
 }

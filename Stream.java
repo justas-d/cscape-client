@@ -243,7 +243,7 @@ public final class Stream extends NodeSub {
 		int i = currentOffset;
 		currentOffset = 0;
 		byte abyte0[] = new byte[i];
-		readBytes(i, 0, abyte0);
+ 		readBytes(i, 0, abyte0);
 		BigInteger biginteger2 = new BigInteger(abyte0);
 		BigInteger biginteger3 = biginteger2/*.modPow(biginteger, biginteger1)*/;
 		byte abyte1[] = biginteger3.toByteArray();
@@ -367,8 +367,19 @@ public final class Stream extends NodeSub {
 
 	public int method439()
 	{
+		/*
 			currentOffset += 4;
-			return ((buffer[currentOffset - 2] & 0xff) << 24) + ((buffer[currentOffset - 1] & 0xff) << 16) + ((buffer[currentOffset - 4] & 0xff) << 8) + (buffer[currentOffset - 3] & 0xff);
+			return ((buffer[currentOffset - 2] & 0xff) << 24)
+					+ ((buffer[currentOffset - 1] & 0xff) << 16)
+					+ ((buffer[currentOffset - 4] & 0xff) << 8)
+					+ (buffer[currentOffset - 3] & 0xff);
+					*/
+
+		currentOffset += 4;
+		return ((buffer[currentOffset - 4] & 0xff) << 24)
+				+ ((buffer[currentOffset - 3] & 0xff) << 16)
+				+ ((buffer[currentOffset - 2] & 0xff) << 8)
+				+ (buffer[currentOffset - 1] & 0xff);
 	}
 
 	public int method440()

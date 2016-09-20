@@ -444,24 +444,24 @@ public class client extends RSApplet {
 			}
 
 			ObjectManager objectManager = new ObjectManager(byteGroundArray, intGroundArray);
-			int k2 = aByteArrayArray1183.length;
+			int k2 = tileMapBuffers.length;
 			stream.createFrame(0);
 			if(!aBoolean1159)
 			{
 				for(int i3 = 0; i3 < k2; i3++)
 				{
-					int i4 = (anIntArray1234[i3] >> 8) * 64 - baseX;
-					int k5 = (anIntArray1234[i3] & 0xff) * 64 - baseY;
-					byte abyte0[] = aByteArrayArray1183[i3];
+					int i4 = (mapHashMatrix[i3] >> 8) * 64 - baseX;
+					int k5 = (mapHashMatrix[i3] & 0xff) * 64 - baseY;
+					byte abyte0[] = tileMapBuffers[i3];
 					if(abyte0 != null)
 						objectManager.method180(abyte0, k5, i4, (anInt1069 - 6) * 8, (anInt1070 - 6) * 8, aClass11Array1230);
 				}
 
 				for(int j4 = 0; j4 < k2; j4++)
 				{
-					int l5 = (anIntArray1234[j4] >> 8) * 64 - baseX;
-					int k7 = (anIntArray1234[j4] & 0xff) * 64 - baseY;
-					byte abyte2[] = aByteArrayArray1183[j4];
+					int l5 = (mapHashMatrix[j4] >> 8) * 64 - baseX;
+					int k7 = (mapHashMatrix[j4] & 0xff) * 64 - baseY;
+					byte abyte2[] = tileMapBuffers[j4];
 					if(abyte2 == null && anInt1070 < 800)
 						objectManager.method174(k7, 64, 64, l5);
 				}
@@ -476,11 +476,11 @@ public class client extends RSApplet {
 				stream.createFrame(0);
 				for(int i6 = 0; i6 < k2; i6++)
 				{
-					byte abyte1[] = aByteArrayArray1247[i6];
+					byte abyte1[] = objectMapBuffers[i6];
 					if(abyte1 != null)
 					{
-						int l8 = (anIntArray1234[i6] >> 8) * 64 - baseX;
-						int k9 = (anIntArray1234[i6] & 0xff) * 64 - baseY;
+						int l8 = (mapHashMatrix[i6] >> 8) * 64 - baseX;
+						int k9 = (mapHashMatrix[i6] & 0xff) * 64 - baseY;
 						objectManager.method190(l8, aClass11Array1230, k9, worldController, abyte1);
 					}
 				}
@@ -502,11 +502,11 @@ public class client extends RSApplet {
 								int j10 = l7 >> 14 & 0x3ff;
 								int l10 = l7 >> 3 & 0x7ff;
 								int j11 = (j10 / 8 << 8) + l10 / 8;
-								for(int l11 = 0; l11 < anIntArray1234.length; l11++)
+								for(int l11 = 0; l11 < mapHashMatrix.length; l11++)
 								{
-									if(anIntArray1234[l11] != j11 || aByteArrayArray1183[l11] == null)
+									if(mapHashMatrix[l11] != j11 || tileMapBuffers[l11] == null)
 										continue;
-									objectManager.method179(i9, l9, aClass11Array1230, k4 * 8, (j10 & 7) * 8, aByteArrayArray1183[l11], (l10 & 7) * 8, j3, j6 * 8);
+									objectManager.method179(i9, l9, aClass11Array1230, k4 * 8, (j10 & 7) * 8, tileMapBuffers[l11], (l10 & 7) * 8, j3, j6 * 8);
 									break;
 								}
 
@@ -543,11 +543,11 @@ public class client extends RSApplet {
 								int k11 = i10 >> 14 & 0x3ff;
 								int i12 = i10 >> 3 & 0x7ff;
 								int j12 = (k11 / 8 << 8) + i12 / 8;
-								for(int k12 = 0; k12 < anIntArray1234.length; k12++)
+								for(int k12 = 0; k12 < mapHashMatrix.length; k12++)
 								{
-									if(anIntArray1234[k12] != j12 || aByteArrayArray1247[k12] == null)
+									if(mapHashMatrix[k12] != j12 || objectMapBuffers[k12] == null)
 										continue;
-									objectManager.method183(aClass11Array1230, worldController, k10, j8 * 8, (i12 & 7) * 8, l6, aByteArrayArray1247[k12], (k11 & 7) * 8, i11, j9 * 8);
+									objectManager.method183(aClass11Array1230, worldController, k10, j8 * 8, (i12 & 7) * 8, l6, objectMapBuffers[k12], (k11 & 7) * 8, i11, j9 * 8);
 									break;
 								}
 
@@ -624,10 +624,10 @@ public class client extends RSApplet {
 			for(int j5 = i2; j5 <= l2; j5++)
 				if(l3 == k || l3 == j1 || j5 == i2 || j5 == l2)
 				{
-					int j7 = onDemandFetcher.method562(0, j5, l3);
+					int j7 = onDemandFetcher.getMapIndexForRegion(0, j5, l3);
 					if(j7 != -1)
 						onDemandFetcher.method560(j7, 3);
-					int k8 = onDemandFetcher.method562(1, j5, l3);
+					int k8 = onDemandFetcher.getMapIndexForRegion(1, j5, l3);
 					if(k8 != -1)
 						onDemandFetcher.method560(k8, 3);
 				}
@@ -1067,6 +1067,7 @@ public class client extends RSApplet {
 	{
 		anInt839 = 0;
 		localPlayerCount = 0;
+
 		method139(stream);
 		method46(i, stream);
 		method86(stream);
@@ -1220,7 +1221,7 @@ public class client extends RSApplet {
 				{
 					nextSong = currentSong;
 					songChanging = true;
-					onDemandFetcher.method558(2, nextSong);
+					onDemandFetcher.queueFileForDownload(2, nextSong);
 				} else
 				{
 					stopMidi();
@@ -2443,22 +2444,22 @@ public class client extends RSApplet {
 
 	private int method54()
 	{
-		for(int i = 0; i < aByteArrayArray1183.length; i++)
+		for(int i = 0; i < tileMapBuffers.length; i++)
 		{
-			if(aByteArrayArray1183[i] == null && anIntArray1235[i] != -1)
+			if(tileMapBuffers[i] == null && tilemapMatrix[i] != -1)
 				return -1;
-			if(aByteArrayArray1247[i] == null && anIntArray1236[i] != -1)
+			if(objectMapBuffers[i] == null && objectmapMatrix[i] != -1)
 				return -2;
 		}
 
 		boolean flag = true;
-		for(int j = 0; j < aByteArrayArray1183.length; j++)
+		for(int j = 0; j < tileMapBuffers.length; j++)
 		{
-			byte abyte0[] = aByteArrayArray1247[j];
+			byte abyte0[] = objectMapBuffers[j];
 			if(abyte0 != null)
 			{
-				int k = (anIntArray1234[j] >> 8) * 64 - baseX;
-				int l = (anIntArray1234[j] & 0xff) * 64 - baseY;
+				int k = (mapHashMatrix[j] >> 8) * 64 - baseX;
+				int l = (mapHashMatrix[j] & 0xff) * 64 - baseY;
 				if(aBoolean1159)
 				{
 					k = 10;
@@ -2608,20 +2609,20 @@ public class client extends RSApplet {
 					saveMidi(songChanging, onDemandData.buffer);
 				if(onDemandData.dataType == 3 && loadingStage == 1)
 				{
-					for(int i = 0; i < aByteArrayArray1183.length; i++)
+					for(int i = 0; i < tileMapBuffers.length; i++)
 					{
-						if(anIntArray1235[i] == onDemandData.ID)
+						if(tilemapMatrix[i] == onDemandData.ID)
 						{
-							aByteArrayArray1183[i] = onDemandData.buffer;
+							tileMapBuffers[i] = onDemandData.buffer;
 							if(onDemandData.buffer == null)
-								anIntArray1235[i] = -1;
+								tilemapMatrix[i] = -1;
 							break;
 						}
-						if(anIntArray1236[i] != onDemandData.ID)
+						if(objectmapMatrix[i] != onDemandData.ID)
 							continue;
-						aByteArrayArray1247[i] = onDemandData.buffer;
+						objectMapBuffers[i] = onDemandData.buffer;
 						if(onDemandData.buffer == null)
-							anIntArray1236[i] = -1;
+							objectmapMatrix[i] = -1;
 						break;
 					}
 
@@ -3280,7 +3281,7 @@ public class client extends RSApplet {
 				abyte0 = new byte[i2];
 				System.arraycopy(abyte1, 0, abyte0, 0, 6);
 
-				while(j2 < i2) 
+				while(j2 < i2)
 				{
 					int l2 = i2 - j2;
 					if(l2 > 1000)
@@ -3485,9 +3486,9 @@ public class client extends RSApplet {
 		if(l == 74)
 		{
 			stream.createFrame(122);
-			stream.method433(k);
-			stream.method432(j);
-			stream.method431(i1);
+            stream.method432(k);
+            stream.method432(j);
+            stream.method432(i1);
 			atInventoryLoopCycle = 0;
 			atInventoryInterface = k;
 			atInventoryIndex = j;
@@ -3633,9 +3634,9 @@ public class client extends RSApplet {
 		if(l == 539)
 		{
 			stream.createFrame(16);
-			stream.method432(i1);
-			stream.method433(j);
-			stream.method433(k);
+            stream.method432(k);
+            stream.method432(j);
+            stream.method432(i1);
 			atInventoryLoopCycle = 0;
 			atInventoryInterface = k;
 			atInventoryIndex = j;
@@ -3796,6 +3797,8 @@ public class client extends RSApplet {
 			stream.method432(k);
 			stream.method432(j);
 			stream.method432(i1);
+
+
 			atInventoryLoopCycle = 0;
 			atInventoryInterface = k;
 			atInventoryIndex = j;
@@ -3808,9 +3811,9 @@ public class client extends RSApplet {
 		if(l == 493)
 		{
 			stream.createFrame(75);
-			stream.method433(k);
-			stream.method431(j);
-			stream.method432(i1);
+            stream.method432(k);
+            stream.method432(j);
+            stream.method432(i1);
 			atInventoryLoopCycle = 0;
 			atInventoryInterface = k;
 			atInventoryIndex = j;
@@ -4140,9 +4143,9 @@ public class client extends RSApplet {
 		if(l == 454)
 		{
 			stream.createFrame(41);
-			stream.writeWord(i1);
-			stream.method432(j);
-			stream.method432(k);
+            stream.method432(k);
+            stream.method432(j);
+            stream.method432(i1);
 			atInventoryLoopCycle = 0;
 			atInventoryInterface = k;
 			atInventoryIndex = j;
@@ -4519,11 +4522,11 @@ public class client extends RSApplet {
 		stream = null;
 		aStream_847 = null;
 		inStream = null;
-		anIntArray1234 = null;
-		aByteArrayArray1183 = null;
-		aByteArrayArray1247 = null;
-		anIntArray1235 = null;
-		anIntArray1236 = null;
+		mapHashMatrix = null;
+		tileMapBuffers = null;
+		objectMapBuffers = null;
+		tilemapMatrix = null;
+		objectmapMatrix = null;
 		intGroundArray = null;
 		byteGroundArray = null;
 		worldController = null;
@@ -4806,7 +4809,7 @@ public class client extends RSApplet {
 							fpsOn = true;
 						if(inputString.equals("::fpsoff"))
 							fpsOn = false;
-						/*
+
 						if(inputString.equals("::noclip"))
 						{
 							for(int k1 = 0; k1 < 4; k1++)
@@ -4821,7 +4824,7 @@ public class client extends RSApplet {
 							}
 
 						}
-						*/
+
 					}
 					if(inputString.startsWith("."))
 					{
@@ -5700,18 +5703,18 @@ public class client extends RSApplet {
 				inStream.currentOffset = 0;
 				aLong1215 = inStream.readQWord();
 								
-				int ai[] = new int[4];
-				ai[0] = (int)(Math.random() * 99999999D);
-				ai[1] = (int)(Math.random() * 99999999D);
-				ai[2] = (int)(aLong1215 >> 32);
-				ai[3] = (int)aLong1215;
+				int keys[] = new int[4];
+				keys[0] = (int)(Math.random() * 99999999D);
+				keys[1] = (int)(Math.random() * 99999999D);
+				keys[2] = (int)(aLong1215 >> 32);
+				keys[3] = (int)aLong1215;
 
 				stream.currentOffset = 0;
 				stream.writeWordBigEndian(10);
-				stream.writeDWord(ai[0]);
-				stream.writeDWord(ai[1]);
-				stream.writeDWord(ai[2]);
-				stream.writeDWord(ai[3]);
+				stream.writeDWord(keys[0]);
+				stream.writeDWord(keys[1]);
+				stream.writeDWord(keys[2]);
+				stream.writeDWord(keys[3]);
 				stream.writeDWord(signlink.uid);
 				
 				stream.writeString(s);
@@ -5731,11 +5734,11 @@ public class client extends RSApplet {
 
 				aStream_847.writeBytes(stream.buffer, stream.currentOffset, 0);
 
-				stream.encryption = new ISAACRandomGen(ai);
+				stream.encryption = new ISAACRandomGen(keys);
 				for(int j2 = 0; j2 < 4; j2++)
-					ai[j2] += 50;
+					keys[j2] += 50;
 
-				encryption = new ISAACRandomGen(ai);
+				encryption = new ISAACRandomGen(keys);
 				socketStream.queueBytes(aStream_847.currentOffset, aStream_847.buffer);
 				k = socketStream.read();
 			}
@@ -6601,7 +6604,7 @@ public class client extends RSApplet {
 			{
 				nextSong = currentSong;
 				songChanging = true;
-				onDemandFetcher.method558(2, nextSong);
+				onDemandFetcher.queueFileForDownload(2, nextSong);
 			}
 		}
 	}
@@ -6667,7 +6670,7 @@ public class client extends RSApplet {
 				}
 				catch(Exception _ex) { }
 				songChanging = true;
-				onDemandFetcher.method558(2, nextSong);
+				onDemandFetcher.queueFileForDownload(2, nextSong);
 				while(onDemandFetcher.getNodeCount() > 0)
 				{
 					processOnDemandQueue();
@@ -6686,7 +6689,7 @@ public class client extends RSApplet {
 			drawLoadingText(65, "Requesting animations");
 			int k = onDemandFetcher.getVersionCount(1);
 			for(int i1 = 0; i1 < k; i1++)
-				onDemandFetcher.method558(1, i1);
+				onDemandFetcher.queueFileForDownload(1, i1);
 
 			while(onDemandFetcher.getNodeCount() > 0)
 			{
@@ -6711,7 +6714,7 @@ public class client extends RSApplet {
 			{
 				int l1 = onDemandFetcher.getModelIndex(k1);
 				if((l1 & 1) != 0)
-					onDemandFetcher.method558(0, k1);
+					onDemandFetcher.queueFileForDownload(0, k1);
 			}
 
 			k = onDemandFetcher.getNodeCount();
@@ -6730,18 +6733,18 @@ public class client extends RSApplet {
 			if(decompressors[0] != null)
 			{
 				drawLoadingText(75, "Requesting maps");
-				onDemandFetcher.method558(3, onDemandFetcher.method562(0, 48, 47));
-				onDemandFetcher.method558(3, onDemandFetcher.method562(1, 48, 47));
-				onDemandFetcher.method558(3, onDemandFetcher.method562(0, 48, 48));
-				onDemandFetcher.method558(3, onDemandFetcher.method562(1, 48, 48));
-				onDemandFetcher.method558(3, onDemandFetcher.method562(0, 48, 49));
-				onDemandFetcher.method558(3, onDemandFetcher.method562(1, 48, 49));
-				onDemandFetcher.method558(3, onDemandFetcher.method562(0, 47, 47));
-				onDemandFetcher.method558(3, onDemandFetcher.method562(1, 47, 47));
-				onDemandFetcher.method558(3, onDemandFetcher.method562(0, 47, 48));
-				onDemandFetcher.method558(3, onDemandFetcher.method562(1, 47, 48));
-				onDemandFetcher.method558(3, onDemandFetcher.method562(0, 148, 48));
-				onDemandFetcher.method558(3, onDemandFetcher.method562(1, 148, 48));
+				onDemandFetcher.queueFileForDownload(3, onDemandFetcher.getMapIndexForRegion(0, 48, 47));
+				onDemandFetcher.queueFileForDownload(3, onDemandFetcher.getMapIndexForRegion(1, 48, 47));
+				onDemandFetcher.queueFileForDownload(3, onDemandFetcher.getMapIndexForRegion(0, 48, 48));
+				onDemandFetcher.queueFileForDownload(3, onDemandFetcher.getMapIndexForRegion(1, 48, 48));
+				onDemandFetcher.queueFileForDownload(3, onDemandFetcher.getMapIndexForRegion(0, 48, 49));
+				onDemandFetcher.queueFileForDownload(3, onDemandFetcher.getMapIndexForRegion(1, 48, 49));
+				onDemandFetcher.queueFileForDownload(3, onDemandFetcher.getMapIndexForRegion(0, 47, 47));
+				onDemandFetcher.queueFileForDownload(3, onDemandFetcher.getMapIndexForRegion(1, 47, 47));
+				onDemandFetcher.queueFileForDownload(3, onDemandFetcher.getMapIndexForRegion(0, 47, 48));
+				onDemandFetcher.queueFileForDownload(3, onDemandFetcher.getMapIndexForRegion(1, 47, 48));
+				onDemandFetcher.queueFileForDownload(3, onDemandFetcher.getMapIndexForRegion(0, 148, 48));
+				onDemandFetcher.queueFileForDownload(3, onDemandFetcher.getMapIndexForRegion(1, 148, 48));
 				k = onDemandFetcher.getNodeCount();
 				while(onDemandFetcher.getNodeCount() > 0)
 				{
@@ -10453,7 +10456,17 @@ public class client extends RSApplet {
 				if(l1 == 65535)
 					l1 = -1;
 				tabInterfaceIDs[j10] = l1;
-				needDrawTabArea = true;
+
+if(l1 == 1644) {
+    System.out.println("Children of interface: " + 1668);
+
+    for (int chid : RSInterface.interfaceCache[1668].children) {
+        RSInterface child = RSInterface.interfaceCache[chid];
+        System.out.println(chid + ": " + child.message);
+    }
+
+}
+                needDrawTabArea = true;
 				tabAreaAltered = true;
 				pktType = -1;
 				return true;
@@ -10467,7 +10480,7 @@ public class client extends RSApplet {
 				{
 					nextSong = i2;
 					songChanging = true;
-					onDemandFetcher.method558(2, nextSong);
+					onDemandFetcher.queueFileForDownload(2, nextSong);
 				}
 				currentSong = i2;
 				pktType = -1;
@@ -10481,7 +10494,7 @@ public class client extends RSApplet {
 				{
 					nextSong = j2;
 					songChanging = false;
-					onDemandFetcher.method558(2, nextSong);
+					onDemandFetcher.queueFileForDownload(2, nextSong);
 					prevSong = k10;
 				}
 				pktType = -1;
@@ -10506,6 +10519,7 @@ public class client extends RSApplet {
 			}
 			if(pktType == 73 || pktType == 241)
 			{
+
 				
 	//mapReset();
 	int l2 = anInt1069;
@@ -10561,39 +10575,39 @@ public class client extends RSApplet {
 				aRSImageProducer_1165.drawGraphics(4, super.graphics, 4);
 				if(pktType == 73)
 				{
-					int k16 = 0;
+					int mapSize = 0;
 					for(int i21 = (anInt1069 - 6) / 8; i21 <= (anInt1069 + 6) / 8; i21++)
 					{
 						for(int k23 = (anInt1070 - 6) / 8; k23 <= (anInt1070 + 6) / 8; k23++)
-							k16++;
+							mapSize++;
 
 					}
 
-					aByteArrayArray1183 = new byte[k16][];
-					aByteArrayArray1247 = new byte[k16][];
-					anIntArray1234 = new int[k16];
-					anIntArray1235 = new int[k16];
-					anIntArray1236 = new int[k16];
-					k16 = 0;
+					tileMapBuffers = new byte[mapSize][];
+					objectMapBuffers = new byte[mapSize][];
+					mapHashMatrix = new int[mapSize];
+					tilemapMatrix = new int[mapSize];
+					objectmapMatrix = new int[mapSize];
+					mapSize = 0;
 					for(int l23 = (anInt1069 - 6) / 8; l23 <= (anInt1069 + 6) / 8; l23++)
 					{
 						for(int j26 = (anInt1070 - 6) / 8; j26 <= (anInt1070 + 6) / 8; j26++)
 						{
-							anIntArray1234[k16] = (l23 << 8) + j26;
+							mapHashMatrix[mapSize] = (l23 << 8) + j26;
 							if(aBoolean1141 && (j26 == 49 || j26 == 149 || j26 == 147 || l23 == 50 || l23 == 49 && j26 == 47))
 							{
-								anIntArray1235[k16] = -1;
-								anIntArray1236[k16] = -1;
-								k16++;
+								tilemapMatrix[mapSize] = -1;
+								objectmapMatrix[mapSize] = -1;
+								mapSize++;
 							} else
 							{
-								int k28 = anIntArray1235[k16] = onDemandFetcher.method562(0, j26, l23);
+								int k28 = tilemapMatrix[mapSize] = onDemandFetcher.getMapIndexForRegion(0, j26, l23);
 								if(k28 != -1)
-									onDemandFetcher.method558(3, k28);
-								int j30 = anIntArray1236[k16] = onDemandFetcher.method562(1, j26, l23);
+									onDemandFetcher.queueFileForDownload(3, k28);
+								int j30 = objectmapMatrix[mapSize] = onDemandFetcher.getMapIndexForRegion(1, j26, l23);
 								if(j30 != -1)
-									onDemandFetcher.method558(3, j30);
-								k16++;
+									onDemandFetcher.queueFileForDownload(3, j30);
+								mapSize++;
 							}
 						}
 
@@ -10602,7 +10616,7 @@ public class client extends RSApplet {
 				}
 				if(pktType == 241)
 				{
-					int l16 = 0;
+					int mapSize = 0;
 					int ai[] = new int[676];
 					for(int i24 = 0; i24 < 4; i24++)
 					{
@@ -10616,7 +10630,7 @@ public class client extends RSApplet {
 									int k31 = k30 >> 14 & 0x3ff;
 									int i32 = k30 >> 3 & 0x7ff;
 									int k32 = (k31 / 8 << 8) + i32 / 8;
-									for(int j33 = 0; j33 < l16; j33++)
+									for(int j33 = 0; j33 < mapSize; j33++)
 									{
 										if(ai[j33] != k32)
 											continue;
@@ -10625,7 +10639,7 @@ public class client extends RSApplet {
 									}
 
 									if(k32 != -1)
-										ai[l16++] = k32;
+										ai[mapSize++] = k32;
 								}
 							}
 
@@ -10633,22 +10647,22 @@ public class client extends RSApplet {
 
 					}
 
-					aByteArrayArray1183 = new byte[l16][];
-					aByteArrayArray1247 = new byte[l16][];
-					anIntArray1234 = new int[l16];
-					anIntArray1235 = new int[l16];
-					anIntArray1236 = new int[l16];
-					for(int l26 = 0; l26 < l16; l26++)
+					tileMapBuffers = new byte[mapSize][];
+					objectMapBuffers = new byte[mapSize][];
+					mapHashMatrix = new int[mapSize];
+					tilemapMatrix = new int[mapSize];
+					objectmapMatrix = new int[mapSize];
+					for(int l26 = 0; l26 < mapSize; l26++)
 					{
-						int i29 = anIntArray1234[l26] = ai[l26];
+						int i29 = mapHashMatrix[l26] = ai[l26];
 						int l30 = i29 >> 8 & 0xff;
 						int l31 = i29 & 0xff;
-						int j32 = anIntArray1235[l26] = onDemandFetcher.method562(0, l31, l30);
+						int j32 = tilemapMatrix[l26] = onDemandFetcher.getMapIndexForRegion(0, l31, l30);
 						if(j32 != -1)
-							onDemandFetcher.method558(3, j32);
-						int i33 = anIntArray1236[l26] = onDemandFetcher.method562(1, l31, l30);
+							onDemandFetcher.queueFileForDownload(3, j32);
+						int i33 = objectmapMatrix[l26] = onDemandFetcher.getMapIndexForRegion(1, l31, l30);
 						if(i33 != -1)
-							onDemandFetcher.method558(3, i33);
+							onDemandFetcher.queueFileForDownload(3, i33);
 					}
 
 				}
@@ -11481,6 +11495,14 @@ public class client extends RSApplet {
 			{
 				int j9 = inStream.method434();
 				method60(j9);
+
+				System.out.println("Children of interface: " + j9);
+				for(int chid : RSInterface.interfaceCache[j9].children)
+				{
+					RSInterface child = RSInterface.interfaceCache[chid];
+					System.out.println(chid + ": " + child.message);
+				}
+
 				if(invOverlayInterfaceID != -1)
 				{
 					invOverlayInterfaceID = -1;
@@ -12105,7 +12127,7 @@ public class client extends RSApplet {
 	private int[] anIntArray1180;
 	private int[] anIntArray1181;
 	private int[] anIntArray1182;
-	private byte[][] aByteArrayArray1183;
+	private byte[][] tileMapBuffers;
 	private int anInt1184;
 	private int minimapInt1;
 	private int anInt1186;
@@ -12152,9 +12174,9 @@ public class client extends RSApplet {
 	private Class11[] aClass11Array1230;
 	public static int anIntArray1232[];
 	private boolean aBoolean1233;
-	private int[] anIntArray1234;
-	private int[] anIntArray1235;
-	private int[] anIntArray1236;
+	private int[] mapHashMatrix;
+	private int[] tilemapMatrix;
+	private int[] objectmapMatrix;
 	private int anInt1237;
 	private int anInt1238;
 	public final int anInt1239 = 100;
@@ -12165,7 +12187,7 @@ public class client extends RSApplet {
 	private int atInventoryInterface;
 	private int atInventoryIndex;
 	private int atInventoryInterfaceType;
-	private byte[][] aByteArrayArray1247;
+	private byte[][] objectMapBuffers;
 	private int tradeMode;
 	private int anInt1249;
 	private final int[] anIntArray1250;

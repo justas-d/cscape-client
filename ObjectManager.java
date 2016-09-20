@@ -9,12 +9,12 @@ final class ObjectManager {
 		anInt145 = 99;
 		anInt146 = 104;
 		anInt147 = 104;
-		anIntArrayArrayArray129 = ai;
-		aByteArrayArrayArray149 = abyte0;
-		aByteArrayArrayArray142 = new byte[4][anInt146][anInt147];
-		aByteArrayArrayArray130 = new byte[4][anInt146][anInt147];
-		aByteArrayArrayArray136 = new byte[4][anInt146][anInt147];
-		aByteArrayArrayArray148 = new byte[4][anInt146][anInt147];
+		tileVertexHeights = ai;
+		tileRenderRuleFlags = abyte0;
+		tileUnderlayFloorIds = new byte[4][anInt146][anInt147];
+		tileOverlayFloorIds = new byte[4][anInt146][anInt147];
+		tileOverlayClippingPaths = new byte[4][anInt146][anInt147];
+		tileOverlayRotations = new byte[4][anInt146][anInt147];
 		anIntArrayArrayArray135 = new int[4][anInt146 + 1][anInt147 + 1];
 		aByteArrayArrayArray134 = new byte[4][anInt146 + 1][anInt147 + 1];
 		anIntArrayArray139 = new int[anInt146 + 1][anInt147 + 1];
@@ -40,10 +40,10 @@ final class ObjectManager {
 			for(int k = 0; k < 104; k++)
 			{
 				for(int i1 = 0; i1 < 104; i1++)
-					if((aByteArrayArrayArray149[j][k][i1] & 1) == 1)
+					if((tileRenderRuleFlags[j][k][i1] & 1) == 1)
 					{
 						int k1 = j;
-						if((aByteArrayArrayArray149[1][k][i1] & 2) == 2)
+						if((tileRenderRuleFlags[1][k][i1] & 2) == 2)
 							k1--;
 						if(k1 >= 0)
 							aclass11[k1].method213(i1, k);
@@ -76,8 +76,8 @@ final class ObjectManager {
 			{
 				for(int j5 = 1; j5 < anInt146 - 1; j5++)
 				{
-					int k6 = anIntArrayArrayArray129[l][j5 + 1][j4] - anIntArrayArrayArray129[l][j5 - 1][j4];
-					int l7 = anIntArrayArrayArray129[l][j5][j4 + 1] - anIntArrayArrayArray129[l][j5][j4 - 1];
+					int k6 = tileVertexHeights[l][j5 + 1][j4] - tileVertexHeights[l][j5 - 1][j4];
+					int l7 = tileVertexHeights[l][j5][j4 + 1] - tileVertexHeights[l][j5][j4 - 1];
 					int j9 = (int)Math.sqrt(k6 * k6 + 0x10000 + l7 * l7);
 					int k12 = (k6 << 8) / j9;
 					int l13 = 0x10000 / j9;
@@ -105,7 +105,7 @@ final class ObjectManager {
 					int k9 = l6 + 5;
 					if(k9 >= 0 && k9 < anInt146)
 					{
-						int l12 = aByteArrayArrayArray142[l][k9][i8] & 0xff;
+						int l12 = tileUnderlayFloorIds[l][k9][i8] & 0xff;
 						if(l12 > 0)
 						{
 							Flo flo = Flo.cache[l12 - 1];
@@ -119,7 +119,7 @@ final class ObjectManager {
 					int i13 = l6 - 5;
 					if(i13 >= 0 && i13 < anInt146)
 					{
-						int i14 = aByteArrayArrayArray142[l][i13][i8] & 0xff;
+						int i14 = tileUnderlayFloorIds[l][i13][i8] & 0xff;
 						if(i14 > 0)
 						{
 							Flo flo_1 = Flo.cache[i14 - 1];
@@ -159,18 +159,18 @@ final class ObjectManager {
 							k15 -= anIntArray127[k18];
 							k16 -= anIntArray128[k18];
 						}
-						if(k17 >= 1 && k17 < anInt147 - 1 && (!lowMem || (aByteArrayArrayArray149[0][l6][k17] & 2) != 0 || (aByteArrayArrayArray149[l][l6][k17] & 0x10) == 0 && method182(k17, l, l6) == anInt131))
+						if(k17 >= 1 && k17 < anInt147 - 1 && (!lowMem || (tileRenderRuleFlags[0][l6][k17] & 2) != 0 || (tileRenderRuleFlags[l][l6][k17] & 0x10) == 0 && method182(k17, l, l6) == anInt131))
 						{
 							if(l < anInt145)
 								anInt145 = l;
-							int l18 = aByteArrayArrayArray142[l][l6][k17] & 0xff;
-							int i19 = aByteArrayArrayArray130[l][l6][k17] & 0xff;
+							int l18 = tileUnderlayFloorIds[l][l6][k17] & 0xff;
+							int i19 = tileOverlayFloorIds[l][l6][k17] & 0xff;
 							if(l18 > 0 || i19 > 0)
 							{
-								int j19 = anIntArrayArrayArray129[l][l6][k17];
-								int k19 = anIntArrayArrayArray129[l][l6 + 1][k17];
-								int l19 = anIntArrayArrayArray129[l][l6 + 1][k17 + 1];
-								int i20 = anIntArrayArrayArray129[l][l6][k17 + 1];
+								int j19 = tileVertexHeights[l][l6][k17];
+								int k19 = tileVertexHeights[l][l6 + 1][k17];
+								int l19 = tileVertexHeights[l][l6 + 1][k17 + 1];
+								int i20 = tileVertexHeights[l][l6][k17 + 1];
 								int j20 = anIntArrayArray139[l6][k17];
 								int k20 = anIntArrayArray139[l6 + 1][k17];
 								int l20 = anIntArrayArray139[l6 + 1][k17 + 1];
@@ -195,7 +195,7 @@ final class ObjectManager {
 								if(l > 0)
 								{
 									boolean flag = true;
-									if(l18 == 0 && aByteArrayArrayArray136[l][l6][k17] != 0)
+									if(l18 == 0 && tileOverlayClippingPaths[l][l6][k17] != 0)
 										flag = false;
 									if(i19 > 0 && !Flo.cache[i19 - 1].aBoolean393)
 										flag = false;
@@ -210,8 +210,8 @@ final class ObjectManager {
 									worldController.method279(l, l6, k17, 0, 0, -1, j19, k19, l19, i20, method187(j21, j20), method187(j21, k20), method187(j21, l20), method187(j21, i21), 0, 0, 0, 0, i22, 0);
 								} else
 								{
-									int k22 = aByteArrayArrayArray136[l][l6][k17] + 1;
-									byte byte4 = aByteArrayArrayArray148[l][l6][k17];
+									int k22 = tileOverlayClippingPaths[l][l6][k17] + 1;
+									byte byte4 = tileOverlayRotations[l][l6][k17];
 									Flo flo_2 = Flo.cache[i19 - 1];
 									int i23 = flo_2.anInt391;
 									int j23;
@@ -253,7 +253,7 @@ final class ObjectManager {
 		for(int j1 = 0; j1 < anInt146; j1++)
 		{
 			for(int l1 = 0; l1 < anInt147; l1++)
-				if((aByteArrayArrayArray149[1][j1][l1] & 2) == 2)
+				if((tileRenderRuleFlags[1][j1][l1] & 2) == 2)
 					worldController.method276(l1, j1);
 
 		}
@@ -305,8 +305,8 @@ label1:
 							if(l10 >= 8)
 							{
 								char c1 = '\360';
-								int k14 = anIntArrayArrayArray129[k8][i4][k4] - c1;
-								int l15 = anIntArrayArrayArray129[i7][i4][k4];
+								int k14 = tileVertexHeights[k8][i4][k4] - c1;
+								int l15 = tileVertexHeights[i7][i4][k4];
 								WorldController.method277(l2, i4 * 128, l15, i4 * 128, l5 * 128 + 128, k14, k4 * 128, 1);
 								for(int l16 = i7; l16 <= k8; l16++)
 								{
@@ -347,8 +347,8 @@ label3:
 							if(k11 >= 8)
 							{
 								char c2 = '\360';
-								int l14 = anIntArrayArrayArray129[l8][l4][k3] - c2;
-								int i16 = anIntArrayArrayArray129[j7][l4][k3];
+								int l14 = tileVertexHeights[l8][l4][k3] - c2;
+								int i16 = tileVertexHeights[j7][l4][k3];
 								WorldController.method277(l2, l4 * 128, i16, i6 * 128 + 128, k3 * 128, l14, k3 * 128, 2);
 								for(int i17 = j7; i17 <= l8; i17++)
 								{
@@ -387,7 +387,7 @@ label5:
 
 							if(((j6 - i5) + 1) * ((i9 - k7) + 1) >= 4)
 							{
-								int j12 = anIntArrayArrayArray129[i3][i5][k7];
+								int j12 = tileVertexHeights[i3][i5][k7];
 								WorldController.method277(l2, i5 * 128, j12, j6 * 128 + 128, i9 * 128 + 128, j12, k7 * 128, 4);
 								for(int k13 = i5; k13 <= j6; k13++)
 								{
@@ -453,13 +453,13 @@ label0:
 				{
 					aByteArrayArrayArray134[0][k1][j1] = 127;
 					if(k1 == i1 && k1 > 0)
-						anIntArrayArrayArray129[0][k1][j1] = anIntArrayArrayArray129[0][k1 - 1][j1];
+						tileVertexHeights[0][k1][j1] = tileVertexHeights[0][k1 - 1][j1];
 					if(k1 == i1 + l && k1 < anInt146 - 1)
-						anIntArrayArrayArray129[0][k1][j1] = anIntArrayArrayArray129[0][k1 + 1][j1];
+						tileVertexHeights[0][k1][j1] = tileVertexHeights[0][k1 + 1][j1];
 					if(j1 == i && j1 > 0)
-						anIntArrayArrayArray129[0][k1][j1] = anIntArrayArrayArray129[0][k1][j1 - 1];
+						tileVertexHeights[0][k1][j1] = tileVertexHeights[0][k1][j1 - 1];
 					if(j1 == i + j && j1 < anInt147 - 1)
-						anIntArrayArrayArray129[0][k1][j1] = anIntArrayArrayArray129[0][k1][j1 + 1];
+						tileVertexHeights[0][k1][j1] = tileVertexHeights[0][k1][j1 + 1];
 				}
 
 		}
@@ -468,19 +468,19 @@ label0:
 	private void method175(int i, WorldController worldController, Class11 class11, int j, int k, int l, int i1,
 								 int j1)
 	{
-		if(lowMem && (aByteArrayArrayArray149[0][l][i] & 2) == 0)
+		if(lowMem && (tileRenderRuleFlags[0][l][i] & 2) == 0)
 		{
-			if((aByteArrayArrayArray149[k][l][i] & 0x10) != 0)
+			if((tileRenderRuleFlags[k][l][i] & 0x10) != 0)
 				return;
 			if(method182(i, k, l) != anInt131)
 				return;
 		}
 		if(k < anInt145)
 			anInt145 = k;
-		int k1 = anIntArrayArrayArray129[k][l][i];
-		int l1 = anIntArrayArrayArray129[k][l + 1][i];
-		int i2 = anIntArrayArrayArray129[k][l + 1][i + 1];
-		int j2 = anIntArrayArrayArray129[k][l][i + 1];
+		int k1 = tileVertexHeights[k][l][i];
+		int l1 = tileVertexHeights[k][l + 1][i];
+		int i2 = tileVertexHeights[k][l + 1][i + 1];
+		int j2 = tileVertexHeights[k][l][i + 1];
 		int k2 = k1 + l1 + i2 + j2 >> 2;
 		ObjectDef class46 = ObjectDef.forID(i1);
 		int l2 = l + (i << 7) + (i1 << 14) + 0x40000000;
@@ -901,18 +901,18 @@ label0:
 	{
 		if(k >= 0 && k < 104 && i >= 0 && i < 104)
 		{
-			aByteArrayArrayArray149[l][k][i] = 0;
+			tileRenderRuleFlags[l][k][i] = 0;
 			do
 			{
 				int l1 = stream.readUnsignedByte();
 				if(l1 == 0)
 					if(l == 0)
 					{
-						anIntArrayArrayArray129[0][k][i] = -method172(0xe3b7b + k + k1, 0x87cce + i + j) * 8;
+						tileVertexHeights[0][k][i] = -method172(0xe3b7b + k + k1, 0x87cce + i + j) * 8;
 						return;
 					} else
 					{
-						anIntArrayArrayArray129[l][k][i] = anIntArrayArrayArray129[l - 1][k][i] - 240;
+						tileVertexHeights[l][k][i] = tileVertexHeights[l - 1][k][i] - 240;
 						return;
 					}
 				if(l1 == 1)
@@ -922,24 +922,25 @@ label0:
 						j2 = 0;
 					if(l == 0)
 					{
-						anIntArrayArrayArray129[0][k][i] = -j2 * 8;
+						tileVertexHeights[0][k][i] = -j2 * 8;
 						return;
 					} else
 					{
-						anIntArrayArrayArray129[l][k][i] = anIntArrayArrayArray129[l - 1][k][i] - j2 * 8;
+						tileVertexHeights[l][k][i] = tileVertexHeights[l - 1][k][i] - j2 * 8;
 						return;
 					}
 				}
 				if(l1 <= 49)
 				{
-					aByteArrayArrayArray130[l][k][i] = stream.readSignedByte();
-					aByteArrayArrayArray136[l][k][i] = (byte)((l1 - 2) / 4);
-					aByteArrayArrayArray148[l][k][i] = (byte)((l1 - 2) + i1 & 3);
+					tileOverlayFloorIds[l][k][i] = stream.readSignedByte();
+					tileOverlayClippingPaths[l][k][i] = (byte)((l1 - 2) / 4);
+					tileOverlayRotations[l][k][i] = (byte)((l1 - 2) + i1 & 3);
 				} else
 				if(l1 <= 81)
-					aByteArrayArrayArray149[l][k][i] = (byte)(l1 - 49);
+					
+					tileRenderRuleFlags[l][k][i] = (byte)(l1 - 49);
 				else
-					aByteArrayArrayArray142[l][k][i] = (byte)(l1 - 81);
+					tileUnderlayFloorIds[l][k][i] = (byte)(l1 - 81);
 			} while(true);
 		}
 		do
@@ -959,9 +960,9 @@ label0:
 
 	private int method182(int i, int j, int k)
 	{
-		if((aByteArrayArrayArray149[j][k][i] & 8) != 0)
+		if((tileRenderRuleFlags[j][k][i] & 8) != 0)
 			return 0;
-		if(j > 0 && (aByteArrayArrayArray149[1][k][i] & 2) != 0)
+		if(j > 0 && (tileRenderRuleFlags[1][k][i] & 2) != 0)
 			return j - 1;
 		else
 			return j;
@@ -1001,7 +1002,7 @@ label0:
 						if(j4 > 0 && k4 > 0 && j4 < 103 && k4 < 103)
 						{
 							int l4 = j3;
-							if((aByteArrayArrayArray149[1][j4][k4] & 2) == 2)
+							if((tileRenderRuleFlags[1][j4][k4] & 2) == 2)
 								l4--;
 							Class11 class11 = null;
 							if(l4 >= 0)
@@ -1358,7 +1359,7 @@ label0:
 					if(j3 > 0 && k3 > 0 && j3 < 103 && k3 < 103)
 					{
 						int l3 = j2;
-						if((aByteArrayArrayArray149[1][j3][k3] & 2) == 2)
+						if((tileRenderRuleFlags[1][j3][k3] & 2) == 2)
 							l3--;
 						Class11 class11 = null;
 						if(l3 >= 0)
@@ -1376,13 +1377,13 @@ label0:
 	private final int[] anIntArray126;
 	private final int[] anIntArray127;
 	private final int[] anIntArray128;
-	private final int[][][] anIntArrayArrayArray129;
-	private final byte[][][] aByteArrayArrayArray130;
+	private final int[][][] tileVertexHeights;
+	private final byte[][][] tileOverlayFloorIds;
 	static int anInt131;
 	private static int anInt133 = (int)(Math.random() * 33D) - 16;
 	private final byte[][][] aByteArrayArrayArray134;
 	private final int[][][] anIntArrayArrayArray135;
-	private final byte[][][] aByteArrayArrayArray136;
+	private final byte[][][] tileOverlayClippingPaths;
 	private static final int anIntArray137[] = {
 		1, 0, -1, 0
 	};
@@ -1391,15 +1392,15 @@ label0:
 	private static final int anIntArray140[] = {
 		16, 32, 64, 128
 	};
-	private final byte[][][] aByteArrayArrayArray142;
+	private final byte[][][] tileUnderlayFloorIds;
 	private static final int anIntArray144[] = {
 		0, -1, 0, 1
 	};
 	static int anInt145 = 99;
 	private final int anInt146;
 	private final int anInt147;
-	private final byte[][][] aByteArrayArrayArray148;
-	private final byte[][][] aByteArrayArrayArray149;
+	private final byte[][][] tileOverlayRotations;
+	private final byte[][][] tileRenderRuleFlags;
 	static boolean lowMem = true;
 	private static final int anIntArray152[] = {
 		1, 2, 4, 8

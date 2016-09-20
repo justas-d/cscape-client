@@ -6,11 +6,11 @@ import java.io.*;
 
 final class Decompressor {
 
-	public Decompressor(RandomAccessFile randomaccessfile, RandomAccessFile randomaccessfile1, int j)
+	public Decompressor(RandomAccessFile randomaccessfile, RandomAccessFile randomaccessfile1, int index)
 	{
-		anInt311 = j;
-			dataFile = randomaccessfile;
-			indexFile = randomaccessfile1;
+		fileIndex = index;
+		dataFile = randomaccessfile;
+		indexFile = randomaccessfile1;
 	}
 
 	public synchronized byte[] decompress(int i)
@@ -55,7 +55,7 @@ final class Decompressor {
 				int l2 = ((buffer[2] & 0xff) << 8) + (buffer[3] & 0xff);
 				int i3 = ((buffer[4] & 0xff) << 16) + ((buffer[5] & 0xff) << 8) + (buffer[6] & 0xff);
 				int j3 = buffer[7] & 0xff;
-				if(k2 != i || l2 != l1 || j3 != anInt311)
+				if(k2 != i || l2 != l1 || j3 != fileIndex)
 					return null;
 				if(i3 < 0 || (long)i3 > dataFile.length() / 520L)
 					return null;
@@ -136,7 +136,7 @@ final class Decompressor {
 						int j3 = ((buffer[2] & 0xff) << 8) + (buffer[3] & 0xff);
 						i2 = ((buffer[4] & 0xff) << 16) + ((buffer[5] & 0xff) << 8) + (buffer[6] & 0xff);
 						int k3 = buffer[7] & 0xff;
-						if(i3 != j || j3 != l1 || k3 != anInt311)
+						if(i3 != j || j3 != l1 || k3 != fileIndex)
 							return false;
 						if(i2 < 0 || (long)i2 > dataFile.length() / 520L)
 							return false;
@@ -160,7 +160,7 @@ final class Decompressor {
 				buffer[4] = (byte)(i2 >> 16);
 				buffer[5] = (byte)(i2 >> 8);
 				buffer[6] = (byte)i2;
-				buffer[7] = (byte)anInt311;
+				buffer[7] = (byte) fileIndex;
 				seekTo(dataFile, l * 520);
 				dataFile.write(buffer, 0, 8);
 				int k2 = k - j1;
@@ -198,6 +198,6 @@ final class Decompressor {
 	private static final byte[] buffer = new byte[520];
 	private final RandomAccessFile dataFile;
 	private final RandomAccessFile indexFile;
-	private final int anInt311;
+	private final int fileIndex;
 
 }
