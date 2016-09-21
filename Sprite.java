@@ -370,8 +370,8 @@ public final class Sprite extends DrawingArea {
 		}
 	}
 
-	public void method352(int i, int j, int ai[], int k, int ai1[], int i1,
-						  int j1, int k1, int l1, int i2)
+	public void renderCircle(int i, int j, int ai[], int k, int ai1[], int i1,
+							 int j1, int k1, int l1, int i2)
 	{
 		try
 		{

@@ -11,7 +11,7 @@ final class ObjectManager {
 		anInt147 = 104;
 		tileVertexHeights = ai;
 		tileRenderRuleFlags = abyte0;
-		tileUnderlayFloorIds = new byte[4][anInt146][anInt147];
+		aByteArrayArrayArray142 = new byte[4][anInt146][anInt147];
 		tileOverlayFloorIds = new byte[4][anInt146][anInt147];
 		tileOverlayClippingPaths = new byte[4][anInt146][anInt147];
 		tileOverlayRotations = new byte[4][anInt146][anInt147];
@@ -100,12 +100,13 @@ final class ObjectManager {
 
 			for(int l6 = -5; l6 < anInt146 + 5; l6++)
 			{
+
 				for(int i8 = 0; i8 < anInt147; i8++)
 				{
 					int k9 = l6 + 5;
 					if(k9 >= 0 && k9 < anInt146)
 					{
-						int l12 = tileUnderlayFloorIds[l][k9][i8] & 0xff;
+						int l12 = aByteArrayArrayArray142[l][k9][i8] & 0xff;
 						if(l12 > 0)
 						{
 							Flo flo = Flo.cache[l12 - 1];
@@ -119,7 +120,7 @@ final class ObjectManager {
 					int i13 = l6 - 5;
 					if(i13 >= 0 && i13 < anInt146)
 					{
-						int i14 = tileUnderlayFloorIds[l][i13][i8] & 0xff;
+						int i14 = aByteArrayArrayArray142[l][i13][i8] & 0xff;
 						if(i14 > 0)
 						{
 							Flo flo_1 = Flo.cache[i14 - 1];
@@ -132,6 +133,10 @@ final class ObjectManager {
 					}
 				}
 
+
+				/*
+					CALCULATE TILE MAP TEXTURES
+				 */
 				if(l6 >= 1 && l6 < anInt146 - 1)
 				{
 					int l9 = 0;
@@ -141,6 +146,7 @@ final class ObjectManager {
 					int k16 = 0;
 					for(int k17 = -5; k17 < anInt147 + 5; k17++)
 					{
+
 						int j18 = k17 + 5;
 						if(j18 >= 0 && j18 < anInt147)
 						{
@@ -163,7 +169,7 @@ final class ObjectManager {
 						{
 							if(l < anInt145)
 								anInt145 = l;
-							int l18 = tileUnderlayFloorIds[l][l6][k17] & 0xff;
+							int l18 = aByteArrayArrayArray142[l][l6][k17] & 0xff;
 							int i19 = tileOverlayFloorIds[l][l6][k17] & 0xff;
 							if(l18 > 0 || i19 > 0)
 							{
@@ -202,39 +208,48 @@ final class ObjectManager {
 									if(flag && j19 == k19 && j19 == l19 && j19 == i20)
 										anIntArrayArrayArray135[l][l6][k17] |= 0x924;
 								}
-								int i22 = 0;
+								int baseMapTexture = 0; // terrain etc, not walls or walkways
 								if(j21 != -1)
-									i22 = Texture.anIntArray1482[method187(k21, 96)];
+								{
+									System.out.println(Texture.anIntArray1482[method187(k21, 96)]);
+									baseMapTexture = Texture.anIntArray1482[method187(k21, 96)];
+								}
 								if(i19 == 0)
 								{
-									worldController.method279(l, l6, k17, 0, 0, -1, j19, k19, l19, i20, method187(j21, j20), method187(j21, k20), method187(j21, l20), method187(j21, i21), 0, 0, 0, 0, i22, 0);
-								} else
+									worldController.method279(l, l6, k17, 0, 0, -1, j19, k19, l19, i20, method187(j21, j20), method187(j21, k20), method187(j21, l20), method187(j21, i21), 0, 0, 0, 0, baseMapTexture, 0);
+								}
+								else
 								{
 									int k22 = tileOverlayClippingPaths[l][l6][k17] + 1;
 									byte byte4 = tileOverlayRotations[l][l6][k17];
 									Flo flo_2 = Flo.cache[i19 - 1];
 									int i23 = flo_2.anInt391;
-									int j23;
-									int k23;
+									int worldTexture;
+									int mapTexture;
+
 									if(i23 >= 0)
 									{
-										k23 = Texture.method369(i23);
-										j23 = -1;
-									} else
-									if(flo_2.anInt390 == 0xff00ff)
-									{
-										k23 = 0;
-										j23 = -2;
-										i23 = -1;
-									} else
-									{
-										j23 = method177(flo_2.anInt394, flo_2.anInt395, flo_2.anInt396);
-										k23 = Texture.anIntArray1482[method185(flo_2.anInt399, 96)];
+										// complex textures (wood, brick etc)
+										mapTexture = Texture.method369(i23);
+										worldTexture = -1;
 									}
-									worldController.method279(l, l6, k17, k22, byte4, i23, j19, k19, l19, i20, method187(j21, j20), method187(j21, k20), method187(j21, l20), method187(j21, i21), method185(j23, j20), method185(j23, k20), method185(j23, l20), method185(j23, i21), i22, k23);
+									else if(flo_2.anInt390 == 0xff00ff)
+									{
+										mapTexture = 0;
+										worldTexture = -2;
+										i23 = -1;
+									}
+									else
+									{
+										// walkways/roads
+										worldTexture = method177(flo_2.anInt394, flo_2.anInt395, flo_2.anInt396);
+										mapTexture = Texture.anIntArray1482[method185(flo_2.anInt399, 96)];
+									}
+									worldController.method279(l, l6, k17, k22, byte4, i23, j19, k19, l19, i20, method187(j21, j20), method187(j21, k20), method187(j21, l20), method187(j21, i21), method185(worldTexture, j20), method185(worldTexture, k20), method185(worldTexture, l20), method185(worldTexture, i21), baseMapTexture, mapTexture);
 								}
 							}
 						}
+
 					}
 
 				}
@@ -940,7 +955,7 @@ label0:
 					
 					tileRenderRuleFlags[l][k][i] = (byte)(l1 - 49);
 				else
-					tileUnderlayFloorIds[l][k][i] = (byte)(l1 - 81);
+					aByteArrayArrayArray142[l][k][i] = (byte)(l1 - 81);
 			} while(true);
 		}
 		do
@@ -1392,7 +1407,7 @@ label0:
 	private static final int anIntArray140[] = {
 		16, 32, 64, 128
 	};
-	private final byte[][][] tileUnderlayFloorIds;
+	private final byte[][][] aByteArrayArrayArray142;
 	private static final int anIntArray144[] = {
 		0, -1, 0, 1
 	};

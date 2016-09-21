@@ -649,7 +649,7 @@ public class client extends RSApplet {
 
 	private void method24(int i)
 	{
-		int ai[] = aClass30_Sub2_Sub1_Sub1_1263.myPixels;
+		int ai[] = mapSprite.myPixels;
 		int j = ai.length;
 		for(int k = 0; k < j; k++)
 			ai[k] = 0;
@@ -670,7 +670,7 @@ public class client extends RSApplet {
 
 		int j1 = ((238 + (int)(Math.random() * 20D)) - 10 << 16) + ((238 + (int)(Math.random() * 20D)) - 10 << 8) + ((238 + (int)(Math.random() * 20D)) - 10);
 		int l1 = (238 + (int)(Math.random() * 20D)) - 10 << 16;
-		aClass30_Sub2_Sub1_Sub1_1263.method343();
+		mapSprite.method343();
 		for(int i2 = 1; i2 < 103; i2++)
 		{
 			for(int j2 = 1; j2 < 103; j2++)
@@ -1187,6 +1187,7 @@ public class client extends RSApplet {
 				Texture.method372(0.69999999999999996D);
 			if(k == 4)
 				Texture.method372(0.59999999999999998D);
+
 			ItemDef.mruNodes1.unlinkAll();
 			welcomeScreenRaised = true;
 		}
@@ -2147,7 +2148,7 @@ public class client extends RSApplet {
 			int k3 = k;
 			if(k1 > 0)
 				k3 = i1;
-			int ai[] = aClass30_Sub2_Sub1_Sub1_1263.myPixels;
+			int ai[] = mapSprite.myPixels;
 			int k4 = 24624 + l * 4 + (103 - i) * 512 * 4;
 			int i5 = k1 >> 14 & 0x7fff;
 			ObjectDef class46_2 = ObjectDef.forID(i5);
@@ -2257,7 +2258,7 @@ public class client extends RSApplet {
 				int l4 = 0xeeeeee;
 				if(k1 > 0)
 					l4 = 0xee0000;
-				int ai1[] = aClass30_Sub2_Sub1_Sub1_1263.myPixels;
+				int ai1[] = mapSprite.myPixels;
 				int l5 = 24624 + l * 4 + (103 - i) * 512 * 4;
 				if(l2 == 0 || l2 == 2)
 				{
@@ -4601,7 +4602,7 @@ public class client extends RSApplet {
 		anIntArray1072 = null;
 		anIntArray1073 = null;
 		aClass30_Sub2_Sub1_Sub1Array1140 = null;
-		aClass30_Sub2_Sub1_Sub1_1263 = null;
+		mapSprite = null;
 		friendsList = null;
 		friendsListAsLongs = null;
 		friendsNodeIDs = null;
@@ -4642,7 +4643,7 @@ public class client extends RSApplet {
 		if(onDemandFetcher != null)
 			System.out.println("Od-cycle:" + onDemandFetcher.onDemandCycle);
 		System.out.println("loop-cycle:" + loopCycle);
-		System.out.println("draw-cycle:" + anInt1061);
+		System.out.println("renderCircle-cycle:" + anInt1061);
 		System.out.println("ptype:" + pktType);
 		System.out.println("psize:" + pktSize);
 		if(socketStream != null)
@@ -6654,7 +6655,7 @@ public class client extends RSApplet {
 			for(int j = 0; j < 4; j++)
 				aClass11Array1230[j] = new Class11();
 
-			aClass30_Sub2_Sub1_Sub1_1263 = new Sprite(512, 512);
+			mapSprite = new Sprite(512, 512);
 			StreamLoader streamLoader_6 = streamLoaderForName(5, "update list", "versionlist", expectedCRCs[5], 60);
 			drawLoadingText(60, "Connecting to update server");
 			onDemandFetcher = new OnDemandFetcher();
@@ -9064,8 +9065,10 @@ public class client extends RSApplet {
 	private void drawMinimap()
 	{
 		aRSImageProducer_1164.initDrawingArea();
+
 		if(anInt1021 == 2)
 		{
+
 			byte abyte0[] = mapBack.aByteArray1450;
 			int ai[] = DrawingArea.pixels;
 			int k2 = abyte0.length;
@@ -9073,15 +9076,20 @@ public class client extends RSApplet {
 				if(abyte0[i5] == 0)
 					ai[i5] = 0;
 
-			compass.method352(33, minimapInt1, anIntArray1057, 256, anIntArray968, 25, 0, 0, 33, 25);
+			compass.renderCircle(33, minimapInt1, anIntArray1057, 256, anIntArray968, 25, 0, 0, 33, 25);
 			aRSImageProducer_1165.initDrawingArea();
 			return;
 		}
+
 		int i = minimapInt1 + minimapInt2 & 0x7ff;
 		int j = 48 + myPlayer.x / 32;
 		int l2 = 464 - myPlayer.y / 32;
-		aClass30_Sub2_Sub1_Sub1_1263.method352(151, i, anIntArray1229, 256 + minimapInt3, anIntArray1052, l2, 5, 25, 146, j);
-		compass.method352(33, minimapInt1, anIntArray1057, 256, anIntArray968, 25, 0, 0, 33, 25);
+		// renderCircle the actual map
+		mapSprite.renderCircle(151, i, anIntArray1229, 256 + minimapInt3, anIntArray1052, l2, 5, 25, 146, j);
+		// renderCircle compass
+		compass.renderCircle(33, minimapInt1, anIntArray1057, 256, anIntArray968, 25, 0, 0, 33, 25);
+
+		// renderCircle icons such as stores, quest etc
 		for(int j5 = 0; j5 < anInt1071; j5++)
 		{
 			int k = (anIntArray1072[j5] * 4 + 2) - myPlayer.x / 32;
@@ -9089,6 +9097,7 @@ public class client extends RSApplet {
 			markMinimap(aClass30_Sub2_Sub1_Sub1Array1140[j5], k, i3);
 		}
 
+		// renderCircle ground items
 		for(int k5 = 0; k5 < 104; k5++)
 		{
 			for(int l5 = 0; l5 < 104; l5++)
@@ -9104,6 +9113,7 @@ public class client extends RSApplet {
 
 		}
 
+		// renderCircle npc
 		for(int i6 = 0; i6 < npcCount; i6++)
 		{
 			NPC npc = npcArray[npcIndices[i6]];
@@ -9121,6 +9131,7 @@ public class client extends RSApplet {
 			}
 		}
 
+		// renderCircle players
 		for(int j6 = 0; j6 < playerCount; j6++)
 		{
 			Player player = playerArray[playerIndices[j6]];
@@ -9180,6 +9191,8 @@ public class client extends RSApplet {
 				}
 			}
 		}
+
+		// renderCircle destination waypoint
 		if(destX != 0)
 		{
 			int j2 = (destX * 4 + 2) - myPlayer.x / 32;
@@ -10457,15 +10470,6 @@ public class client extends RSApplet {
 					l1 = -1;
 				tabInterfaceIDs[j10] = l1;
 
-if(l1 == 1644) {
-    System.out.println("Children of interface: " + 1668);
-
-    for (int chid : RSInterface.interfaceCache[1668].children) {
-        RSInterface child = RSInterface.interfaceCache[chid];
-        System.out.println(chid + ": " + child.message);
-    }
-
-}
                 needDrawTabArea = true;
 				tabAreaAltered = true;
 				pktType = -1;
@@ -11496,13 +11500,6 @@ if(l1 == 1644) {
 				int j9 = inStream.method434();
 				method60(j9);
 
-				System.out.println("Children of interface: " + j9);
-				for(int chid : RSInterface.interfaceCache[j9].children)
-				{
-					RSInterface child = RSInterface.interfaceCache[chid];
-					System.out.println(chid + ": " + child.message);
-				}
-
 				if(invOverlayInterfaceID != -1)
 				{
 					invOverlayInterfaceID = -1;
@@ -12202,7 +12199,7 @@ if(l1 == 1644) {
 	private int prevSong;
 	private int destX;
 	private int destY;
-	private Sprite aClass30_Sub2_Sub1_Sub1_1263;
+	private Sprite mapSprite;
 	private int anInt1264;
 	private int anInt1265;
 	private String loginMessage1;

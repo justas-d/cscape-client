@@ -275,7 +275,7 @@ final class Texture extends DrawingArea {
 			method370(i1);
 
 	}
-
+	// decode colors?
 	private static int method373(int i, double d)
 	{
 		double d1 = (double)(i >> 16) / 256D;
