@@ -6,8 +6,15 @@ import java.applet.AppletContext;
 import java.awt.*;
 import java.io.*;
 import java.net.*;
-
+import java.nio.file.Files;
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.spec.X509EncodedKeySpec;
 import sign.signlink;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 
 public class client extends RSApplet {
 
@@ -5735,6 +5742,13 @@ public class client extends RSApplet {
 
 				aStream_847.writeBytes(stream.buffer, stream.currentOffset, 0);
 
+				byte[] buffer = new byte[aStream_847.currentOffset];
+				System.arraycopy(aStream_847.buffer,0,buffer,0,aStream_847.currentOffset);
+				byte[] payload = rsa.doFinal(buffer);
+
+				aStream_847.currentOffset = 0;
+				aStream_847.writeBytes(payload, payload.length, 0);
+
 				stream.encryption = new ISAACRandomGen(keys);
 				for(int j2 = 0; j2 < 4; j2++)
 					keys[j2] += 50;
@@ -6021,6 +6035,10 @@ public class client extends RSApplet {
 		catch(IOException _ex)
 		{
 			loginMessage1 = "";
+		} catch (BadPaddingException e) {
+			e.printStackTrace();
+		} catch (IllegalBlockSizeException e) {
+			e.printStackTrace();
 		}
 		loginMessage2 = "Error connecting to server.";
 	}
@@ -11622,7 +11640,30 @@ public class client extends RSApplet {
 		openInterfaceID = -1;
 	}
 
-	public client() {
+	private Cipher rsa;
+
+	private void initKeys()
+	{
+		try
+		{
+			byte[] keyBytes = Files.readAllBytes(new File("cryptokey-public.der").toPath());
+
+			X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
+			KeyFactory kf = KeyFactory.getInstance("RSA");
+			PublicKey key = kf.generatePublic(spec);
+			rsa = Cipher.getInstance("RSA/ECB/OAEPWithSHA-1AndMGF1Padding");
+			rsa.init(Cipher.ENCRYPT_MODE, key);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			System.exit(1);
+		}
+	}
+
+	public client()
+	{
+		initKeys();
 		server = "127.0.0.1";
 		anIntArrayArray825 = new int[104][104];
 		friendsNodeIDs = new int[200];
