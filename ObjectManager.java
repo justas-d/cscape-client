@@ -211,7 +211,6 @@ final class ObjectManager {
 								int baseMapTexture = 0; // terrain etc, not walls or walkways
 								if(j21 != -1)
 								{
-									System.out.println(Texture.anIntArray1482[method187(k21, 96)]);
 									baseMapTexture = Texture.anIntArray1482[method187(k21, 96)];
 								}
 								if(i19 == 0)

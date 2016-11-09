@@ -160,7 +160,10 @@ public final class Stream extends NodeSub {
 	public int readDWord()
 	{
 		currentOffset += 4;
-		return ((buffer[currentOffset - 4] & 0xff) << 24) + ((buffer[currentOffset - 3] & 0xff) << 16) + ((buffer[currentOffset - 2] & 0xff) << 8) + (buffer[currentOffset - 1] & 0xff);
+		return ((buffer[currentOffset - 4] & 0xff) << 24)
+				+ ((buffer[currentOffset - 3] & 0xff) << 16)
+				+ ((buffer[currentOffset - 2] & 0xff) << 8)
+				+ (buffer[currentOffset - 1] & 0xff);
 	}
 
 	public long readQWord()
@@ -384,8 +387,17 @@ public final class Stream extends NodeSub {
 
 	public int method440()
 	{
+		/*
 		currentOffset += 4;
-		return ((buffer[currentOffset - 3] & 0xff) << 24) + ((buffer[currentOffset - 4] & 0xff) << 16) + ((buffer[currentOffset - 1] & 0xff) << 8) + (buffer[currentOffset - 2] & 0xff);
+		return ((buffer[currentOffset - 3] & 0xff) << 24) +
+				((buffer[currentOffset - 4] & 0xff) << 16) +
+				((buffer[currentOffset - 1] & 0xff) << 8) +
+				(buffer[currentOffset - 2] & 0xff);
+				*/
+		return ((buffer[currentOffset - 4] & 0xff) << 24)
+				+ ((buffer[currentOffset - 3] & 0xff) << 16)
+				+ ((buffer[currentOffset - 2] & 0xff) << 8)
+				+ (buffer[currentOffset - 1] & 0xff);
 	}
 
 	public void method441(int i, byte abyte0[], int j)

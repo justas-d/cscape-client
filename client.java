@@ -39,17 +39,17 @@ public class client extends RSApplet {
 
 	private void connectServer()
 	{
-/*	  int j = 5;
+	  int j = 5;
 		expectedCRCs[8] = 0;
 		int k = 0;
 		while(expectedCRCs[8] == 0)
 		{
 			String s = "Unknown problem";
-			drawLoadingText(20, (byte)4, "Connecting to web server");
+			drawLoadingText(20, "Connecting to web server");
 			try
 			{
 				DataInputStream datainputstream = openJagGrabInputStream("crc" + (int)(Math.random() * 99999999D) + "-" + 317);
-				Stream class30_sub2_sub2 = new Stream(new byte[40], 891);
+				Stream class30_sub2_sub2 = new Stream(new byte[40]);
 				datainputstream.readFully(class30_sub2_sub2.buffer, 0, 40);
 				datainputstream.close();
 				for(int i1 = 0; i1 < 9; i1++)
@@ -90,11 +90,11 @@ public class client extends RSApplet {
 				{
 					if(k >= 10)
 					{
-						drawLoadingText(10, (byte)4, "Game updated - please reload page");
+						drawLoadingText(10, "Game updated - please reload page");
 						l = 10;
 					} else
 					{
-						drawLoadingText(10, (byte)4, s + " - Will retry in " + l + " secs.");
+						drawLoadingText(10, s + " - Will retry in " + l + " secs.");
 					}
 					try
 					{
@@ -109,7 +109,7 @@ public class client extends RSApplet {
 				aBoolean872 = !aBoolean872;
 			}
 		}
- */
+
 	}
 	
 	private boolean menuHasAddFriend(int j)
@@ -2853,7 +2853,7 @@ public class client extends RSApplet {
 			int l5 = (int)l;
 			stream.createFrame(241);
 			stream.writeDWord((l5 << 20) + (j5 << 19) + k4);
-			System.out.println(l5 + " " + j5 + " " + k4);
+	//		System.out.println(l5 + " " + j5 + " " + k4);
 		}
 		if(anInt1016 > 0)
 			anInt1016--;
@@ -4807,8 +4807,6 @@ public class client extends RSApplet {
 				}
 				if((j == 13 || j == 10) && inputString.length() > 0)
 				{
-					if(myPrivilege == 2)
-					{
 					  if(inputString.equals("::clientdrop"))
 							dropClient();
 						if(inputString.equals("::lag"))
@@ -4833,7 +4831,6 @@ public class client extends RSApplet {
 
 						}
 
-					}
 					if(inputString.startsWith("."))
 					{
 						stream.createFrame(103);
@@ -6653,7 +6650,7 @@ public class client extends RSApplet {
 		}
 		try
 		{
-			connectServer();
+			//connectServer();
 			titleStreamLoader = streamLoaderForName(1, "title screen", "title", expectedCRCs[1], 25);
 			aTextDrawingArea_1270 = new TextDrawingArea(false, "p11_full", titleStreamLoader);
 			aTextDrawingArea_1271 = new TextDrawingArea(false, "p12_full", titleStreamLoader);
@@ -8290,7 +8287,7 @@ public class client extends RSApplet {
 		{
 			player.anInt1538 = stream.method437();
 			player.anInt1539 = stream.method437();
-			System.out.println(player.anInt1538 + " " + player.anInt1539 );
+			//System.out.println(player.anInt1538 + " " + player.anInt1539 );
 		}
 		if((i & 0x20) != 0)
 		{
@@ -8503,16 +8500,22 @@ public class client extends RSApplet {
 			char c = '\u01FB';
 			int k = 20;
 			int i1 = 0xffff00;
-			if(super.fps < 15)
-				i1 = 0xff0000;
 			aTextDrawingArea_1271.method380("Fps:" + super.fps, c, i1, k);
 			k += 15;
-			Runtime runtime = Runtime.getRuntime();
-			int j1 = (int)((runtime.totalMemory() - runtime.freeMemory()) / 1024L);
-			i1 = 0xffff00;
-			if(j1 > 0x2000000 && lowMem)
-				i1 = 0xff0000;
-			aTextDrawingArea_1271.method380("Mem:" + j1 + "k", c, 0xffff00, k);
+			aTextDrawingArea_1271.method380("-------", c, i1, k);
+			k += 15;
+
+			aTextDrawingArea_1271.method380("PktBuiildAlloc: " + servStats.PacketBuildersAllocated, c, i1, k);
+			k += 15;
+			aTextDrawingArea_1271.method380("Pkt Sent: " + servStats.PacketsSent, c, i1, k);
+			k += 15;
+			aTextDrawingArea_1271.method380("Pkt Recv: " + servStats.PacketsReceived, c, i1, k);
+			k += 15;
+			aTextDrawingArea_1271.method380("Bytes Sent: " + servStats.BytesSent, c, i1, k);
+			k += 15;
+			aTextDrawingArea_1271.method380("Bytes Recv: " + servStats.BytesReceived, c, i1, k);
+			k += 15;
+			aTextDrawingArea_1271.method380("Tick time: " + servStats.TickProcessTime, c, i1, k);
 			k += 15;
 		}
 		if(anInt1104 != 0)
@@ -10318,6 +10321,7 @@ public class client extends RSApplet {
 					pktType = pktType - encryption.getNextKey() & 0xff;
 				pktSize = SizeConstants.packetSizes[pktType];
 				i--;
+				System.out.println("Packet " + pktType + " Size " + pktSize);
 			}
 			if(pktSize == -1)
 				if(i > 0)
@@ -10943,6 +10947,17 @@ public class client extends RSApplet {
 				pktType = -1;
 				return true;
 			}
+			if(pktType == 2)
+			{
+				servStats.PacketsSent = inStream.readDWord();
+				servStats.BytesSent = inStream.readDWord();
+				servStats.BytesReceived = inStream.readDWord();
+				servStats.PacketsReceived = inStream.readDWord();
+				servStats.TickProcessTime = inStream.readDWord();
+				servStats.PacketBuildersAllocated = inStream.readDWord();
+				pktType = -1;
+				return true;
+			}
 			if(pktType == 50)
 			{
 				long l4 = inStream.readQWord();
@@ -11485,9 +11500,9 @@ public class client extends RSApplet {
 				RSInterface class9_2 = RSInterface.interfaceCache[i9];
 				while(inStream.currentOffset < pktSize)
 				{
-					int j20 = inStream.method422();
-					int i23 = inStream.readUnsignedWord();
-					int l25 = inStream.readUnsignedByte();
+					int j20 = inStream.method422(); // index
+					int i23 = inStream.readUnsignedWord(); // id
+					int l25 = inStream.readUnsignedByte(); // smart-size
 					if(l25 == 255)
 						l25 = inStream.readDWord();
 					if(j20 >= 0 && j20 < class9_2.inv.length)
@@ -11814,6 +11829,18 @@ public class client extends RSApplet {
 		bigY = new int[4000];
 		anInt1289 = -1;
 	}
+
+	private class ServerStats
+	{
+		public int PacketsSent;
+		public int PacketsReceived ;
+		public int BytesSent ;
+		public int BytesReceived ;
+		public long TickProcessTime ;
+		public int PacketBuildersAllocated ;
+	}
+
+	public ServerStats servStats = new ServerStats();
 
 	public String server;
 	private int ignoreCount;
