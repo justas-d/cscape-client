@@ -1588,25 +1588,6 @@ public class client extends RSApplet {
 				aByteArray912 = abyte0;
 				Texture.method370(17);
 				anInt854++;
-				if(anInt854 > 1235)
-				{
-					anInt854 = 0;
-					stream.createFrame(226);
-					stream.writeWordBigEndian(0);
-					int l2 = stream.currentOffset;
-					stream.writeWord(58722);
-					stream.writeWordBigEndian(240);
-					stream.writeWord((int)(Math.random() * 65536D));
-					stream.writeWordBigEndian((int)(Math.random() * 256D));
-					if((int)(Math.random() * 2D) == 0)
-						stream.writeWord(51825);
-					stream.writeWordBigEndian((int)(Math.random() * 256D));
-					stream.writeWord((int)(Math.random() * 65536D));
-					stream.writeWord(7130);
-					stream.writeWord((int)(Math.random() * 65536D));
-					stream.writeWord(61657);
-					stream.writeBytes(stream.currentOffset - l2);
-				}
 			}
 			if(Texture.anIntArray1480[24] >= j)
 			{
@@ -3390,6 +3371,8 @@ public class client extends RSApplet {
 
 	private void dropClient()
 	{
+		servStats = new ServerStats();
+
 		if(anInt1011 > 0)
 		{
 			resetLogout();
@@ -8495,7 +8478,8 @@ public class client extends RSApplet {
 			drawMenu();
 		if(anInt1055 == 1)
 			headIcons[1].drawSprite(472, 296);
-		if(fpsOn)
+		//if(fpsOn)
+		if(servStats.IsReceiving)
 		{
 			char c = '\u01FB';
 			int k = 20;
@@ -10949,12 +10933,16 @@ public class client extends RSApplet {
 			}
 			if(pktType == 2)
 			{
-				servStats.PacketsSent = inStream.readDWord();
-				servStats.BytesSent = inStream.readDWord();
-				servStats.BytesReceived = inStream.readDWord();
-				servStats.PacketsReceived = inStream.readDWord();
-				servStats.TickProcessTime = inStream.readDWord();
-				servStats.PacketBuildersAllocated = inStream.readDWord();
+				servStats.IsReceiving = inStream.readUnsignedByte() != 0;
+				if(servStats.IsReceiving )
+				{
+					servStats.PacketsSent = inStream.readDWord();
+					servStats.BytesSent = inStream.readDWord();
+					servStats.BytesReceived = inStream.readDWord();
+					servStats.PacketsReceived = inStream.readDWord();
+					servStats.TickProcessTime = inStream.readDWord();
+					servStats.PacketBuildersAllocated = inStream.readDWord();
+				}
 				pktType = -1;
 				return true;
 			}
@@ -11832,6 +11820,7 @@ public class client extends RSApplet {
 
 	private class ServerStats
 	{
+		public boolean IsReceiving;
 		public int PacketsSent;
 		public int PacketsReceived ;
 		public int BytesSent ;
