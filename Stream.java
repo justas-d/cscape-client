@@ -44,12 +44,12 @@ public final class Stream extends NodeSub {
 		buffer[currentOffset++] = (byte)(i +  encryption.getNextKey());
 	}
 
-	public void writeWordBigEndian(int i)
+	public void writeByte(int i)
 	{
 		buffer[currentOffset++] = (byte)i;
 	}
 
-	public void writeWord(int i)
+	public void writeInt16(int i)
 	{
 		buffer[currentOffset++] = (byte)(i >> 8);
 		buffer[currentOffset++] = (byte)i;
@@ -251,7 +251,7 @@ public final class Stream extends NodeSub {
 		BigInteger biginteger3 = biginteger2/*.modPow(biginteger, biginteger1)*/;
 		byte abyte1[] = biginteger3.toByteArray();
 		currentOffset = 0;
-		writeWordBigEndian(abyte1.length);
+		writeByte(abyte1.length);
 		writeBytes(abyte1, abyte1.length, 0);
 	}
 
