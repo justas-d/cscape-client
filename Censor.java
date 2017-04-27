@@ -186,12 +186,12 @@ final class Censor {
 
 	private static void method501(char ac[])
 	{
-		char ac1[] = ac.clone();
+		char ac1[] = (char[]) ac.clone();
 		char ac2[] = {
 			'(', 'a', ')'
 		};
 		method509(null, ac1, ac2);
-		char ac3[] = ac.clone();
+		char ac3[] = (char[]) ac.clone();
 		char ac4[] = {
 			'd', 'o', 't'
 		};
@@ -307,12 +307,12 @@ final class Censor {
 
 	private static void method505(char ac[])
 	{
-		char ac1[] = ac.clone();
+		char ac1[] = (char[]) ac.clone();
 		char ac2[] = {
 			'd', 'o', 't'
 		};
 		method509(null, ac1, ac2);
-		char ac3[] = ac.clone();
+		char ac3[] = (char[]) ac.clone();
 		char ac4[] = {
 			's', 'l', 'a', 's', 'h'
 		};
