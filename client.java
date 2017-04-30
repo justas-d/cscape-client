@@ -1072,15 +1072,15 @@ public class client extends RSApplet {
 
 	private void updateNPCs(Stream stream, int i)
 	{
-		anInt839 = 0;
+		entityRemoveQueueSize = 0;
 		localUpdatingListCount = 0;
 
 		updateExistingNpcs(stream);
 		addNewUpdateNpcs(i, stream);
 		updateNpcFlags(stream);
-		for(int k = 0; k < anInt839; k++)
+		for(int k = 0; k < entityRemoveQueueSize; k++)
 		{
-			int l = anIntArray840[k];
+			int l = entityRemoveQueue[k];
 			if(npcArray[l].updateCycle != loopCycle)
 			{
 				npcArray[l].desc = null;
@@ -4572,7 +4572,7 @@ public class client extends RSApplet {
 		playerIndices = null;
 		localUpdatingList = null;
 		appearanceStreams = null;
-		anIntArray840 = null;
+		entityRemoveQueue = null;
 		npcArray = null;
 		npcIndices = null;
 		groundArray = null;
@@ -6209,28 +6209,30 @@ public class client extends RSApplet {
 			i4--;
 			int localX = bigX[i4];
 			int localY = bigY[i4];
+			int pLen =(k4*2)+1;
 			if(i == 0)
 			{
 				stream.createFrame(164);
-				stream.writeByte(k4 + k4 + 3);
+				stream.writeByte(pLen);
 			}
 			if(i == 1)
 			{
 				stream.createFrame(248);
-				stream.writeByte(k4 + k4 + 3 + 14);
+				stream.writeByte(pLen);
 			}
 			if(i == 2)
 			{
 				stream.createFrame(98);
-				stream.writeByte(k4 + k4 + 3);
+				stream.writeByte(pLen);
 			}
 			// k6 = localX
             // i7 = localY
-			stream.method433(localX  + baseX);
-			stream.method431(localY + baseY);
+			//stream.method433(localX + baseX);
+			//stream.method431(localY + baseY);
 
-			destX = bigX[0];
-			destY = bigY[0];
+			stream.writeByte(localX);
+			stream.writeByte(localY);
+
 			for(int j7 = 1; j7 < k4; j7++)
 			{
 				i4--;
@@ -7025,6 +7027,7 @@ public class client extends RSApplet {
 				if(appearanceStreams[j] != null)
 					playerArray[j].updatePlayer(appearanceStreams[j]);
 			}
+
 			playerIndices[lastUpdateOtherPlayersCount++] = j;
 			Player player = playerArray[j];
 			player.updateCycle = loopCycle;
@@ -7065,20 +7068,19 @@ public class client extends RSApplet {
 				int i2 = myPlayer.x + k1 >> 7;
 				int j2 = myPlayer.y - l1 >> 7;
 				boolean flag1 = doWalkTo(1, 0, 0, 0, myPlayer.smallY[0], 0, 0, j2, myPlayer.smallX[0], true, i2);
+				/*
 				if(flag1)
 				{
 					stream.writeByte(i);
 					stream.writeByte(j);
 					stream.writeInt16(minimapInt1);
-					stream.writeByte(57);
 					stream.writeByte(minimapInt2);
 					stream.writeByte(minimapInt3);
-					stream.writeByte(89);
 					stream.writeInt16(myPlayer.x);
 					stream.writeInt16(myPlayer.y);
 					stream.writeByte(anInt1264);
-					stream.writeByte(63);
 				}
+				*/
 			}
 			anInt1117++;
 			if(anInt1117 > 1151)
@@ -8485,15 +8487,7 @@ public class client extends RSApplet {
 			aTextDrawingArea_1271.method380("-------", c, i1, k);
 			k += 15;
 
-			aTextDrawingArea_1271.method380("PktBuiildAlloc: " + servStats.PacketBuildersAllocated, c, i1, k);
-			k += 15;
-			aTextDrawingArea_1271.method380("Pkt Sent: " + servStats.PacketsSent, c, i1, k);
-			k += 15;
-			aTextDrawingArea_1271.method380("Pkt Recv: " + servStats.PacketsReceived, c, i1, k);
-			k += 15;
-			aTextDrawingArea_1271.method380("Bytes Sent: " + servStats.BytesSent, c, i1, k);
-			k += 15;
-			aTextDrawingArea_1271.method380("Bytes Recv: " + servStats.BytesReceived, c, i1, k);
+			aTextDrawingArea_1271.method380("Delta time: " + servStats.DeltaTime, c, i1, k);
 			k += 15;
 			aTextDrawingArea_1271.method380("Tick time: " + servStats.TickProcessTime, c, i1, k);
 			k += 15;
@@ -9484,8 +9478,9 @@ public class client extends RSApplet {
 		if(j < lastUpdateOtherPlayersCount)
 		{
 			for(int k = j; k < lastUpdateOtherPlayersCount; k++)
-				anIntArray840[anInt839++] = playerIndices[k];
-
+			{
+				entityRemoveQueue[entityRemoveQueueSize++] = playerIndices[k];
+			}
 		}
 		if(j > lastUpdateOtherPlayersCount)
 		{
@@ -9496,35 +9491,36 @@ public class client extends RSApplet {
 		lastUpdateOtherPlayersCount = 0;
 		for(int l = 0; l < j; l++)
 		{
-			int i1 = playerIndices[l];
-			Player player = playerArray[i1];
+			int playerIndex = playerIndices[l];
+			Player player = playerArray[playerIndex];
+
 			int j1 = stream.readBits(1);
 			if(j1 == 0)
 			{
-				playerIndices[lastUpdateOtherPlayersCount++] = i1;
+				playerIndices[lastUpdateOtherPlayersCount++] = playerIndex;
 				player.updateCycle = loopCycle;
 			} else
 			{
 				int k1 = stream.readBits(2);
 				if(k1 == 0)
 				{
-					playerIndices[lastUpdateOtherPlayersCount++] = i1;
+					playerIndices[lastUpdateOtherPlayersCount++] = playerIndex;
 					player.updateCycle = loopCycle;
-					localUpdatingList[localUpdatingListCount++] = i1;
+					localUpdatingList[localUpdatingListCount++] = playerIndex;
 				} else
 				if(k1 == 1)
 				{
-					playerIndices[lastUpdateOtherPlayersCount++] = i1;
+					playerIndices[lastUpdateOtherPlayersCount++] = playerIndex;
 					player.updateCycle = loopCycle;
 					int l1 = stream.readBits(3);
 					player.moveInDir(false, l1);
 					int j2 = stream.readBits(1);
 					if(j2 == 1)
-						localUpdatingList[localUpdatingListCount++] = i1;
+						localUpdatingList[localUpdatingListCount++] = playerIndex;
 				} else
 				if(k1 == 2)
 				{
-					playerIndices[lastUpdateOtherPlayersCount++] = i1;
+					playerIndices[lastUpdateOtherPlayersCount++] = playerIndex;
 					player.updateCycle = loopCycle;
 					int i2 = stream.readBits(3);
 					player.moveInDir(true, i2);
@@ -9532,10 +9528,10 @@ public class client extends RSApplet {
 					player.moveInDir(true, k2);
 					int l2 = stream.readBits(1);
 					if(l2 == 1)
-						localUpdatingList[localUpdatingListCount++] = i1;
+						localUpdatingList[localUpdatingListCount++] = playerIndex;
 				} else
 				if(k1 == 3)
-					anIntArray840[anInt839++] = i1;
+					entityRemoveQueue[entityRemoveQueueSize++] = playerIndex;
 			}
 		}
 	}
@@ -9978,7 +9974,7 @@ public class client extends RSApplet {
 		if(k < npcCount)
 		{
 			for(int l = k; l < npcCount; l++)
-				anIntArray840[anInt839++] = npcIndices[l];
+				entityRemoveQueue[entityRemoveQueueSize++] = npcIndices[l];
 
 		}
 		if(k > npcCount)
@@ -10028,7 +10024,7 @@ public class client extends RSApplet {
 						localUpdatingList[localUpdatingListCount++] = j1;
 				} else
 				if(l1 == 3)
-					anIntArray840[anInt839++] = j1;
+					entityRemoveQueue[entityRemoveQueueSize++] = j1;
 			}
 		}
 
@@ -10215,19 +10211,21 @@ public class client extends RSApplet {
 
 	private void updatePlayers(int i, Stream stream)
 	{
-		anInt839 = 0;
+		entityRemoveQueueSize = 0;
 		localUpdatingListCount = 0;
 		updateLocalPlayer(stream);
 		updateOtherPlayers(stream);
 		readNewOtherPlayers(stream, i);
 		updatePlayerFlags(stream);
-		for(int k = 0; k < anInt839; k++)
+		for(int k = 0; k < entityRemoveQueueSize; k++)
 		{
-			int l = anIntArray840[k];
+			int l = entityRemoveQueue[k];
 			if(playerArray[l].updateCycle != loopCycle)
+			{
 				playerArray[l] = null;
-		}
+			}
 
+		}
 		if(stream.currentOffset != i)
 		{
 			signlink.reporterror("Error packet size mismatch in updatePlayers pos:" + stream.currentOffset + " psize:" + i);
@@ -10935,12 +10933,8 @@ public class client extends RSApplet {
 				servStats.IsReceiving = inStream.readUnsignedByte() != 0;
 				if(servStats.IsReceiving )
 				{
-					servStats.PacketsSent = inStream.readDWord();
-					servStats.BytesSent = inStream.readDWord();
-					servStats.BytesReceived = inStream.readDWord();
-					servStats.PacketsReceived = inStream.readDWord();
-					servStats.TickProcessTime = inStream.readDWord();
-					servStats.PacketBuildersAllocated = inStream.readDWord();
+					servStats.DeltaTime = inStream.readUnsignedWord();
+					servStats.TickProcessTime = inStream.readUnsignedWord();
 				}
 				pktType = -1;
 				return true;
@@ -11674,7 +11668,7 @@ public class client extends RSApplet {
 		aStream_834 = new Stream(new byte[5000]);
 		npcArray = new NPC[16384];
 		npcIndices = new int[16384];
-		anIntArray840 = new int[1000];
+		entityRemoveQueue = new int[1000];
 		aStream_847 = Stream.create();
 		aBoolean848 = true;
 		openInterfaceID = -1;
@@ -11820,12 +11814,8 @@ public class client extends RSApplet {
 	private class ServerStats
 	{
 		public boolean IsReceiving;
-		public int PacketsSent;
-		public int PacketsReceived ;
-		public int BytesSent ;
-		public int BytesReceived ;
-		public long TickProcessTime ;
-		public int PacketBuildersAllocated ;
+		public int DeltaTime;
+		public int TickProcessTime;
 	}
 
 	public ServerStats servStats = new ServerStats();
@@ -11845,8 +11835,8 @@ public class client extends RSApplet {
 	private NPC[] npcArray;
 	private int npcCount;
 	private int[] npcIndices;
-	private int anInt839;
-	private int[] anIntArray840;
+	private int entityRemoveQueueSize;
+	private int[] entityRemoveQueue;
 	private int prevPacketType;
 	private int secondPrevPacketType;
 	private int thirdPrevPacketType;
