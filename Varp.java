@@ -44,7 +44,7 @@ public final class  Varp {
 				dummy = 2;
 			else
 			if(j == 5)
-				anInt709 = stream.readUnsignedWord();
+				type = stream.readUnsignedWord();
 			else
 			if(j == 6)
 				dummy = 2;
@@ -79,7 +79,7 @@ public final class  Varp {
 	public static Varp cache[];
 	private static int anInt702;
 	private static int[] anIntArray703;
-	public int anInt709;
+	public int type;
 	public boolean aBoolean713;
 
 }

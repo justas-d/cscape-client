@@ -388,8 +388,9 @@ public final class Stream extends NodeSub {
 
 	public int method440()
 	{
-		/*
 		currentOffset += 4;
+
+				/*
 		return ((buffer[currentOffset - 3] & 0xff) << 24) +
 				((buffer[currentOffset - 4] & 0xff) << 16) +
 				((buffer[currentOffset - 1] & 0xff) << 8) +
