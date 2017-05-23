@@ -2,20 +2,20 @@
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) 
 
-final class Item extends Animable {
+final class GroundItem extends Animable {
 
 	public final Model getRotatedModel()
 	{
-		ItemDef itemDef = ItemDef.forID(ID);
-			return itemDef.method201(anInt1559);
+		ItemDef itemDef = ItemDef.forID(Id);
+			return itemDef.getModel(Amount);
 	}
 
-	public Item()
+	public GroundItem()
 	{
 	}
 
-	public int ID;
+	public int Id;
 	public int x;
 	public int y;
-	public int anInt1559;
+	public int Amount;
 }

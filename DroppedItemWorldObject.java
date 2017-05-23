@@ -3,18 +3,18 @@
 // Decompiler options: packimports(3) 
 
 
-final class Object4 {
+final class DroppedItemWorldObject {
 
-	Object4()
+	DroppedItemWorldObject()
 	{
 	}
 
 	int anInt45;
 	int anInt46;
 	int anInt47;
-	Animable aClass30_Sub2_Sub4_48;
-	Animable aClass30_Sub2_Sub4_49;
-	Animable aClass30_Sub2_Sub4_50;
+	Animable item1;
+	Animable item2;
+	Animable item3;
 	int uid;
 	int anInt52;
 }

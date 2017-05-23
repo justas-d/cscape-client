@@ -269,7 +269,7 @@ public final class ItemDef
 			if(i1 != -1)
 				itemDef = forID(i1);
 		}
-		Model model = itemDef.method201(1);
+		Model model = itemDef.getModel(1);
 		if(model == null)
 			return null;
 		Sprite sprite = null;
@@ -378,21 +378,26 @@ public final class ItemDef
 		return sprite2;
 	}
 
-	public Model method201(int i)
+	public Model getModel(int amount)
 	{
-		if(stackIDs != null && i > 1)
+		if(stackIDs != null && amount > 1)
 		{
 			int j = -1;
-			for(int k = 0; k < 10; k++)
-				if(i >= stackAmounts[k] && stackAmounts[k] != 0)
+			for(int k = 0; k < 10; k++) {
+				if(amount >= stackAmounts[k] && stackAmounts[k] != 0) {
 					j = stackIDs[k];
+				}
+
+			}
 
 			if(j != -1)
-				return forID(j).method201(1);
+				return forID(j).getModel(1);
 		}
 		Model model = (Model) mruNodes2.insertFromCache(id);
+
 		if(model != null)
 			return model;
+
 		model = Model.method462(modelID);
 		if(model == null)
 			return null;

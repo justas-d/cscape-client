@@ -134,7 +134,7 @@ public class client extends RSApplet {
 		} else
 		if(inputDialogState == 1)
 		{
-			chatTextDrawingArea.drawText(0, "Enter amount:", 40, 239);
+			chatTextDrawingArea.drawText(0, "Enter Amount:", 40, 239);
 			chatTextDrawingArea.drawText(128, amountOrNameInput + "*", 60, 239);
 		} else
 		if(inputDialogState == 2)
@@ -582,7 +582,7 @@ public class client extends RSApplet {
 			for(int i5 = 0; i5 < 104; i5++)
 			{
 				for(int i7 = 0; i7 < 104; i7++)
-					spawnGroundItem(i5, i7);
+					updateGroundItem(i5, i7);
 
 			}
 
@@ -736,44 +736,57 @@ public class client extends RSApplet {
 
 	}
 
-	private void spawnGroundItem(int i, int j)
+	private void updateGroundItem(int x, int y)
 	{
-		NodeList class19 = groundArray[plane][i][j];
-		if(class19 == null)
+		NodeList groundItems = groundArray[plane][x][y];
+
+		if(groundItems == null)
 		{
-			worldController.method295(plane, i, j);
+			worldController.resetDroppedItemObject(plane, x, y);
 			return;
 		}
-		int k = 0xfa0a1f01;
-		Object obj = null;
-		for(Item item = (Item)class19.reverseGetFirst(); item != null; item = (Item)class19.reverseGetNext())
+
+		// figure out which 3 items will appear in the world
+		int maxValue = 0xfa0a1f01;
+		GroundItem mostValueableItem = null;
+
+		for(GroundItem item = (GroundItem)groundItems.reverseGetFirst();
+			item != null;
+			item = (GroundItem)groundItems.reverseGetNext())
 		{
-			ItemDef itemDef = ItemDef.forID(item.ID);
-			int l = itemDef.value;
+			ItemDef itemDef = ItemDef.forID(item.Id);
+
+			int finalValue = itemDef.value;
+
 			if(itemDef.stackable)
-				l *= item.anInt1559 + 1;
-//	notifyItemSpawn(item, i + baseX, j + baseY);
+				finalValue *= item.Amount + 1;
+	//notifyItemSpawn(item, x + baseX, y + baseY);
 	
-			if(l > k)
+			if(finalValue > maxValue)
 			{
-				k = l;
-				obj = item;
+				maxValue = finalValue;
+				mostValueableItem = item;
 			}
 		}
 
-		class19.insertTail(((Node) (obj)));
-		Object obj1 = null;
-		Object obj2 = null;
-		for(Item class30_sub2_sub4_sub2_1 = (Item)class19.reverseGetFirst(); class30_sub2_sub4_sub2_1 != null; class30_sub2_sub4_sub2_1 = (Item)class19.reverseGetNext())
+		groundItems.insertTail((Node) mostValueableItem);
+		GroundItem secondItem = null;
+		GroundItem thirdItem = null;
+
+		for(GroundItem item = (GroundItem)groundItems.reverseGetFirst();
+			item != null;
+			item = (GroundItem)groundItems.reverseGetNext())
 		{
-			if(class30_sub2_sub4_sub2_1.ID != ((Item) (obj)).ID && obj1 == null)
-				obj1 = class30_sub2_sub4_sub2_1;
-			if(class30_sub2_sub4_sub2_1.ID != ((Item) (obj)).ID && class30_sub2_sub4_sub2_1.ID != ((Item) (obj1)).ID && obj2 == null)
-				obj2 = class30_sub2_sub4_sub2_1;
+			if(item.Id != mostValueableItem.Id && secondItem == null)
+				secondItem = item;
+			if(item.Id != mostValueableItem.Id && item.Id != secondItem.Id && thirdItem == null)
+				thirdItem = item;
 		}
 
-		int i1 = i + (j << 7) + 0x60000000;
-		worldController.method281(i, i1, ((Animable) (obj1)), method42(plane, j * 128 + 64, i * 128 + 64), ((Animable) (obj2)), ((Animable) (obj)), plane, j);
+		int uid = x + (y << 7) + 0x60000000;
+
+		// submit data to world
+		worldController.spawnGroundItemObject(x, uid, (Animable)secondItem, method42(plane, y * 128 + 64, x * 128 + 64), (Animable) thirdItem,(Animable) mostValueableItem, plane, y);
 	}
 
 	private void method26(boolean flag)
@@ -1783,7 +1796,7 @@ public class client extends RSApplet {
 		{
 			if(l == 0L)
 				return;
-			if(friendsCount >= 100 && anInt1046 != 1)
+			if(friendsCount >= 100 && isMember != 1)
 			{
 				pushMessage("Your friendlist is full. Max of 100 for free users, and 200 for members", 0, "");
 				return;
@@ -1829,17 +1842,19 @@ public class client extends RSApplet {
 		throw new RuntimeException();
 	}
 
-	private int method42(int i, int j, int k)
+	private int method42(int plane, int y, int x)
 	{
-		int l = k >> 7;
-		int i1 = j >> 7;
+		int l = x >> 7;
+		int i1 = y >> 7;
+
 		if(l < 0 || i1 < 0 || l > 103 || i1 > 103)
 			return 0;
-		int j1 = i;
+
+		int j1 = plane;
 		if(j1 < 3 && (byteGroundArray[1][l][i1] & 2) == 2)
 			j1++;
-		int k1 = k & 0x7f;
-		int l1 = j & 0x7f;
+		int k1 = x & 0x7f;
+		int l1 = y & 0x7f;
 		int i2 = intGroundArray[j1][l][i1] * (128 - k1) + intGroundArray[j1][l + 1][i1] * k1 >> 7;
 		int j2 = intGroundArray[j1][l][i1 + 1] * (128 - k1) + intGroundArray[j1][l + 1][i1 + 1] * k1 >> 7;
 		return i2 * (128 - l1) + j2 * l1 >> 7;
@@ -2492,7 +2507,7 @@ public class client extends RSApplet {
 				{
 					int j = -class30_sub2_sub4_sub4.anInt1590 - 1;
 					Player player;
-					if(j == unknownInt10)
+					if(j == ourPid)
 						player = myPlayer;
 					else
 						player = playerArray[j];
@@ -4432,14 +4447,14 @@ public class client extends RSApplet {
 				NodeList class19 = groundArray[plane][i1][j1];
 				if(class19 != null)
 				{
-					for(Item item = (Item)class19.getFirst(); item != null; item = (Item)class19.getNext())
+					for(GroundItem item = (GroundItem)class19.getFirst(); item != null; item = (GroundItem)class19.getNext())
 					{
-						ItemDef itemDef = ItemDef.forID(item.ID);
+						ItemDef itemDef = ItemDef.forID(item.Id);
 						if(itemSelected == 1)
 						{
 							menuActionName[menuActionRow] = "Use " + selectedItemName + " with @lre@" + itemDef.name;
 							menuActionID[menuActionRow] = 511;
-							menuActionCmd1[menuActionRow] = item.ID;
+							menuActionCmd1[menuActionRow] = item.Id;
 							menuActionCmd2[menuActionRow] = i1;
 							menuActionCmd3[menuActionRow] = j1;
 							menuActionRow++;
@@ -4450,7 +4465,7 @@ public class client extends RSApplet {
 							{
 								menuActionName[menuActionRow] = spellTooltip + " @lre@" + itemDef.name;
 								menuActionID[menuActionRow] = 94;
-								menuActionCmd1[menuActionRow] = item.ID;
+								menuActionCmd1[menuActionRow] = item.Id;
 								menuActionCmd2[menuActionRow] = i1;
 								menuActionCmd3[menuActionRow] = j1;
 								menuActionRow++;
@@ -4471,7 +4486,7 @@ public class client extends RSApplet {
 										menuActionID[menuActionRow] = 244;
 									if(j3 == 4)
 										menuActionID[menuActionRow] = 213;
-									menuActionCmd1[menuActionRow] = item.ID;
+									menuActionCmd1[menuActionRow] = item.Id;
 									menuActionCmd2[menuActionRow] = i1;
 									menuActionCmd3[menuActionRow] = j1;
 									menuActionRow++;
@@ -4480,15 +4495,15 @@ public class client extends RSApplet {
 								{
 									menuActionName[menuActionRow] = "Take @lre@" + itemDef.name;
 									menuActionID[menuActionRow] = 234;
-									menuActionCmd1[menuActionRow] = item.ID;
+									menuActionCmd1[menuActionRow] = item.Id;
 									menuActionCmd2[menuActionRow] = i1;
 									menuActionCmd3[menuActionRow] = j1;
 									menuActionRow++;
 								}
 
-							menuActionName[menuActionRow] = "Examine @lre@" + itemDef.name + " @gre@(@whi@" + item.ID + "@gre@)";
+							menuActionName[menuActionRow] = "Examine @lre@" + itemDef.name + " @gre@(@whi@" + item.Id + "@gre@)";
 							menuActionID[menuActionRow] = 1448;
-							menuActionCmd1[menuActionRow] = item.ID;
+							menuActionCmd1[menuActionRow] = item.Id;
 							menuActionCmd2[menuActionRow] = i1;
 							menuActionCmd3[menuActionRow] = j1;
 							menuActionRow++;
@@ -7420,7 +7435,7 @@ public class client extends RSApplet {
 		if(entity.interactingEntity >= 32768)
 		{
 			int j = entity.interactingEntity - 32768;
-			if(j == unknownInt10)
+			if(j == ourPid)
 				j = myPlayerIndex;
 			Player player = playerArray[j];
 			if(player != null)
@@ -9667,13 +9682,13 @@ public class client extends RSApplet {
 		welcomeScreenRaised = true;
 	}
 
-	private void method137(Stream stream, int j)
+	private void updateRegion(Stream stream, int opcode)
 	{
-		if(j == 84)
+		if(opcode == 84)
 		{
 			int k = stream.readUnsignedByte();
-			int j3 = anInt1268 + (k >> 4 & 7);
-			int i6 = anInt1269 + (k & 7);
+			int j3 = updRegionPlayerLocalX + (k >> 4 & 7);
+			int i6 = updRegionPlayerLocalY + (k & 7);
 			int l8 = stream.readUnsignedWord();
 			int k11 = stream.readUnsignedWord();
 			int l13 = stream.readUnsignedWord();
@@ -9682,24 +9697,24 @@ public class client extends RSApplet {
 				NodeList class19_1 = groundArray[plane][j3][i6];
 				if(class19_1 != null)
 				{
-					for(Item class30_sub2_sub4_sub2_3 = (Item)class19_1.reverseGetFirst(); class30_sub2_sub4_sub2_3 != null; class30_sub2_sub4_sub2_3 = (Item)class19_1.reverseGetNext())
+					for(GroundItem item = (GroundItem)class19_1.reverseGetFirst(); item != null; item = (GroundItem)class19_1.reverseGetNext())
 					{
-						if(class30_sub2_sub4_sub2_3.ID != (l8 & 0x7fff) || class30_sub2_sub4_sub2_3.anInt1559 != k11)
+						if(item.Id != (l8 & 0x7fff) || item.Amount != k11)
 							continue;
-						class30_sub2_sub4_sub2_3.anInt1559 = l13;
+						item.Amount = l13;
 						break;
 					}
 
-					spawnGroundItem(j3, i6);
+					updateGroundItem(j3, i6);
 				}
 			}
 			return;
 		}
-		if(j == 105)
+		if(opcode == 105)
 		{
 			int l = stream.readUnsignedByte();
-			int k3 = anInt1268 + (l >> 4 & 7);
-			int j6 = anInt1269 + (l & 7);
+			int k3 = updRegionPlayerLocalX + (l >> 4 & 7);
+			int j6 = updRegionPlayerLocalY + (l & 7);
 			int i9 = stream.readUnsignedWord();
 			int l11 = stream.readUnsignedByte();
 			int i14 = l11 >> 4 & 0xf;
@@ -9712,40 +9727,42 @@ public class client extends RSApplet {
 				anInt1062++;
 			}
 		}
-		if(j == 215)
+		if(opcode == 215)
 		{
-			int i1 = stream.method435();
-			int l3 = stream.method428();
-			int k6 = anInt1268 + (l3 >> 4 & 7);
-			int j9 = anInt1269 + (l3 & 7);
-			int i12 = stream.method435();
-			int j14 = stream.readUnsignedWord();
-			if(k6 >= 0 && j9 >= 0 && k6 < 104 && j9 < 104 && i12 != unknownInt10)
+			int id = stream.method435();
+			int packetOff = stream.method428();
+			int k6 = updRegionPlayerLocalX + (packetOff >> 4 & 7);
+			int j9 = updRegionPlayerLocalY + (packetOff & 7);
+			int pid = stream.method435();
+			int amount = stream.readUnsignedWord();
+			if(k6 >= 0 && j9 >= 0 && k6 < 104 && j9 < 104 && pid != ourPid)
 			{
-				Item class30_sub2_sub4_sub2_2 = new Item();
-				class30_sub2_sub4_sub2_2.ID = i1;
-				class30_sub2_sub4_sub2_2.anInt1559 = j14;
+				GroundItem item = new GroundItem();
+				item.Id = id;
+				item.Amount = amount;
+
 				if(groundArray[plane][k6][j9] == null)
 					groundArray[plane][k6][j9] = new NodeList();
-				groundArray[plane][k6][j9].insertHead(class30_sub2_sub4_sub2_2);
-				spawnGroundItem(k6, j9);
+				groundArray[plane][k6][j9].insertHead(item);
+
+				updateGroundItem(k6, j9);
 			}
 			return;
 		}
-		if(j == 156)
+		if(opcode == 156)
 		{
 			int j1 = stream.method426();
-			int i4 = anInt1268 + (j1 >> 4 & 7);
-			int l6 = anInt1269 + (j1 & 7);
+			int i4 = updRegionPlayerLocalX + (j1 >> 4 & 7);
+			int l6 = updRegionPlayerLocalY + (j1 & 7);
 			int k9 = stream.readUnsignedWord();
 			if(i4 >= 0 && l6 >= 0 && i4 < 104 && l6 < 104)
 			{
 				NodeList class19 = groundArray[plane][i4][l6];
 				if(class19 != null)
 				{
-					for(Item item = (Item)class19.reverseGetFirst(); item != null; item = (Item)class19.reverseGetNext())
+					for(GroundItem item = (GroundItem)class19.reverseGetFirst(); item != null; item = (GroundItem)class19.reverseGetNext())
 					{
-						if(item.ID != (k9 & 0x7fff))
+						if(item.Id != (k9 & 0x7fff))
 							continue;
 						item.unlink();
 						break;
@@ -9753,16 +9770,16 @@ public class client extends RSApplet {
 
 					if(class19.reverseGetFirst() == null)
 						groundArray[plane][i4][l6] = null;
-					spawnGroundItem(i4, l6);
+					updateGroundItem(i4, l6);
 				}
 			}
 			return;
 		}
-		if(j == 160)
+		if(opcode == 160)
 		{
 			int k1 = stream.method428();
-			int j4 = anInt1268 + (k1 >> 4 & 7);
-			int i7 = anInt1269 + (k1 & 7);
+			int j4 = updRegionPlayerLocalX + (k1 >> 4 & 7);
+			int i7 = updRegionPlayerLocalY + (k1 & 7);
 			int l9 = stream.method428();
 			int j12 = l9 >> 2;
 			int k14 = l9 & 3;
@@ -9813,11 +9830,11 @@ public class client extends RSApplet {
 			}
 			return;
 		}
-		if(j == 147)
+		if(opcode == 147)
 		{
 			int l1 = stream.method428();
-			int k4 = anInt1268 + (l1 >> 4 & 7);
-			int j7 = anInt1269 + (l1 & 7);
+			int k4 = updRegionPlayerLocalX + (l1 >> 4 & 7);
+			int j7 = updRegionPlayerLocalY + (l1 & 7);
 			int i10 = stream.readUnsignedWord();
 			byte byte0 = stream.method430();
 			int l14 = stream.method434();
@@ -9831,7 +9848,7 @@ public class client extends RSApplet {
 			int l21 = stream.readUnsignedWord();
 			byte byte3 = stream.method429();
 			Player player;
-			if(i10 == unknownInt10)
+			if(i10 == ourPid)
 				player = myPlayer;
 			else
 				player = playerArray[i10];
@@ -9878,11 +9895,11 @@ public class client extends RSApplet {
 				}
 			}
 		}
-		if(j == 151)
+		if(opcode == 151)
 		{
 			int i2 = stream.method426();
-			int l4 = anInt1268 + (i2 >> 4 & 7);
-			int k7 = anInt1269 + (i2 & 7);
+			int l4 = updRegionPlayerLocalX + (i2 >> 4 & 7);
+			int k7 = updRegionPlayerLocalY + (i2 & 7);
 			int j10 = stream.method434();
 			int k12 = stream.method428();
 			int i15 = k12 >> 2;
@@ -9892,11 +9909,11 @@ public class client extends RSApplet {
 				method130(-1, j10, k16, l17, k7, i15, plane, l4, 0);
 			return;
 		}
-		if(j == 4)
+		if(opcode == 4)
 		{
 			int j2 = stream.readUnsignedByte();
-			int i5 = anInt1268 + (j2 >> 4 & 7);
-			int l7 = anInt1269 + (j2 & 7);
+			int i5 = updRegionPlayerLocalX + (j2 >> 4 & 7);
+			int l7 = updRegionPlayerLocalY + (j2 & 7);
 			int k10 = stream.readUnsignedWord();
 			int l12 = stream.readUnsignedByte();
 			int j15 = stream.readUnsignedWord();
@@ -9909,43 +9926,47 @@ public class client extends RSApplet {
 			}
 			return;
 		}
-		if(j == 44)
+		if(opcode == 44)
 		{
-			int k2 = stream.method436();
-			int j5 = stream.readUnsignedWord();
-			int i8 = stream.readUnsignedByte();
-			int l10 = anInt1268 + (i8 >> 4 & 7);
-			int i13 = anInt1269 + (i8 & 7);
-			if(l10 >= 0 && i13 >= 0 && l10 < 104 && i13 < 104)
+			int id = stream.method436();
+			int amnt = stream.readUnsignedWord();
+			int packed = stream.readUnsignedByte();
+			int x = updRegionPlayerLocalX + (packed >> 4 & 7);
+			int y = updRegionPlayerLocalY + (packed & 7);
+
+			if(x >= 0 && y >= 0 && x < 104 && y < 104)
 			{
-				Item class30_sub2_sub4_sub2_1 = new Item();
-				class30_sub2_sub4_sub2_1.ID = k2;
-				class30_sub2_sub4_sub2_1.anInt1559 = j5;
-				if(groundArray[plane][l10][i13] == null)
-					groundArray[plane][l10][i13] = new NodeList();
-				groundArray[plane][l10][i13].insertHead(class30_sub2_sub4_sub2_1);
-				spawnGroundItem(l10, i13);
+				GroundItem item = new GroundItem();
+				item.Id = id;
+				item.Amount = amnt;
+
+				if(groundArray[plane][x][y] == null)
+					groundArray[plane][x][y] = new NodeList();
+
+				groundArray[plane][x][y].insertHead(item);
+
+				updateGroundItem(x, y);
 			}
 			return;
 		}
-		if(j == 101)
+		if(opcode == 101)
 		{
 			int l2 = stream.method427();
 			int k5 = l2 >> 2;
 			int j8 = l2 & 3;
 			int i11 = anIntArray1177[k5];
 			int j13 = stream.readUnsignedByte();
-			int k15 = anInt1268 + (j13 >> 4 & 7);
-			int l16 = anInt1269 + (j13 & 7);
+			int k15 = updRegionPlayerLocalX + (j13 >> 4 & 7);
+			int l16 = updRegionPlayerLocalY + (j13 & 7);
 			if(k15 >= 0 && l16 >= 0 && k15 < 104 && l16 < 104)
 				method130(-1, -1, j8, i11, l16, k5, plane, k15, 0);
 			return;
 		}
-		if(j == 117)
+		if(opcode == 117)
 		{
 			int i3 = stream.readUnsignedByte();
-			int l5 = anInt1268 + (i3 >> 4 & 7);
-			int k8 = anInt1269 + (i3 & 7);
+			int l5 = updRegionPlayerLocalX + (i3 >> 4 & 7);
+			int k8 = updRegionPlayerLocalY + (i3 & 7);
 			int j11 = l5 + stream.readSignedByte();
 			int k13 = k8 + stream.readSignedByte();
 			int l15 = stream.readSignedWord();
@@ -10378,22 +10399,28 @@ public class client extends RSApplet {
 			}
 			if(pktType == 64)
 			{
-				anInt1268 = inStream.method427();
-				anInt1269 = inStream.method428();
-				for(int j = anInt1268; j < anInt1268 + 8; j++)
-				{
-					for(int l9 = anInt1269; l9 < anInt1269 + 8; l9++)
-						if(groundArray[plane][j][l9] != null)
-						{
-							groundArray[plane][j][l9] = null;
-							spawnGroundItem(j, l9);
-						}
+				updRegionPlayerLocalX = inStream.method427();
+				updRegionPlayerLocalY = inStream.method428();
 
+				for(int x = updRegionPlayerLocalX; x < updRegionPlayerLocalX + 8; x++)
+				{
+					for(int y = updRegionPlayerLocalY; y < updRegionPlayerLocalY + 8; y++)
+					{
+						if(groundArray[plane][x][y] != null)
+						{
+							groundArray[plane][x][y] = null;
+							updateGroundItem(x, y);
+						}
+					}
 				}
 
-				for(Class30_Sub1 class30_sub1 = (Class30_Sub1)aClass19_1179.reverseGetFirst(); class30_sub1 != null; class30_sub1 = (Class30_Sub1)aClass19_1179.reverseGetNext())
-					if(class30_sub1.anInt1297 >= anInt1268 && class30_sub1.anInt1297 < anInt1268 + 8 && class30_sub1.anInt1298 >= anInt1269 && class30_sub1.anInt1298 < anInt1269 + 8 && class30_sub1.anInt1295 == plane)
+				for(Class30_Sub1 class30_sub1 = (Class30_Sub1)aClass19_1179.reverseGetFirst();
+					class30_sub1 != null;
+					class30_sub1 = (Class30_Sub1)aClass19_1179.reverseGetNext())
+				{
+					if(class30_sub1.anInt1297 >= updRegionPlayerLocalX && class30_sub1.anInt1297 < updRegionPlayerLocalX + 8 && class30_sub1.anInt1298 >= updRegionPlayerLocalY && class30_sub1.anInt1298 < updRegionPlayerLocalY + 8 && class30_sub1.anInt1295 == plane)
 						class30_sub1.anInt1294 = 0;
+				}
 
 				pktType = -1;
 				return true;
@@ -10804,12 +10831,12 @@ public class client extends RSApplet {
 			}
 			if(pktType == 60)
 			{
-				anInt1269 = inStream.readUnsignedByte();
-				anInt1268 = inStream.method427();
+				updRegionPlayerLocalY = inStream.readUnsignedByte();
+				updRegionPlayerLocalX = inStream.method427();
 				while(inStream.currentOffset < pktSize)
 				{
 					int k3 = inStream.readUnsignedByte();
-					method137(inStream, k3);
+					updateRegion(inStream, k3);
 				}
 				pktType = -1;
 				return true;
@@ -11155,8 +11182,8 @@ public class client extends RSApplet {
 			}
 			if(pktType == 85)
 			{
-				anInt1269 = inStream.method427();
-				anInt1268 = inStream.method427();
+				updRegionPlayerLocalY = inStream.method427();
+				updRegionPlayerLocalX = inStream.method427();
 				pktType = -1;
 				return true;
 			}
@@ -11347,8 +11374,8 @@ public class client extends RSApplet {
 			}
 			if(pktType == 249)
 			{
-				anInt1046 = inStream.method426();
-				unknownInt10 = inStream.method436();
+				isMember = inStream.method426();
+				ourPid = inStream.method436();
 				pktType = -1;
 				return true;
 			}
@@ -11508,7 +11535,7 @@ public class client extends RSApplet {
 			}
 			if(pktType == 105 || pktType == 84 || pktType == 147 || pktType == 215 || pktType == 4 || pktType == 117 || pktType == 156 || pktType == 44 || pktType == 160 || pktType == 101 || pktType == 151)
 			{
-				method137(inStream, pktType);
+				updateRegion(inStream, pktType);
 				pktType = -1;
 				return true;
 			}
@@ -11690,7 +11717,7 @@ public class client extends RSApplet {
 		aBooleanArray876 = new boolean[5];
 		drawFlames = false;
 		reportAbuseInput = "";
-		unknownInt10 = -1;
+		ourPid = -1;
 		menuOpen = false;
 		inputString = "";
 		maxPlayers = 2048;
@@ -11885,7 +11912,7 @@ public class client extends RSApplet {
 	private MouseDetection mouseDetection;
 	private volatile boolean drawFlames;
 	private String reportAbuseInput;
-	private int unknownInt10;
+	private int ourPid;
 	private boolean menuOpen;
 	private int anInt886;
 	private String inputString;
@@ -12047,7 +12074,7 @@ public class client extends RSApplet {
 	private int dialogID;
 	private final int[] maxStats;
 	private final int[] settingsBuffer;
-	private int anInt1046;
+	private int isMember;
 	private boolean aBoolean1047;
 	private int anInt1048;
 	private String aString1049;
@@ -12261,8 +12288,8 @@ public class client extends RSApplet {
 	private int anInt1265;
 	private String loginMessage1;
 	private String loginMessage2;
-	private int anInt1268;
-	private int anInt1269;
+	private int updRegionPlayerLocalX;
+	private int updRegionPlayerLocalY;
 	private TextDrawingArea aTextDrawingArea_1270;
 	private TextDrawingArea aTextDrawingArea_1271;
 	private TextDrawingArea chatTextDrawingArea;

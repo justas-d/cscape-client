@@ -174,34 +174,38 @@ final class WorldController {
 		groundArray[i][j1][k].obj3 = class49;
 	}
 
-	public void method281(int i, int j, Animable class30_sub2_sub4, int k, Animable class30_sub2_sub4_1, Animable class30_sub2_sub4_2,
-						  int l, int i1)
+	public void spawnGroundItemObject(int x, int uid, Animable secondItem, int k, Animable thirdItem, Animable firstItem,
+									  int plane, int y)
 	{
-		Object4 object4 = new Object4();
-		object4.aClass30_Sub2_Sub4_48 = class30_sub2_sub4_2;
-		object4.anInt46 = i * 128 + 64;
-		object4.anInt47 = i1 * 128 + 64;
-		object4.anInt45 = k;
-		object4.uid = j;
-		object4.aClass30_Sub2_Sub4_49 = class30_sub2_sub4;
-		object4.aClass30_Sub2_Sub4_50 = class30_sub2_sub4_1;
+		DroppedItemWorldObject obj = new DroppedItemWorldObject();
+		obj.item1 = firstItem;
+		obj.anInt46 = x * 128 + 64;
+		obj.anInt47 = y * 128 + 64;
+		obj.anInt45 = k;
+		obj.uid = uid;
+		obj.item2 = secondItem;
+		obj.item3 = thirdItem;
+
 		int j1 = 0;
-		Ground class30_sub3 = groundArray[l][i][i1];
-		if(class30_sub3 != null)
+		Ground ground = groundArray[plane][x][y];
+
+		if(ground != null)
 		{
-			for(int k1 = 0; k1 < class30_sub3.anInt1317; k1++)
-				if(class30_sub3.obj5Array[k1].aClass30_Sub2_Sub4_521 instanceof Model)
+			for(int k1 = 0; k1 < ground.anInt1317; k1++)
+				if(ground.obj5Array[k1].aClass30_Sub2_Sub4_521 instanceof Model)
 				{
-					int l1 = ((Model)class30_sub3.obj5Array[k1].aClass30_Sub2_Sub4_521).anInt1654;
+					int l1 = ((Model)ground.obj5Array[k1].aClass30_Sub2_Sub4_521).anInt1654;
 					if(l1 > j1)
 						j1 = l1;
 				}
 
 		}
-		object4.anInt52 = j1;
-		if(groundArray[l][i][i1] == null)
-			groundArray[l][i][i1] = new Ground(l, i, i1);
-		groundArray[l][i][i1].obj4 = object4;
+		obj.anInt52 = j1;
+
+		if(groundArray[plane][x][y] == null)
+			groundArray[plane][x][y] = new Ground(plane, x, y);
+
+		groundArray[plane][x][y].droppedItems = obj;
 	}
 
 	public void method282(int i, Animable class30_sub2_sub4, int j, int k, byte byte0, int l,
@@ -461,13 +465,11 @@ final class WorldController {
 		class30_sub3.obj3 = null;
 	}
 
-	public void method295(int i, int j, int k)
+	public void resetDroppedItemObject(int plane, int x, int y)
 	{
-		Ground class30_sub3 = groundArray[i][j][k];
-		if(class30_sub3 != null)
-		{
-			class30_sub3.obj4 = null;
-		}
+		Ground ground = groundArray[plane][x][y];
+		if(ground != null)
+			ground.droppedItems = null;
 	}
 
 	public Object1 method296(int i, int j, int k)
@@ -1290,15 +1292,15 @@ label0:
 					Object3 class49 = class30_sub3_1.obj3;
 					if(class49 != null)
 						class49.aClass30_Sub2_Sub4_814.method443(0, anInt458, anInt459, anInt460, anInt461, class49.anInt812 - anInt455, class49.anInt811 - anInt456, class49.anInt813 - anInt457, class49.uid);
-					Object4 object4_1 = class30_sub3_1.obj4;
-					if(object4_1 != null && object4_1.anInt52 == 0)
+					DroppedItemWorldObject droppedItemWorldObject_1 = class30_sub3_1.droppedItems;
+					if(droppedItemWorldObject_1 != null && droppedItemWorldObject_1.anInt52 == 0)
 					{
-						if(object4_1.aClass30_Sub2_Sub4_49 != null)
-							object4_1.aClass30_Sub2_Sub4_49.method443(0, anInt458, anInt459, anInt460, anInt461, object4_1.anInt46 - anInt455, object4_1.anInt45 - anInt456, object4_1.anInt47 - anInt457, object4_1.uid);
-						if(object4_1.aClass30_Sub2_Sub4_50 != null)
-							object4_1.aClass30_Sub2_Sub4_50.method443(0, anInt458, anInt459, anInt460, anInt461, object4_1.anInt46 - anInt455, object4_1.anInt45 - anInt456, object4_1.anInt47 - anInt457, object4_1.uid);
-						if(object4_1.aClass30_Sub2_Sub4_48 != null)
-							object4_1.aClass30_Sub2_Sub4_48.method443(0, anInt458, anInt459, anInt460, anInt461, object4_1.anInt46 - anInt455, object4_1.anInt45 - anInt456, object4_1.anInt47 - anInt457, object4_1.uid);
+						if(droppedItemWorldObject_1.item2 != null)
+							droppedItemWorldObject_1.item2.method443(0, anInt458, anInt459, anInt460, anInt461, droppedItemWorldObject_1.anInt46 - anInt455, droppedItemWorldObject_1.anInt45 - anInt456, droppedItemWorldObject_1.anInt47 - anInt457, droppedItemWorldObject_1.uid);
+						if(droppedItemWorldObject_1.item3 != null)
+							droppedItemWorldObject_1.item3.method443(0, anInt458, anInt459, anInt460, anInt461, droppedItemWorldObject_1.anInt46 - anInt455, droppedItemWorldObject_1.anInt45 - anInt456, droppedItemWorldObject_1.anInt47 - anInt457, droppedItemWorldObject_1.uid);
+						if(droppedItemWorldObject_1.item1 != null)
+							droppedItemWorldObject_1.item1.method443(0, anInt458, anInt459, anInt460, anInt461, droppedItemWorldObject_1.anInt46 - anInt455, droppedItemWorldObject_1.anInt45 - anInt456, droppedItemWorldObject_1.anInt47 - anInt457, droppedItemWorldObject_1.uid);
 					}
 				}
 				int k4 = class30_sub3_1.anInt1320;
@@ -1484,15 +1486,15 @@ label0:
 			}
 			class30_sub3_1.aBoolean1323 = false;
 			anInt446--;
-			Object4 object4 = class30_sub3_1.obj4;
-			if(object4 != null && object4.anInt52 != 0)
+			DroppedItemWorldObject droppedItemWorldObject = class30_sub3_1.droppedItems;
+			if(droppedItemWorldObject != null && droppedItemWorldObject.anInt52 != 0)
 			{
-				if(object4.aClass30_Sub2_Sub4_49 != null)
-					object4.aClass30_Sub2_Sub4_49.method443(0, anInt458, anInt459, anInt460, anInt461, object4.anInt46 - anInt455, object4.anInt45 - anInt456 - object4.anInt52, object4.anInt47 - anInt457, object4.uid);
-				if(object4.aClass30_Sub2_Sub4_50 != null)
-					object4.aClass30_Sub2_Sub4_50.method443(0, anInt458, anInt459, anInt460, anInt461, object4.anInt46 - anInt455, object4.anInt45 - anInt456 - object4.anInt52, object4.anInt47 - anInt457, object4.uid);
-				if(object4.aClass30_Sub2_Sub4_48 != null)
-					object4.aClass30_Sub2_Sub4_48.method443(0, anInt458, anInt459, anInt460, anInt461, object4.anInt46 - anInt455, object4.anInt45 - anInt456 - object4.anInt52, object4.anInt47 - anInt457, object4.uid);
+				if(droppedItemWorldObject.item2 != null)
+					droppedItemWorldObject.item2.method443(0, anInt458, anInt459, anInt460, anInt461, droppedItemWorldObject.anInt46 - anInt455, droppedItemWorldObject.anInt45 - anInt456 - droppedItemWorldObject.anInt52, droppedItemWorldObject.anInt47 - anInt457, droppedItemWorldObject.uid);
+				if(droppedItemWorldObject.item3 != null)
+					droppedItemWorldObject.item3.method443(0, anInt458, anInt459, anInt460, anInt461, droppedItemWorldObject.anInt46 - anInt455, droppedItemWorldObject.anInt45 - anInt456 - droppedItemWorldObject.anInt52, droppedItemWorldObject.anInt47 - anInt457, droppedItemWorldObject.uid);
+				if(droppedItemWorldObject.item1 != null)
+					droppedItemWorldObject.item1.method443(0, anInt458, anInt459, anInt460, anInt461, droppedItemWorldObject.anInt46 - anInt455, droppedItemWorldObject.anInt45 - anInt456 - droppedItemWorldObject.anInt52, droppedItemWorldObject.anInt47 - anInt457, droppedItemWorldObject.uid);
 			}
 			if(class30_sub3_1.anInt1328 != 0)
 			{
