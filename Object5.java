@@ -16,12 +16,12 @@ public final class Object5
 	int anInt520;
 	public Animable aClass30_Sub2_Sub4_521;
 	public int anInt522;
-	int anInt523;
+	int localX;
 	int anInt524;
-	int anInt525;
+	int localY;
 	int anInt526;
 	int anInt527;
 	int anInt528;
 	public int uid;
-	byte aByte530;
+	byte packedTypeAndRotation;
 }

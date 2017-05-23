@@ -479,72 +479,72 @@ label0:
 		}
 	}
 
-	private void method175(int i, WorldController worldController, Class11 class11, int j, int k, int l, int i1,
-								 int j1)
+	private void method175(int y, WorldController worldController, Class11 class11, int type, int plane, int x, int objId,
+						   int rotation)
 	{
-		if(lowMem && (tileRenderRuleFlags[0][l][i] & 2) == 0)
+		if(lowMem && (tileRenderRuleFlags[0][x][y] & 2) == 0)
 		{
-			if((tileRenderRuleFlags[k][l][i] & 0x10) != 0)
+			if((tileRenderRuleFlags[plane][x][y] & 0x10) != 0)
 				return;
-			if(method182(i, k, l) != anInt131)
+			if(method182(y, plane, x) != anInt131)
 				return;
 		}
-		if(k < anInt145)
-			anInt145 = k;
-		int k1 = tileVertexHeights[k][l][i];
-		int l1 = tileVertexHeights[k][l + 1][i];
-		int i2 = tileVertexHeights[k][l + 1][i + 1];
-		int j2 = tileVertexHeights[k][l][i + 1];
+		if(plane < anInt145)
+			anInt145 = plane;
+		int k1 = tileVertexHeights[plane][x][y];
+		int l1 = tileVertexHeights[plane][x + 1][y];
+		int i2 = tileVertexHeights[plane][x + 1][y + 1];
+		int j2 = tileVertexHeights[plane][x][y + 1];
 		int k2 = k1 + l1 + i2 + j2 >> 2;
-		ObjectDef class46 = ObjectDef.forID(i1);
-		int l2 = l + (i << 7) + (i1 << 14) + 0x40000000;
-		if(!class46.hasActions)
-			l2 += 0x80000000;
-		byte byte0 = (byte)((j1 << 6) + j);
-		if(j == 22)
+		ObjectDef objDef = ObjectDef.forID(objId);
+		int uid = x + (y << 7) + (objId << 14) + 0x40000000;
+		if(!objDef.hasActions)
+			uid += 0x80000000;
+		byte packedTypeAndRotation = (byte)((rotation << 6) + type);
+		if(type == 22)
 		{
-			if(lowMem && !class46.hasActions && !class46.aBoolean736)
+			if(lowMem && !objDef.hasActions && !objDef.aBoolean736)
 				return;
 			Object obj;
-			if(class46.anInt781 == -1 && class46.childrenIDs == null)
-				obj = class46.method578(22, j1, k1, l1, i2, j2, -1);
+			if(objDef.anInt781 == -1 && objDef.childrenIDs == null)
+				obj = objDef.method578(22, rotation, k1, l1, i2, j2, -1);
 			else
-				obj = new Animable_Sub5(i1, j1, 22, l1, i2, k1, j2, class46.anInt781, true);
-			worldController.method280(k, k2, i, ((Animable) (obj)), byte0, l2, l);
-			if(class46.aBoolean767 && class46.hasActions && class11 != null)
-				class11.method213(i, l);
+				obj = new Animable_Sub5(objId, rotation, 22, l1, i2, k1, j2, objDef.anInt781, true);
+			worldController.method280(plane, k2, y, ((Animable) (obj)), packedTypeAndRotation, uid, x);
+			if(objDef.aBoolean767 && objDef.hasActions && class11 != null)
+				class11.method213(y, x);
 			return;
 		}
-		if(j == 10 || j == 11)
+		if(type == 10 || type == 11)
 		{
 			Object obj1;
-			if(class46.anInt781 == -1 && class46.childrenIDs == null)
-				obj1 = class46.method578(10, j1, k1, l1, i2, j2, -1);
+			if(objDef.anInt781 == -1 && objDef.childrenIDs == null)
+				obj1 = objDef.method578(10, rotation, k1, l1, i2, j2, -1);
 			else
-				obj1 = new Animable_Sub5(i1, j1, 10, l1, i2, k1, j2, class46.anInt781, true);
+				obj1 = new Animable_Sub5(objId, rotation, 10, l1, i2, k1, j2, objDef.anInt781, true);
 			if(obj1 != null)
 			{
 				int i5 = 0;
-				if(j == 11)
+				if(type == 11)
 					i5 += 256;
 				int j4;
 				int l4;
-				if(j1 == 1 || j1 == 3)
+				if(rotation == 1 || rotation == 3)
 				{
-					j4 = class46.anInt761;
-					l4 = class46.anInt744;
+					j4 = objDef.anInt761;
+					l4 = objDef.anInt744;
 				} else
 				{
-					j4 = class46.anInt744;
-					l4 = class46.anInt761;
+					j4 = objDef.anInt744;
+					l4 = objDef.anInt761;
 				}
-				if(worldController.method284(l2, byte0, k2, l4, ((Animable) (obj1)), j4, k, i5, i, l) && class46.aBoolean779)
+				if(worldController.method284(uid, packedTypeAndRotation, k2, l4, ((Animable) (obj1)), j4, plane, i5, y, x) && objDef.aBoolean779)
 				{
 					Model model;
 					if(obj1 instanceof Model)
 						model = (Model)obj1;
 					else
-						model = class46.method578(10, j1, k1, l1, i2, j2, -1);
+						model = objDef.method578(10, rotation, k1, l1, i2, j2, -1);
 					if(model != null)
 					{
 						for(int j5 = 0; j5 <= j4; j5++)
@@ -554,8 +554,8 @@ label0:
 								int l5 = model.anInt1650 / 4;
 								if(l5 > 30)
 									l5 = 30;
-								if(l5 > aByteArrayArrayArray134[k][l + j5][i + k5])
-									aByteArrayArrayArray134[k][l + j5][i + k5] = (byte)l5;
+								if(l5 > aByteArrayArrayArray134[plane][x + j5][y + k5])
+									aByteArrayArrayArray134[plane][x + j5][y + k5] = (byte)l5;
 							}
 
 						}
@@ -563,182 +563,182 @@ label0:
 					}
 				}
 			}
-			if(class46.aBoolean767 && class11 != null)
-				class11.method212(class46.aBoolean757, class46.anInt744, class46.anInt761, l, i, j1);
+			if(objDef.aBoolean767 && class11 != null)
+				class11.method212(objDef.aBoolean757, objDef.anInt744, objDef.anInt761, x, y, rotation);
 			return;
 		}
-		if(j >= 12)
+		if(type >= 12)
 		{
 			Object obj2;
-			if(class46.anInt781 == -1 && class46.childrenIDs == null)
-				obj2 = class46.method578(j, j1, k1, l1, i2, j2, -1);
+			if(objDef.anInt781 == -1 && objDef.childrenIDs == null)
+				obj2 = objDef.method578(type, rotation, k1, l1, i2, j2, -1);
 			else
-				obj2 = new Animable_Sub5(i1, j1, j, l1, i2, k1, j2, class46.anInt781, true);
-			worldController.method284(l2, byte0, k2, 1, ((Animable) (obj2)), 1, k, 0, i, l);
-			if(j >= 12 && j <= 17 && j != 13 && k > 0)
-				anIntArrayArrayArray135[k][l][i] |= 0x924;
-			if(class46.aBoolean767 && class11 != null)
-				class11.method212(class46.aBoolean757, class46.anInt744, class46.anInt761, l, i, j1);
+				obj2 = new Animable_Sub5(objId, rotation, type, l1, i2, k1, j2, objDef.anInt781, true);
+			worldController.method284(uid, packedTypeAndRotation, k2, 1, ((Animable) (obj2)), 1, plane, 0, y, x);
+			if(type >= 12 && type <= 17 && type != 13 && plane > 0)
+				anIntArrayArrayArray135[plane][x][y] |= 0x924;
+			if(objDef.aBoolean767 && class11 != null)
+				class11.method212(objDef.aBoolean757, objDef.anInt744, objDef.anInt761, x, y, rotation);
 			return;
 		}
-		if(j == 0)
+		if(type == 0)
 		{
 			Object obj3;
-			if(class46.anInt781 == -1 && class46.childrenIDs == null)
-				obj3 = class46.method578(0, j1, k1, l1, i2, j2, -1);
+			if(objDef.anInt781 == -1 && objDef.childrenIDs == null)
+				obj3 = objDef.method578(0, rotation, k1, l1, i2, j2, -1);
 			else
-				obj3 = new Animable_Sub5(i1, j1, 0, l1, i2, k1, j2, class46.anInt781, true);
-			worldController.method282(anIntArray152[j1], ((Animable) (obj3)), l2, i, byte0, l, null, k2, 0, k);
-			if(j1 == 0)
+				obj3 = new Animable_Sub5(objId, rotation, 0, l1, i2, k1, j2, objDef.anInt781, true);
+			worldController.method282(anIntArray152[rotation], ((Animable) (obj3)), uid, y, packedTypeAndRotation, x, null, k2, 0, plane);
+			if(rotation == 0)
 			{
-				if(class46.aBoolean779)
+				if(objDef.aBoolean779)
 				{
-					aByteArrayArrayArray134[k][l][i] = 50;
-					aByteArrayArrayArray134[k][l][i + 1] = 50;
+					aByteArrayArrayArray134[plane][x][y] = 50;
+					aByteArrayArrayArray134[plane][x][y + 1] = 50;
 				}
-				if(class46.aBoolean764)
-					anIntArrayArrayArray135[k][l][i] |= 0x249;
+				if(objDef.aBoolean764)
+					anIntArrayArrayArray135[plane][x][y] |= 0x249;
 			} else
-			if(j1 == 1)
+			if(rotation == 1)
 			{
-				if(class46.aBoolean779)
+				if(objDef.aBoolean779)
 				{
-					aByteArrayArrayArray134[k][l][i + 1] = 50;
-					aByteArrayArrayArray134[k][l + 1][i + 1] = 50;
+					aByteArrayArrayArray134[plane][x][y + 1] = 50;
+					aByteArrayArrayArray134[plane][x + 1][y + 1] = 50;
 				}
-				if(class46.aBoolean764)
-					anIntArrayArrayArray135[k][l][i + 1] |= 0x492;
+				if(objDef.aBoolean764)
+					anIntArrayArrayArray135[plane][x][y + 1] |= 0x492;
 			} else
-			if(j1 == 2)
+			if(rotation == 2)
 			{
-				if(class46.aBoolean779)
+				if(objDef.aBoolean779)
 				{
-					aByteArrayArrayArray134[k][l + 1][i] = 50;
-					aByteArrayArrayArray134[k][l + 1][i + 1] = 50;
+					aByteArrayArrayArray134[plane][x + 1][y] = 50;
+					aByteArrayArrayArray134[plane][x + 1][y + 1] = 50;
 				}
-				if(class46.aBoolean764)
-					anIntArrayArrayArray135[k][l + 1][i] |= 0x249;
+				if(objDef.aBoolean764)
+					anIntArrayArrayArray135[plane][x + 1][y] |= 0x249;
 			} else
-			if(j1 == 3)
+			if(rotation == 3)
 			{
-				if(class46.aBoolean779)
+				if(objDef.aBoolean779)
 				{
-					aByteArrayArrayArray134[k][l][i] = 50;
-					aByteArrayArrayArray134[k][l + 1][i] = 50;
+					aByteArrayArrayArray134[plane][x][y] = 50;
+					aByteArrayArrayArray134[plane][x + 1][y] = 50;
 				}
-				if(class46.aBoolean764)
-					anIntArrayArrayArray135[k][l][i] |= 0x492;
+				if(objDef.aBoolean764)
+					anIntArrayArrayArray135[plane][x][y] |= 0x492;
 			}
-			if(class46.aBoolean767 && class11 != null)
-				class11.method211(i, j1, l, j, class46.aBoolean757);
-			if(class46.anInt775 != 16)
-				worldController.method290(i, class46.anInt775, l, k);
+			if(objDef.aBoolean767 && class11 != null)
+				class11.method211(y, rotation, x, type, objDef.aBoolean757);
+			if(objDef.anInt775 != 16)
+				worldController.method290(y, objDef.anInt775, x, plane);
 			return;
 		}
-		if(j == 1)
+		if(type == 1)
 		{
 			Object obj4;
-			if(class46.anInt781 == -1 && class46.childrenIDs == null)
-				obj4 = class46.method578(1, j1, k1, l1, i2, j2, -1);
+			if(objDef.anInt781 == -1 && objDef.childrenIDs == null)
+				obj4 = objDef.method578(1, rotation, k1, l1, i2, j2, -1);
 			else
-				obj4 = new Animable_Sub5(i1, j1, 1, l1, i2, k1, j2, class46.anInt781, true);
-			worldController.method282(anIntArray140[j1], ((Animable) (obj4)), l2, i, byte0, l, null, k2, 0, k);
-			if(class46.aBoolean779)
-				if(j1 == 0)
-					aByteArrayArrayArray134[k][l][i + 1] = 50;
+				obj4 = new Animable_Sub5(objId, rotation, 1, l1, i2, k1, j2, objDef.anInt781, true);
+			worldController.method282(anIntArray140[rotation], ((Animable) (obj4)), uid, y, packedTypeAndRotation, x, null, k2, 0, plane);
+			if(objDef.aBoolean779)
+				if(rotation == 0)
+					aByteArrayArrayArray134[plane][x][y + 1] = 50;
 				else
-				if(j1 == 1)
-					aByteArrayArrayArray134[k][l + 1][i + 1] = 50;
+				if(rotation == 1)
+					aByteArrayArrayArray134[plane][x + 1][y + 1] = 50;
 				else
-				if(j1 == 2)
-					aByteArrayArrayArray134[k][l + 1][i] = 50;
+				if(rotation == 2)
+					aByteArrayArrayArray134[plane][x + 1][y] = 50;
 				else
-				if(j1 == 3)
-					aByteArrayArrayArray134[k][l][i] = 50;
-			if(class46.aBoolean767 && class11 != null)
-				class11.method211(i, j1, l, j, class46.aBoolean757);
+				if(rotation == 3)
+					aByteArrayArrayArray134[plane][x][y] = 50;
+			if(objDef.aBoolean767 && class11 != null)
+				class11.method211(y, rotation, x, type, objDef.aBoolean757);
 			return;
 		}
-		if(j == 2)
+		if(type == 2)
 		{
-			int i3 = j1 + 1 & 3;
+			int i3 = rotation + 1 & 3;
 			Object obj11;
 			Object obj12;
-			if(class46.anInt781 == -1 && class46.childrenIDs == null)
+			if(objDef.anInt781 == -1 && objDef.childrenIDs == null)
 			{
-				obj11 = class46.method578(2, 4 + j1, k1, l1, i2, j2, -1);
-				obj12 = class46.method578(2, i3, k1, l1, i2, j2, -1);
+				obj11 = objDef.method578(2, 4 + rotation, k1, l1, i2, j2, -1);
+				obj12 = objDef.method578(2, i3, k1, l1, i2, j2, -1);
 			} else
 			{
-				obj11 = new Animable_Sub5(i1, 4 + j1, 2, l1, i2, k1, j2, class46.anInt781, true);
-				obj12 = new Animable_Sub5(i1, i3, 2, l1, i2, k1, j2, class46.anInt781, true);
+				obj11 = new Animable_Sub5(objId, 4 + rotation, 2, l1, i2, k1, j2, objDef.anInt781, true);
+				obj12 = new Animable_Sub5(objId, i3, 2, l1, i2, k1, j2, objDef.anInt781, true);
 			}
-			worldController.method282(anIntArray152[j1], ((Animable) (obj11)), l2, i, byte0, l, ((Animable) (obj12)), k2, anIntArray152[i3], k);
-			if(class46.aBoolean764)
-				if(j1 == 0)
+			worldController.method282(anIntArray152[rotation], ((Animable) (obj11)), uid, y, packedTypeAndRotation, x, ((Animable) (obj12)), k2, anIntArray152[i3], plane);
+			if(objDef.aBoolean764)
+				if(rotation == 0)
 				{
-					anIntArrayArrayArray135[k][l][i] |= 0x249;
-					anIntArrayArrayArray135[k][l][i + 1] |= 0x492;
+					anIntArrayArrayArray135[plane][x][y] |= 0x249;
+					anIntArrayArrayArray135[plane][x][y + 1] |= 0x492;
 				} else
-				if(j1 == 1)
+				if(rotation == 1)
 				{
-					anIntArrayArrayArray135[k][l][i + 1] |= 0x492;
-					anIntArrayArrayArray135[k][l + 1][i] |= 0x249;
+					anIntArrayArrayArray135[plane][x][y + 1] |= 0x492;
+					anIntArrayArrayArray135[plane][x + 1][y] |= 0x249;
 				} else
-				if(j1 == 2)
+				if(rotation == 2)
 				{
-					anIntArrayArrayArray135[k][l + 1][i] |= 0x249;
-					anIntArrayArrayArray135[k][l][i] |= 0x492;
+					anIntArrayArrayArray135[plane][x + 1][y] |= 0x249;
+					anIntArrayArrayArray135[plane][x][y] |= 0x492;
 				} else
-				if(j1 == 3)
+				if(rotation == 3)
 				{
-					anIntArrayArrayArray135[k][l][i] |= 0x492;
-					anIntArrayArrayArray135[k][l][i] |= 0x249;
+					anIntArrayArrayArray135[plane][x][y] |= 0x492;
+					anIntArrayArrayArray135[plane][x][y] |= 0x249;
 				}
-			if(class46.aBoolean767 && class11 != null)
-				class11.method211(i, j1, l, j, class46.aBoolean757);
-			if(class46.anInt775 != 16)
-				worldController.method290(i, class46.anInt775, l, k);
+			if(objDef.aBoolean767 && class11 != null)
+				class11.method211(y, rotation, x, type, objDef.aBoolean757);
+			if(objDef.anInt775 != 16)
+				worldController.method290(y, objDef.anInt775, x, plane);
 			return;
 		}
-		if(j == 3)
+		if(type == 3)
 		{
 			Object obj5;
-			if(class46.anInt781 == -1 && class46.childrenIDs == null)
-				obj5 = class46.method578(3, j1, k1, l1, i2, j2, -1);
+			if(objDef.anInt781 == -1 && objDef.childrenIDs == null)
+				obj5 = objDef.method578(3, rotation, k1, l1, i2, j2, -1);
 			else
-				obj5 = new Animable_Sub5(i1, j1, 3, l1, i2, k1, j2, class46.anInt781, true);
-			worldController.method282(anIntArray140[j1], ((Animable) (obj5)), l2, i, byte0, l, null, k2, 0, k);
-			if(class46.aBoolean779)
-				if(j1 == 0)
-					aByteArrayArrayArray134[k][l][i + 1] = 50;
+				obj5 = new Animable_Sub5(objId, rotation, 3, l1, i2, k1, j2, objDef.anInt781, true);
+			worldController.method282(anIntArray140[rotation], ((Animable) (obj5)), uid, y, packedTypeAndRotation, x, null, k2, 0, plane);
+			if(objDef.aBoolean779)
+				if(rotation == 0)
+					aByteArrayArrayArray134[plane][x][y + 1] = 50;
 				else
-				if(j1 == 1)
-					aByteArrayArrayArray134[k][l + 1][i + 1] = 50;
+				if(rotation == 1)
+					aByteArrayArrayArray134[plane][x + 1][y + 1] = 50;
 				else
-				if(j1 == 2)
-					aByteArrayArrayArray134[k][l + 1][i] = 50;
+				if(rotation == 2)
+					aByteArrayArrayArray134[plane][x + 1][y] = 50;
 				else
-				if(j1 == 3)
-					aByteArrayArrayArray134[k][l][i] = 50;
-			if(class46.aBoolean767 && class11 != null)
-				class11.method211(i, j1, l, j, class46.aBoolean757);
+				if(rotation == 3)
+					aByteArrayArrayArray134[plane][x][y] = 50;
+			if(objDef.aBoolean767 && class11 != null)
+				class11.method211(y, rotation, x, type, objDef.aBoolean757);
 			return;
 		}
-		if(j == 9)
+		if(type == 9)
 		{
 			Object obj6;
-			if(class46.anInt781 == -1 && class46.childrenIDs == null)
-				obj6 = class46.method578(j, j1, k1, l1, i2, j2, -1);
+			if(objDef.anInt781 == -1 && objDef.childrenIDs == null)
+				obj6 = objDef.method578(type, rotation, k1, l1, i2, j2, -1);
 			else
-				obj6 = new Animable_Sub5(i1, j1, j, l1, i2, k1, j2, class46.anInt781, true);
-			worldController.method284(l2, byte0, k2, 1, ((Animable) (obj6)), 1, k, 0, i, l);
-			if(class46.aBoolean767 && class11 != null)
-				class11.method212(class46.aBoolean757, class46.anInt744, class46.anInt761, l, i, j1);
+				obj6 = new Animable_Sub5(objId, rotation, type, l1, i2, k1, j2, objDef.anInt781, true);
+			worldController.method284(uid, packedTypeAndRotation, k2, 1, ((Animable) (obj6)), 1, plane, 0, y, x);
+			if(objDef.aBoolean767 && class11 != null)
+				class11.method212(objDef.aBoolean757, objDef.anInt744, objDef.anInt761, x, y, rotation);
 			return;
 		}
-		if(class46.aBoolean762)
-			if(j1 == 1)
+		if(objDef.aBoolean762)
+			if(rotation == 1)
 			{
 				int j3 = j2;
 				j2 = i2;
@@ -746,7 +746,7 @@ label0:
 				l1 = k1;
 				k1 = j3;
 			} else
-			if(j1 == 2)
+			if(rotation == 2)
 			{
 				int k3 = j2;
 				j2 = l1;
@@ -755,7 +755,7 @@ label0:
 				i2 = k1;
 				k1 = k3;
 			} else
-			if(j1 == 3)
+			if(rotation == 3)
 			{
 				int l3 = j2;
 				j2 = k1;
@@ -763,58 +763,58 @@ label0:
 				l1 = i2;
 				i2 = l3;
 			}
-		if(j == 4)
+		if(type == 4)
 		{
 			Object obj7;
-			if(class46.anInt781 == -1 && class46.childrenIDs == null)
-				obj7 = class46.method578(4, 0, k1, l1, i2, j2, -1);
+			if(objDef.anInt781 == -1 && objDef.childrenIDs == null)
+				obj7 = objDef.method578(4, 0, k1, l1, i2, j2, -1);
 			else
-				obj7 = new Animable_Sub5(i1, 0, 4, l1, i2, k1, j2, class46.anInt781, true);
-			worldController.method283(l2, i, j1 * 512, k, 0, k2, ((Animable) (obj7)), l, byte0, 0, anIntArray152[j1]);
+				obj7 = new Animable_Sub5(objId, 0, 4, l1, i2, k1, j2, objDef.anInt781, true);
+			worldController.method283(uid, y, rotation * 512, plane, 0, k2, ((Animable) (obj7)), x, packedTypeAndRotation, 0, anIntArray152[rotation]);
 			return;
 		}
-		if(j == 5)
+		if(type == 5)
 		{
 			int i4 = 16;
-			int k4 = worldController.method300(k, l, i);
+			int k4 = worldController.getObj1Uid(plane, x, y);
 			if(k4 > 0)
 				i4 = ObjectDef.forID(k4 >> 14 & 0x7fff).anInt775;
 			Object obj13;
-			if(class46.anInt781 == -1 && class46.childrenIDs == null)
-				obj13 = class46.method578(4, 0, k1, l1, i2, j2, -1);
+			if(objDef.anInt781 == -1 && objDef.childrenIDs == null)
+				obj13 = objDef.method578(4, 0, k1, l1, i2, j2, -1);
 			else
-				obj13 = new Animable_Sub5(i1, 0, 4, l1, i2, k1, j2, class46.anInt781, true);
-			worldController.method283(l2, i, j1 * 512, k, anIntArray137[j1] * i4, k2, ((Animable) (obj13)), l, byte0, anIntArray144[j1] * i4, anIntArray152[j1]);
+				obj13 = new Animable_Sub5(objId, 0, 4, l1, i2, k1, j2, objDef.anInt781, true);
+			worldController.method283(uid, y, rotation * 512, plane, anIntArray137[rotation] * i4, k2, ((Animable) (obj13)), x, packedTypeAndRotation, anIntArray144[rotation] * i4, anIntArray152[rotation]);
 			return;
 		}
-		if(j == 6)
+		if(type == 6)
 		{
 			Object obj8;
-			if(class46.anInt781 == -1 && class46.childrenIDs == null)
-				obj8 = class46.method578(4, 0, k1, l1, i2, j2, -1);
+			if(objDef.anInt781 == -1 && objDef.childrenIDs == null)
+				obj8 = objDef.method578(4, 0, k1, l1, i2, j2, -1);
 			else
-				obj8 = new Animable_Sub5(i1, 0, 4, l1, i2, k1, j2, class46.anInt781, true);
-			worldController.method283(l2, i, j1, k, 0, k2, ((Animable) (obj8)), l, byte0, 0, 256);
+				obj8 = new Animable_Sub5(objId, 0, 4, l1, i2, k1, j2, objDef.anInt781, true);
+			worldController.method283(uid, y, rotation, plane, 0, k2, ((Animable) (obj8)), x, packedTypeAndRotation, 0, 256);
 			return;
 		}
-		if(j == 7)
+		if(type == 7)
 		{
 			Object obj9;
-			if(class46.anInt781 == -1 && class46.childrenIDs == null)
-				obj9 = class46.method578(4, 0, k1, l1, i2, j2, -1);
+			if(objDef.anInt781 == -1 && objDef.childrenIDs == null)
+				obj9 = objDef.method578(4, 0, k1, l1, i2, j2, -1);
 			else
-				obj9 = new Animable_Sub5(i1, 0, 4, l1, i2, k1, j2, class46.anInt781, true);
-			worldController.method283(l2, i, j1, k, 0, k2, ((Animable) (obj9)), l, byte0, 0, 512);
+				obj9 = new Animable_Sub5(objId, 0, 4, l1, i2, k1, j2, objDef.anInt781, true);
+			worldController.method283(uid, y, rotation, plane, 0, k2, ((Animable) (obj9)), x, packedTypeAndRotation, 0, 512);
 			return;
 		}
-		if(j == 8)
+		if(type == 8)
 		{
 			Object obj10;
-			if(class46.anInt781 == -1 && class46.childrenIDs == null)
-				obj10 = class46.method578(4, 0, k1, l1, i2, j2, -1);
+			if(objDef.anInt781 == -1 && objDef.childrenIDs == null)
+				obj10 = objDef.method578(4, 0, k1, l1, i2, j2, -1);
 			else
-				obj10 = new Animable_Sub5(i1, 0, 4, l1, i2, k1, j2, class46.anInt781, true);
-			worldController.method283(l2, i, j1, k, 0, k2, ((Animable) (obj10)), l, byte0, 0, 768);
+				obj10 = new Animable_Sub5(objId, 0, 4, l1, i2, k1, j2, objDef.anInt781, true);
+			worldController.method283(uid, y, rotation, plane, 0, k2, ((Animable) (obj10)), x, packedTypeAndRotation, 0, 768);
 		}
 	}
 
@@ -873,9 +873,9 @@ label0:
 			{
 				for(int j3 = 0; j3 < 64; j3++)
 					if(l2 == i && i3 >= i1 && i3 < i1 + 8 && j3 >= j1 && j3 < j1 + 8)
-						method181(l1 + Class4.method156(j3 & 7, j, i3 & 7), 0, stream, l + Class4.method155(j, j3 & 7, i3 & 7), k1, j, 0);
+						method181_maybeReadTileHeights(l1 + Class4.method156(j3 & 7, j, i3 & 7), 0, stream, l + Class4.method155(j, j3 & 7, i3 & 7), k1, j, 0);
 					else
-						method181(-1, 0, stream, -1, 0, 0, 0);
+						method181_maybeReadTileHeights(-1, 0, stream, -1, 0, 0, 0);
 
 			}
 
@@ -903,15 +903,15 @@ label0:
 			for(int i2 = 0; i2 < 64; i2++)
 			{
 				for(int j2 = 0; j2 < 64; j2++)
-					method181(j2 + i, l, stream, i2 + j, l1, 0, k);
+					method181_maybeReadTileHeights(j2 + i, l, stream, i2 + j, l1, 0, k);
 
 			}
 
 		}
 	}
 
-	private void method181(int i, int j, Stream stream, int k, int l, int i1,
-								 int k1)
+	private void method181_maybeReadTileHeights(int i, int j, Stream stream, int k, int l, int i1,
+												int k1)
 	{
 		if(k >= 0 && k < 104 && i >= 0 && i < 104)
 		{
@@ -1251,7 +1251,7 @@ label0:
 		if(k == 5)
 		{
 			int j4 = 16;
-			int l4 = worldController.method300(k1, i1, j);
+			int l4 = worldController.getObj1Uid(k1, i1, j);
 			if(l4 > 0)
 				j4 = ObjectDef.forID(l4 >> 14 & 0x7fff).anInt775;
 			Object obj13;
@@ -1343,7 +1343,7 @@ label0:
 	return bool;
   }
 
-	public final void method190(int i, Class11 aclass11[], int j, WorldController worldController, byte abyte0[])
+	public final void readObjectStream(int x, Class11 aclass11[], int y, WorldController worldController, byte abyte0[])
 	{
 label0:
 		{
@@ -1355,30 +1355,33 @@ label0:
 				if(i1 == 0)
 					break label0;
 				l += i1;
-				int j1 = 0;
+				int packedPosition = 0;
 				do
 				{
 					int k1 = stream.method422();
 					if(k1 == 0)
 						break;
-					j1 += k1 - 1;
-					int l1 = j1 & 0x3f;
-					int i2 = j1 >> 6 & 0x3f;
-					int j2 = j1 >> 12;
-					int k2 = stream.readUnsignedByte();
-					int l2 = k2 >> 2;
-					int i3 = k2 & 3;
-					int j3 = i2 + i;
-					int k3 = l1 + j;
-					if(j3 > 0 && k3 > 0 && j3 < 103 && k3 < 103)
+					packedPosition += k1 - 1;
+
+					// signed locals, 2^5 max value
+					int localY = packedPosition & 0x3f;
+					int localX = packedPosition >> 6 & 0x3f;
+
+					int plane = packedPosition >> 12;
+					int packedMeta = stream.readUnsignedByte();
+					int type = packedMeta >> 2;
+					int rotation = packedMeta & 3;
+					int xInBigRegion = localX + x;
+					int yInBigRegion = localY + y;
+					if(xInBigRegion > 0 && yInBigRegion > 0 && xInBigRegion < 103 && yInBigRegion < 103)
 					{
-						int l3 = j2;
-						if((tileRenderRuleFlags[1][j3][k3] & 2) == 2)
+						int l3 = plane;
+						if((tileRenderRuleFlags[1][xInBigRegion][yInBigRegion] & 2) == 2)
 							l3--;
 						Class11 class11 = null;
 						if(l3 >= 0)
 							class11 = aclass11[l3];
-						method175(k3, worldController, class11, l2, j2, j3, l, i3);
+						method175(yInBigRegion, worldController, class11, type, plane, xInBigRegion, l, rotation);
 					}
 				} while(true);
 			} while(true);

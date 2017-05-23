@@ -8,13 +8,13 @@ public final class ObjectDef
 	public static ObjectDef forID(int i)
 	{
 		for(int j = 0; j < 20; j++)
-			if(cache[j].type == i)
+			if(cache[j].objectDefId == i)
 				return cache[j];
 
 		cacheIndex = (cacheIndex + 1) % 20;
 		ObjectDef class46 = cache[cacheIndex];
 		stream.currentOffset = streamIndices[i];
-		class46.type = i;
+		class46.objectDefId = i;
 		class46.setDefaults();
 		class46.readValues(stream);
 		return class46;
@@ -22,7 +22,7 @@ public final class ObjectDef
 
 	private void setDefaults()
 	{
-		anIntArray773 = null;
+		modelIndicies = null;
 		anIntArray776 = null;
 		name = null;
 		description = null;
@@ -43,7 +43,7 @@ public final class ObjectDef
 		actions = null;
 		anInt746 = -1;
 		anInt758 = -1;
-		aBoolean751 = false;
+		shouldMirrorX = false;
 		aBoolean779 = true;
 		anInt748 = 128;
 		anInt772 = 128;
@@ -62,10 +62,10 @@ public final class ObjectDef
 
 	public void method574(OnDemandFetcher class42_sub1)
 	{
-		if(anIntArray773 == null)
+		if(modelIndicies == null)
 			return;
-		for(int j = 0; j < anIntArray773.length; j++)
-			class42_sub1.method560(anIntArray773[j] & 0xffff, 0);
+		for(int j = 0; j < modelIndicies.length; j++)
+			class42_sub1.method560(modelIndicies[j] & 0xffff, 0);
 	}
 
 	public static void nullLoader()
@@ -100,26 +100,26 @@ stream = null;
 	{
 		if(anIntArray776 == null)
 		{
-			if(anIntArray773 == null)
+			if(modelIndicies == null)
 				return true;
 			if(i != 10)
 				return true;
 			boolean flag1 = true;
-			for(int k = 0; k < anIntArray773.length; k++)
-				flag1 &= Model.method463(anIntArray773[k] & 0xffff);
+			for(int k = 0; k < modelIndicies.length; k++)
+				flag1 &= Model.method463(modelIndicies[k] & 0xffff);
 
 			return flag1;
 		}
 		for(int j = 0; j < anIntArray776.length; j++)
 			if(anIntArray776[j] == i)
-				return Model.method463(anIntArray773[j] & 0xffff);
+				return Model.method463(modelIndicies[j] & 0xffff);
 
 		return true;
 	}
 
-	public Model method578(int i, int j, int k, int l, int i1, int j1, int k1)
+	public Model method578(int type, int j, int k, int l, int i1, int j1, int k1)
 	{
-		Model model = method581(i, k1, j);
+		Model model = method581(type, k1, j);
 		if(model == null)
 			return null;
 		if(aBoolean762 || aBoolean769)
@@ -144,11 +144,11 @@ stream = null;
 
 	public boolean method579()
 	{
-		if(anIntArray773 == null)
+		if(modelIndicies == null)
 			return true;
 		boolean flag1 = true;
-		for(int i = 0; i < anIntArray773.length; i++)
-			flag1 &= Model.method463(anIntArray773[i] & 0xffff);
+		for(int i = 0; i < modelIndicies.length; i++)
+			flag1 &= Model.method463(modelIndicies[i] & 0xffff);
 			return flag1;
 	}
 
@@ -172,25 +172,28 @@ stream = null;
 			return forID(childrenIDs[i]);
 	}
 
-	private Model method581(int j, int k, int l)
+	private Model method581(int type, int k, int l)
 	{
 		Model model = null;
-		long l1;
+		long uid;
 		if(anIntArray776 == null)
 		{
-			if(j != 10)
+			if(type != 10)
 				return null;
-			l1 = (long)((type << 6) + l) + ((long)(k + 1) << 32);
-			Model model_1 = (Model) mruNodes2.insertFromCache(l1);
+
+			uid = (long)((objectDefId << 6) + l) + ((long)(k + 1) << 32);
+
+			Model model_1 = (Model) mruNodes2.insertFromCache(uid);
 			if(model_1 != null)
 				return model_1;
-			if(anIntArray773 == null)
+			if(modelIndicies == null)
+
 				return null;
-			boolean flag1 = aBoolean751 ^ (l > 3);
-			int k1 = anIntArray773.length;
+			boolean flag1 = shouldMirrorX ^ (l > 3);
+			int k1 = modelIndicies.length;
 			for(int i2 = 0; i2 < k1; i2++)
 			{
-				int l2 = anIntArray773[i2];
+				int l2 = modelIndicies[i2];
 				if(flag1)
 					l2 += 0x10000;
 				model = (Model) mruNodes1.insertFromCache(l2);
@@ -214,7 +217,7 @@ stream = null;
 			int i1 = -1;
 			for(int j1 = 0; j1 < anIntArray776.length; j1++)
 			{
-				if(anIntArray776[j1] != j)
+				if(anIntArray776[j1] != type)
 					continue;
 				i1 = j1;
 				break;
@@ -222,12 +225,12 @@ stream = null;
 
 			if(i1 == -1)
 				return null;
-			l1 = (long)((type << 6) + (i1 << 3) + l) + ((long)(k + 1) << 32);
-			Model model_2 = (Model) mruNodes2.insertFromCache(l1);
+			uid = (long)((objectDefId << 6) + (i1 << 3) + l) + ((long)(k + 1) << 32);
+			Model model_2 = (Model) mruNodes2.insertFromCache(uid);
 			if(model_2 != null)
 				return model_2;
-			int j2 = anIntArray773[i1];
-			boolean flag3 = aBoolean751 ^ (l > 3);
+			int j2 = modelIndicies[i1];
+			boolean flag3 = shouldMirrorX ^ (l > 3);
 			if(flag3)
 				j2 += 0x10000;
 			model = (Model) mruNodes1.insertFromCache(j2);
@@ -268,7 +271,7 @@ stream = null;
 		model_3.method479(64 + aByte737, 768 + aByte742 * 5, -50, -10, -50, !aBoolean769);
 		if(anInt760 == 1)
 			model_3.anInt1654 = model_3.modelHeight;
-		mruNodes2.removeFromCache(model_3, l1);
+		mruNodes2.removeFromCache(model_3, uid);
 		return model_3;
 	}
 
@@ -288,13 +291,13 @@ label0:
 				{
 					int k = stream.readUnsignedByte();
 					if(k > 0)
-						if(anIntArray773 == null || lowMem)
+						if(modelIndicies == null || lowMem)
 						{
 							anIntArray776 = new int[k];
-							anIntArray773 = new int[k];
+							modelIndicies = new int[k];
 							for(int k1 = 0; k1 < k; k1++)
 							{
-								anIntArray773[k1] = stream.readUnsignedWord();
+								modelIndicies[k1] = stream.readUnsignedWord();
 								anIntArray776[k1] = stream.readUnsignedByte();
 							}
 
@@ -313,12 +316,12 @@ label0:
 				{
 					int l = stream.readUnsignedByte();
 					if(l > 0)
-						if(anIntArray773 == null || lowMem)
+						if(modelIndicies == null || lowMem)
 						{
 							anIntArray776 = null;
-							anIntArray773 = new int[l];
+							modelIndicies = new int[l];
 							for(int l1 = 0; l1 < l; l1++)
-								anIntArray773[l1] = stream.readUnsignedWord();
+								modelIndicies[l1] = stream.readUnsignedWord();
 
 						} else
 						{
@@ -391,7 +394,7 @@ label0:
 					anInt746 = stream.readUnsignedWord();
 				else
 				if(j == 62)
-					aBoolean751 = true;
+					shouldMirrorX = true;
 				else
 				if(j == 64)
 					aBoolean779 = false;
@@ -452,7 +455,7 @@ label0:
 		} while(true);
 		if(i == -1)
 		{
-			hasActions = anIntArray773 != null && (anIntArray776 == null || anIntArray776[0] == 10);
+			hasActions = modelIndicies != null && (anIntArray776 == null || anIntArray776[0] == 10);
 			if(actions != null)
 				hasActions = true;
 		}
@@ -467,7 +470,7 @@ label0:
 
 	private ObjectDef()
 	{
-		type = -1;
+		objectDefId = -1;
 	}
 
 	public boolean aBoolean736;
@@ -483,10 +486,10 @@ label0:
 	private int[] originalModelColors;
 	private int anInt748;
 	public int anInt749;
-	private boolean aBoolean751;
+	private boolean shouldMirrorX;
 	public static boolean lowMem;
 	private static Stream stream;
-	public int type;
+	public int objectDefId;
 	private static int[] streamIndices;
 	public boolean aBoolean757;
 	public int anInt758;
@@ -502,7 +505,7 @@ label0:
 	private boolean aBoolean769;
 	private static int cacheIndex;
 	private int anInt772;
-	private int[] anIntArray773;
+	private int[] modelIndicies;
 	public int anInt774;
 	public int anInt775;
 	private int[] anIntArray776;

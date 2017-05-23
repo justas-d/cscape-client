@@ -450,7 +450,7 @@ public class client extends RSApplet {
 
 			}
 
-			ObjectManager objectManager = new ObjectManager(byteGroundArray, intGroundArray);
+			ObjectManager objectManager = new ObjectManager(byteGroundArray, tileVertexHeights);
 			int k2 = tileMapBuffers.length;
 			stream.createFrame(0);
 			if(!aBoolean1159)
@@ -488,7 +488,7 @@ public class client extends RSApplet {
 					{
 						int l8 = (mapHashMatrix[i6] >> 8) * 64 - baseX;
 						int k9 = (mapHashMatrix[i6] & 0xff) * 64 - baseY;
-						objectManager.method190(l8, aClass11Array1230, k9, worldController, abyte1);
+						objectManager.readObjectStream(l8, aClass11Array1230, k9, worldController, abyte1);
 					}
 				}
 
@@ -696,7 +696,7 @@ public class client extends RSApplet {
 		{
 			for(int l2 = 0; l2 < 104; l2++)
 			{
-				int i3 = worldController.method303(plane, k2, l2);
+				int i3 = worldController.getObj3Uid(plane, k2, l2);
 				if(i3 != 0)
 				{
 					i3 = i3 >> 14 & 0x7fff;
@@ -1855,8 +1855,8 @@ public class client extends RSApplet {
 			j1++;
 		int k1 = x & 0x7f;
 		int l1 = y & 0x7f;
-		int i2 = intGroundArray[j1][l][i1] * (128 - k1) + intGroundArray[j1][l + 1][i1] * k1 >> 7;
-		int j2 = intGroundArray[j1][l][i1 + 1] * (128 - k1) + intGroundArray[j1][l + 1][i1 + 1] * k1 >> 7;
+		int i2 = tileVertexHeights[j1][l][i1] * (128 - k1) + tileVertexHeights[j1][l + 1][i1] * k1 >> 7;
+		int j2 = tileVertexHeights[j1][l][i1 + 1] * (128 - k1) + tileVertexHeights[j1][l + 1][i1 + 1] * k1 >> 7;
 		return i2 * (128 - l1) + j2 * l1 >> 7;
 	}
 
@@ -1996,7 +1996,7 @@ public class client extends RSApplet {
 			int k1 = player.y >> 7;
 			if(j1 < 0 || j1 >= 104 || k1 < 0 || k1 >= 104)
 				continue;
-			if(player.aModel_1714 != null && loopCycle >= player.anInt1707 && loopCycle < player.anInt1708)
+			if(player.transformObj != null && loopCycle >= player.anInt1707 && loopCycle < player.anInt1708)
 			{
 				player.aBoolean1699 = false;
 				player.anInt1709 = method42(plane, player.y, player.x);
@@ -2143,10 +2143,10 @@ public class client extends RSApplet {
 
 	private void method50(int i, int k, int l, int i1, int j1)
 	{
-		int k1 = worldController.method300(j1, l, i);
+		int k1 = worldController.getObj1Uid(j1, l, i);
 		if(k1 != 0)
 		{
-			int l1 = worldController.method304(j1, l, i, k1);
+			int l1 = worldController.getTopmost_1_2_3_5_typeAndRotation(j1, l, i, k1);
 			int k2 = l1 >> 6 & 3;
 			int i3 = l1 & 0x1f;
 			int k3 = k;
@@ -2242,7 +2242,7 @@ public class client extends RSApplet {
 		k1 = worldController.method302(j1, l, i);
 		if(k1 != 0)
 		{
-			int i2 = worldController.method304(j1, l, i, k1);
+			int i2 = worldController.getTopmost_1_2_3_5_typeAndRotation(j1, l, i, k1);
 			int l2 = i2 >> 6 & 3;
 			int j3 = i2 & 0x1f;
 			int l3 = k1 >> 14 & 0x7fff;
@@ -2279,7 +2279,7 @@ public class client extends RSApplet {
 				}
 			}
 		}
-		k1 = worldController.method303(j1, l, i);
+		k1 = worldController.getObj3Uid(j1, l, i);
 		if(k1 != 0)
 		{
 			int j2 = k1 >> 14 & 0x7fff;
@@ -3080,16 +3080,19 @@ public class client extends RSApplet {
 	private void method63()
 	{
 		Class30_Sub1 class30_sub1 = (Class30_Sub1)aClass19_1179.reverseGetFirst();
-		for(; class30_sub1 != null; class30_sub1 = (Class30_Sub1)aClass19_1179.reverseGetNext())
-			if(class30_sub1.anInt1294 == -1)
-			{
-				class30_sub1.anInt1302 = 0;
-				method89(class30_sub1);
-			} else
-			{
-				class30_sub1.unlink();
-			}
 
+		for(; class30_sub1 != null;
+            class30_sub1 = (Class30_Sub1)aClass19_1179.reverseGetNext())
+		{
+            if (class30_sub1.anInt1294 == -1)
+            {
+                class30_sub1.anInt1302 = 0;
+                method89(class30_sub1);
+            } else
+                {
+                class30_sub1.unlink();
+            }
+        }
 	}
 
 	private void resetImageProducers()
@@ -3211,7 +3214,7 @@ public class client extends RSApplet {
 	private boolean actionWalk(int i, int j, int k)
 	{
 		int i1 = i >> 14 & 0x7fff;
-		int j1 = worldController.method304(plane, k, j, i);
+		int j1 = worldController.getTopmost_1_2_3_5_typeAndRotation(plane, k, j, i);
 		if(j1 == -1)
 			return false;
 		int k1 = j1 & 0x1f;
@@ -4338,7 +4341,7 @@ public class client extends RSApplet {
 			if(l == j)
 				continue;
 			j = l;
-			if(k1 == 2 && worldController.method304(plane, i1, j1, l) >= 0)
+			if(k1 == 2 && worldController.getTopmost_1_2_3_5_typeAndRotation(plane, i1, j1, l) >= 0)
 			{
 				ObjectDef class46 = ObjectDef.forID(l1);
 				if(class46.childrenIDs != null)
@@ -4392,7 +4395,7 @@ public class client extends RSApplet {
 					}
 					menuActionName[menuActionRow] = "Examine @cya@" + class46.name + " @gre@(@whi@" + l1 + "@gre@) (@whi@" + (i1 + baseX) + "," + (j1 + baseY) + "@gre@)";
 					menuActionID[menuActionRow] = 1226;
-					menuActionCmd1[menuActionRow] = class46.type << 14;
+					menuActionCmd1[menuActionRow] = class46.objectDefId << 14;
 					menuActionCmd2[menuActionRow] = i1;
 					menuActionCmd3[menuActionRow] = j1;
 					menuActionRow++;
@@ -4540,7 +4543,7 @@ public class client extends RSApplet {
 		objectMapBuffers = null;
 		tilemapMatrix = null;
 		objectmapMatrix = null;
-		intGroundArray = null;
+		tileVertexHeights = null;
 		byteGroundArray = null;
 		worldController = null;
 		aClass11Array1230 = null;
@@ -6346,10 +6349,10 @@ public class client extends RSApplet {
 			if((l & 0x40) != 0)
 			{
 				int l1 = stream.method427();
-				int k2 = stream.method428();
+				int k2 = stream.method428_byte();
 				npc.updateHitData(k2, l1, loopCycle);
 				npc.loopCycleStatus = loopCycle + 300;
-				npc.currentHealth = stream.method428();
+				npc.currentHealth = stream.method428_byte();
 				npc.maxHealth = stream.method427();
 			}
 			if((l & 2) != 0)
@@ -6541,30 +6544,37 @@ public class client extends RSApplet {
 
 	}
 
-	private void method89(Class30_Sub1 class30_sub1)
+	private void method89(Class30_Sub1 something)
 	{
-		int i = 0;
-		int j = -1;
-		int k = 0;
-		int l = 0;
-		if(class30_sub1.anInt1296 == 0)
-			i = worldController.method300(class30_sub1.anInt1295, class30_sub1.anInt1297, class30_sub1.anInt1298);
-		if(class30_sub1.anInt1296 == 1)
-			i = worldController.method301(class30_sub1.anInt1295, class30_sub1.anInt1297, class30_sub1.anInt1298);
-		if(class30_sub1.anInt1296 == 2)
-			i = worldController.method302(class30_sub1.anInt1295, class30_sub1.anInt1297, class30_sub1.anInt1298);
-		if(class30_sub1.anInt1296 == 3)
-			i = worldController.method303(class30_sub1.anInt1295, class30_sub1.anInt1297, class30_sub1.anInt1298);
-		if(i != 0)
+		int uid = 0;
+		int objectDefId = -1;
+		int type = 0;
+		int rotation = 0;
+
+		if(something.mappedType == 0)
+			uid = worldController.getObj1Uid(something.plane, something.x, something.y);
+
+		if(something.mappedType == 1)
+			uid = worldController.getObj2Uid(something.plane, something.x, something.y);
+
+		if(something.mappedType == 2)
+			uid = worldController.getObj5Uid(something.plane, something.x, something.y);
+
+		if(something.mappedType == 3)
+			uid = worldController.getObj3Uid(something.plane, something.x, something.y);
+
+		if(uid != 0)
 		{
-			int i1 = worldController.method304(class30_sub1.anInt1295, class30_sub1.anInt1297, class30_sub1.anInt1298, i);
-			j = i >> 14 & 0x7fff;
-			k = i1 & 0x1f;
-			l = i1 >> 6;
+			int i1 = worldController.getTopmost_1_2_3_5_typeAndRotation(something.plane, something.x, something.y, uid);
+
+			// unpack obj id
+			objectDefId = uid >> 14 & 0x7fff;
+			type = i1 & 0x1f;
+			rotation = i1 >> 6;
 		}
-		class30_sub1.anInt1299 = j;
-		class30_sub1.anInt1301 = k;
-		class30_sub1.anInt1300 = l;
+		something.objectDefId = objectDefId;
+		something.objType = type;
+		something.rotation = rotation;
 	}
 
 	private void method90()
@@ -6672,8 +6682,8 @@ public class client extends RSApplet {
 			StreamLoader streamLoader_4 = streamLoaderForName(7, "chat system", "wordenc", expectedCRCs[7], 50);
 			StreamLoader streamLoader_5 = streamLoaderForName(8, "sound effects", "sounds", expectedCRCs[8], 55);
 			byteGroundArray = new byte[4][104][104];
-			intGroundArray = new int[4][105][105];
-			worldController = new WorldController(intGroundArray);
+			tileVertexHeights = new int[4][105][105];
+			worldController = new WorldController(tileVertexHeights);
 			for(int j = 0; j < 4; j++)
 				aClass11Array1230[j] = new Class11();
 
@@ -8154,13 +8164,13 @@ public class client extends RSApplet {
 	{
 		if((i & 0x400) != 0)
 		{
-			player.anInt1543 = stream.method428();
-			player.anInt1545 = stream.method428();
-			player.anInt1544 = stream.method428();
-			player.anInt1546 = stream.method428();
+			player.anInt1543 = stream.method428_byte();
+			player.anInt1545 = stream.method428_byte();
+			player.anInt1544 = stream.method428_byte();
+			player.anInt1546 = stream.method428_byte();
 			player.anInt1547 = stream.method436() + loopCycle;
-			player.anInt1548 = stream.method435() + loopCycle;
-			player.anInt1549 = stream.method428();
+			player.anInt1548 = stream.method435_short() + loopCycle;
+			player.anInt1549 = stream.method428_byte();
 			player.method446();
 		}
 		if((i & 0x100) != 0)
@@ -8308,7 +8318,7 @@ public class client extends RSApplet {
 		if((i & 0x200) != 0)
 		{
 			int l1 = stream.readUnsignedByte();
-			int l2 = stream.method428();
+			int l2 = stream.method428_byte();
 			player.updateHitData(l2, l1, loopCycle);
 			player.loopCycleStatus = loopCycle + 300;
 			player.currentHealth = stream.readUnsignedByte();
@@ -8364,7 +8374,7 @@ public class client extends RSApplet {
 						int l2 = plane;
 						if(l2 < 3 && (byteGroundArray[1][l1][k2] & 2) == 2)
 							l2++;
-						int i3 = j1 - intGroundArray[l2][l1][k2];
+						int i3 = j1 - tileVertexHeights[l2][l1][k2];
 						if(i3 > k1)
 							k1 = i3;
 					}
@@ -8600,23 +8610,23 @@ public class client extends RSApplet {
 					class30_sub1.anInt1294--;
 				if(class30_sub1.anInt1294 == 0)
 				{
-					if(class30_sub1.anInt1299 < 0 || ObjectManager.method178(class30_sub1.anInt1299, class30_sub1.anInt1301))
+					if(class30_sub1.objectDefId < 0 || ObjectManager.method178(class30_sub1.objectDefId, class30_sub1.objType))
 					{
-						method142(class30_sub1.anInt1298, class30_sub1.anInt1295, class30_sub1.anInt1300, class30_sub1.anInt1301, class30_sub1.anInt1297, class30_sub1.anInt1296, class30_sub1.anInt1299);
+						method142(class30_sub1.y, class30_sub1.plane, class30_sub1.rotation, class30_sub1.objType, class30_sub1.x, class30_sub1.mappedType, class30_sub1.objectDefId);
 						class30_sub1.unlink();
 					}
 				} else
 				{
 					if(class30_sub1.anInt1302 > 0)
 						class30_sub1.anInt1302--;
-					if(class30_sub1.anInt1302 == 0 && class30_sub1.anInt1297 >= 1 && class30_sub1.anInt1298 >= 1 && class30_sub1.anInt1297 <= 102 && class30_sub1.anInt1298 <= 102 && (class30_sub1.anInt1291 < 0 || ObjectManager.method178(class30_sub1.anInt1291, class30_sub1.anInt1293)))
+					if(class30_sub1.anInt1302 == 0 && class30_sub1.x >= 1 && class30_sub1.y >= 1 && class30_sub1.x <= 102 && class30_sub1.y <= 102 && (class30_sub1.anInt1291 < 0 || ObjectManager.method178(class30_sub1.anInt1291, class30_sub1.anotherObjType)))
 					{
-						method142(class30_sub1.anInt1298, class30_sub1.anInt1295, class30_sub1.anInt1292, class30_sub1.anInt1293, class30_sub1.anInt1297, class30_sub1.anInt1296, class30_sub1.anInt1291);
+						method142(class30_sub1.y, class30_sub1.plane, class30_sub1.direction, class30_sub1.anotherObjType, class30_sub1.x, class30_sub1.mappedType, class30_sub1.anInt1291);
 						class30_sub1.anInt1302 = -1;
-						if(class30_sub1.anInt1291 == class30_sub1.anInt1299 && class30_sub1.anInt1299 == -1)
+						if(class30_sub1.anInt1291 == class30_sub1.objectDefId && class30_sub1.objectDefId == -1)
 							class30_sub1.unlink();
 						else
-						if(class30_sub1.anInt1291 == class30_sub1.anInt1299 && class30_sub1.anInt1292 == class30_sub1.anInt1300 && class30_sub1.anInt1293 == class30_sub1.anInt1301)
+						if(class30_sub1.anInt1291 == class30_sub1.objectDefId && class30_sub1.direction == class30_sub1.rotation && class30_sub1.anotherObjType == class30_sub1.objType)
 							class30_sub1.unlink();
 					}
 				}
@@ -9320,33 +9330,35 @@ public class client extends RSApplet {
 
 	}
 
-	private void method130(int j, int k, int l, int i1, int j1, int k1,
-						   int l1, int i2, int j2)
+	private void spawnOrUpdate_Class30_Sub1(int j, int k, int dir, int mappedType, int y, int type,
+                                            int plane, int x, int j2)
 	{
-		Class30_Sub1 class30_sub1 = null;
-		for(Class30_Sub1 class30_sub1_1 = (Class30_Sub1)aClass19_1179.reverseGetFirst(); class30_sub1_1 != null; class30_sub1_1 = (Class30_Sub1)aClass19_1179.reverseGetNext())
+		Class30_Sub1 inst = null;
+		for(Class30_Sub1 element = (Class30_Sub1)aClass19_1179.reverseGetFirst();
+            element != null;
+            element = (Class30_Sub1)aClass19_1179.reverseGetNext())
 		{
-			if(class30_sub1_1.anInt1295 != l1 || class30_sub1_1.anInt1297 != i2 || class30_sub1_1.anInt1298 != j1 || class30_sub1_1.anInt1296 != i1)
+			if(element.plane != plane || element.x != x || element.y != y || element.mappedType != mappedType)
 				continue;
-			class30_sub1 = class30_sub1_1;
+			inst = element;
 			break;
 		}
 
-		if(class30_sub1 == null)
+		if(inst == null)
 		{
-			class30_sub1 = new Class30_Sub1();
-			class30_sub1.anInt1295 = l1;
-			class30_sub1.anInt1296 = i1;
-			class30_sub1.anInt1297 = i2;
-			class30_sub1.anInt1298 = j1;
-			method89(class30_sub1);
-			aClass19_1179.insertHead(class30_sub1);
+			inst = new Class30_Sub1();
+			inst.plane = plane;
+			inst.mappedType = mappedType;
+			inst.x = x;
+			inst.y = y;
+			method89(inst);
+			aClass19_1179.insertHead(inst);
 		}
-		class30_sub1.anInt1291 = k;
-		class30_sub1.anInt1293 = k1;
-		class30_sub1.anInt1292 = l;
-		class30_sub1.anInt1302 = j2;
-		class30_sub1.anInt1294 = j;
+		inst.anInt1291 = k;
+		inst.anotherObjType = type;
+		inst.direction = dir;
+		inst.anInt1302 = j2;
+		inst.anInt1294 = j;
 	}
 
 	private boolean interfaceIsSelected(RSInterface class9)
@@ -9729,11 +9741,11 @@ public class client extends RSApplet {
 		}
 		if(opcode == 215)
 		{
-			int id = stream.method435();
-			int packetOff = stream.method428();
+			int id = stream.method435_short();
+			int packetOff = stream.method428_byte();
 			int k6 = updRegionPlayerLocalX + (packetOff >> 4 & 7);
 			int j9 = updRegionPlayerLocalY + (packetOff & 7);
-			int pid = stream.method435();
+			int pid = stream.method435_short();
 			int amount = stream.readUnsignedWord();
 			if(k6 >= 0 && j9 >= 0 && k6 < 104 && j9 < 104 && pid != ourPid)
 			{
@@ -9777,104 +9789,114 @@ public class client extends RSApplet {
 		}
 		if(opcode == 160)
 		{
-			int k1 = stream.method428();
-			int j4 = updRegionPlayerLocalX + (k1 >> 4 & 7);
-			int i7 = updRegionPlayerLocalY + (k1 & 7);
-			int l9 = stream.method428();
-			int j12 = l9 >> 2;
+			int packed = stream.method428_byte();
+			int x = updRegionPlayerLocalX + (packed >> 4 & 7);
+			int y = updRegionPlayerLocalY + (packed & 7);
+			int l9 = stream.method428_byte();
+			int type = l9 >> 2;
 			int k14 = l9 & 3;
-			int j16 = anIntArray1177[j12];
-			int j17 = stream.method435();
-			if(j4 >= 0 && i7 >= 0 && j4 < 103 && i7 < 103)
+			int mappedType = anIntArray1177_possibleObjectTypeTo_Something_Map[type];
+			int animationId = stream.method435_short();
+			if(x >= 0 && y >= 0 && x < 103 && y < 103)
 			{
-				int j18 = intGroundArray[plane][j4][i7];
-				int i19 = intGroundArray[plane][j4 + 1][i7];
-				int l19 = intGroundArray[plane][j4 + 1][i7 + 1];
-				int k20 = intGroundArray[plane][j4][i7 + 1];
-				if(j16 == 0)
+				int j18 = tileVertexHeights[plane][x][y];
+				int i19 = tileVertexHeights[plane][x + 1][y];
+				int l19 = tileVertexHeights[plane][x + 1][y + 1];
+				int k20 = tileVertexHeights[plane][x][y + 1];
+
+				if(mappedType == 0)
 				{
-					Object1 class10 = worldController.method296(plane, j4, i7);
+					Object1 class10 = worldController.method296(plane, x, y);
 					if(class10 != null)
 					{
 						int k21 = class10.uid >> 14 & 0x7fff;
-						if(j12 == 2)
+						if(type == 2)
 						{
-							class10.aClass30_Sub2_Sub4_278 = new Animable_Sub5(k21, 4 + k14, 2, i19, l19, j18, k20, j17, false);
-							class10.aClass30_Sub2_Sub4_279 = new Animable_Sub5(k21, k14 + 1 & 3, 2, i19, l19, j18, k20, j17, false);
+							class10.aClass30_Sub2_Sub4_278 = new Animable_Sub5(k21, 4 + k14, 2, i19, l19, j18, k20, animationId, false);
+							class10.aClass30_Sub2_Sub4_279 = new Animable_Sub5(k21, k14 + 1 & 3, 2, i19, l19, j18, k20, animationId, false);
 						} else
 						{
-							class10.aClass30_Sub2_Sub4_278 = new Animable_Sub5(k21, k14, j12, i19, l19, j18, k20, j17, false);
+							class10.aClass30_Sub2_Sub4_278 = new Animable_Sub5(k21, k14, type, i19, l19, j18, k20, animationId, false);
 						}
 					}
 				}
-				if(j16 == 1)
+
+				if(mappedType == 1)
 				{
-					Object2 class26 = worldController.method297(j4, i7, plane);
+					Object2 class26 = worldController.method297(x, y, plane);
 					if(class26 != null)
-						class26.aClass30_Sub2_Sub4_504 = new Animable_Sub5(class26.uid >> 14 & 0x7fff, 0, 4, i19, l19, j18, k20, j17, false);
+						class26.aClass30_Sub2_Sub4_504 = new Animable_Sub5(class26.uid >> 14 & 0x7fff, 0, 4, i19, l19, j18, k20, animationId, false);
 				}
-				if(j16 == 2)
+
+				if(mappedType == 2)
 				{
-					Object5 class28 = worldController.method298(j4, i7, plane);
-					if(j12 == 11)
-						j12 = 10;
+					Object5 class28 = worldController.method298(x, y, plane);
+					if(type == 11)
+						type = 10;
 					if(class28 != null)
-						class28.aClass30_Sub2_Sub4_521 = new Animable_Sub5(class28.uid >> 14 & 0x7fff, k14, j12, i19, l19, j18, k20, j17, false);
+						class28.aClass30_Sub2_Sub4_521 = new Animable_Sub5(class28.uid >> 14 & 0x7fff, k14, type, i19, l19, j18, k20, animationId, false);
 				}
-				if(j16 == 3)
+
+				if(mappedType == 3)
 				{
-					Object3 class49 = worldController.method299(i7, j4, plane);
+					Object3 class49 = worldController.method299(y, x, plane);
 					if(class49 != null)
-						class49.aClass30_Sub2_Sub4_814 = new Animable_Sub5(class49.uid >> 14 & 0x7fff, k14, 22, i19, l19, j18, k20, j17, false);
+						class49.aClass30_Sub2_Sub4_814 = new Animable_Sub5(class49.uid >> 14 & 0x7fff, k14, 22, i19, l19, j18, k20, animationId, false);
 				}
+
 			}
 			return;
 		}
 		if(opcode == 147)
 		{
-			int l1 = stream.method428();
-			int k4 = updRegionPlayerLocalX + (l1 >> 4 & 7);
-			int j7 = updRegionPlayerLocalY + (l1 & 7);
-			int i10 = stream.readUnsignedWord();
+			int packed = stream.method428_byte();
+			int x = updRegionPlayerLocalX + (packed >> 4 & 7);
+			int y = updRegionPlayerLocalY + (packed & 7);
+			int pid = stream.readUnsignedWord();
 			byte byte0 = stream.method430();
 			int l14 = stream.method434();
 			byte byte1 = stream.method429();
 			int k17 = stream.readUnsignedWord();
-			int k18 = stream.method428();
-			int j19 = k18 >> 2;
-			int i20 = k18 & 3;
-			int l20 = anIntArray1177[j19];
+			int k18 = stream.method428_byte();
+			int type = k18 >> 2;
+			int maybeFacingDirection = k18 & 3;
+			int l20 = anIntArray1177_possibleObjectTypeTo_Something_Map[type];
 			byte byte2 = stream.readSignedByte();
-			int l21 = stream.readUnsignedWord();
+			int objectId = stream.readUnsignedWord();
 			byte byte3 = stream.method429();
+
 			Player player;
-			if(i10 == ourPid)
+			if(pid == ourPid)
 				player = myPlayer;
 			else
-				player = playerArray[i10];
+				player = playerArray[pid];
+
 			if(player != null)
 			{
-				ObjectDef class46 = ObjectDef.forID(l21);
-				int i22 = intGroundArray[plane][k4][j7];
-				int j22 = intGroundArray[plane][k4 + 1][j7];
-				int k22 = intGroundArray[plane][k4 + 1][j7 + 1];
-				int l22 = intGroundArray[plane][k4][j7 + 1];
-				Model model = class46.method578(j19, i20, i22, j22, k22, l22, -1);
+				ObjectDef objectDef = ObjectDef.forID(objectId);
+
+				int left = tileVertexHeights[plane][x][y];
+				int right = tileVertexHeights[plane][x + 1][y];
+				int topRight = tileVertexHeights[plane][x + 1][y + 1];
+				int topLeft = tileVertexHeights[plane][x][y + 1];
+
+				Model model = objectDef.method578(type, maybeFacingDirection, left, right, topRight, topLeft, -1);
+
 				if(model != null)
 				{
-					method130(k17 + 1, -1, 0, l20, j7, 0, plane, k4, l14 + 1);
+					spawnOrUpdate_Class30_Sub1(k17 + 1, -1, 0, l20, y, 0, plane, x, l14 + 1);
 					player.anInt1707 = l14 + loopCycle;
 					player.anInt1708 = k17 + loopCycle;
-					player.aModel_1714 = model;
-					int i23 = class46.anInt744;
-					int j23 = class46.anInt761;
-					if(i20 == 1 || i20 == 3)
+					player.transformObj = model;
+					int i23 = objectDef.anInt744;
+					int j23 = objectDef.anInt761;
+					if(maybeFacingDirection == 1 || maybeFacingDirection == 3)
 					{
-						i23 = class46.anInt761;
-						j23 = class46.anInt744;
+						i23 = objectDef.anInt761;
+						j23 = objectDef.anInt744;
 					}
-					player.anInt1711 = k4 * 128 + i23 * 64;
-					player.anInt1713 = j7 * 128 + j23 * 64;
+					player.anInt1711 = x * 128 + i23 * 64;
+					player.anInt1713 = y * 128 + j23 * 64;
 					player.anInt1712 = method42(plane, player.anInt1713, player.anInt1711);
 					if(byte2 > byte0)
 					{
@@ -9888,25 +9910,25 @@ public class client extends RSApplet {
 						byte3 = byte1;
 						byte1 = byte5;
 					}
-					player.anInt1719 = k4 + byte2;
-					player.anInt1721 = k4 + byte0;
-					player.anInt1720 = j7 + byte3;
-					player.anInt1722 = j7 + byte1;
+					player.anInt1719 = x + byte2;
+					player.anInt1721 = x + byte0;
+					player.anInt1720 = y + byte3;
+					player.anInt1722 = y + byte1;
 				}
 			}
 		}
 		if(opcode == 151)
 		{
-			int i2 = stream.method426();
-			int l4 = updRegionPlayerLocalX + (i2 >> 4 & 7);
-			int k7 = updRegionPlayerLocalY + (i2 & 7);
+			int packed = stream.method426();
+			int x = updRegionPlayerLocalX + (packed >> 4 & 7);
+			int y = updRegionPlayerLocalY + (packed & 7);
 			int j10 = stream.method434();
-			int k12 = stream.method428();
-			int i15 = k12 >> 2;
-			int k16 = k12 & 3;
-			int l17 = anIntArray1177[i15];
-			if(l4 >= 0 && k7 >= 0 && l4 < 104 && k7 < 104)
-				method130(-1, j10, k16, l17, k7, i15, plane, l4, 0);
+			int k12 = stream.method428_byte();
+			int type = k12 >> 2;
+			int direction = k12 & 3;
+			int mappedType = anIntArray1177_possibleObjectTypeTo_Something_Map[type];
+			if(x >= 0 && y >= 0 && x < 104 && y < 104)
+				spawnOrUpdate_Class30_Sub1(-1, j10, direction, mappedType, y, type, plane, x, 0);
 			return;
 		}
 		if(opcode == 4)
@@ -9954,12 +9976,12 @@ public class client extends RSApplet {
 			int l2 = stream.method427();
 			int k5 = l2 >> 2;
 			int j8 = l2 & 3;
-			int i11 = anIntArray1177[k5];
+			int i11 = anIntArray1177_possibleObjectTypeTo_Something_Map[k5];
 			int j13 = stream.readUnsignedByte();
 			int k15 = updRegionPlayerLocalX + (j13 >> 4 & 7);
 			int l16 = updRegionPlayerLocalY + (j13 & 7);
 			if(k15 >= 0 && l16 >= 0 && k15 < 104 && l16 < 104)
-				method130(-1, -1, j8, i11, l16, k5, plane, k15, 0);
+				spawnOrUpdate_Class30_Sub1(-1, -1, j8, i11, l16, k5, plane, k15, 0);
 			return;
 		}
 		if(opcode == 117)
@@ -10192,16 +10214,16 @@ public class client extends RSApplet {
 				return;
 			int i2 = 0;
 			if(j1 == 0)
-				i2 = worldController.method300(j, i1, i);
+				i2 = worldController.getObj1Uid(j, i1, i);
 			if(j1 == 1)
-				i2 = worldController.method301(j, i1, i);
+				i2 = worldController.getObj2Uid(j, i1, i);
 			if(j1 == 2)
-				i2 = worldController.method302(j, i1, i);
+				i2 = worldController.getObj5Uid(j, i1, i);
 			if(j1 == 3)
-				i2 = worldController.method303(j, i1, i);
+				i2 = worldController.getObj3Uid(j, i1, i);
 			if(i2 != 0)
 			{
-				int i3 = worldController.method304(j, i1, i, i2);
+				int i3 = worldController.getTopmost_1_2_3_5_typeAndRotation(j, i1, i, i2);
 				int j2 = i2 >> 14 & 0x7fff;
 				int k2 = i3 & 0x1f;
 				int l2 = i3 >> 6;
@@ -10236,7 +10258,7 @@ public class client extends RSApplet {
 				int j3 = j;
 				if(j3 < 3 && (byteGroundArray[1][i1][i] & 2) == 2)
 					j3++;
-				ObjectManager.method188(worldController, k, i, l, j3, aClass11Array1230[j], intGroundArray, i1, k1, j);
+				ObjectManager.method188(worldController, k, i, l, j3, aClass11Array1230[j], tileVertexHeights, i1, k1, j);
 			}
 		}
 	}
@@ -10372,7 +10394,7 @@ public class client extends RSApplet {
 			if(pktType == 176)
 			{
 				daysSinceRecovChange = inStream.method427();
-				unreadMessages = inStream.method435();
+				unreadMessages = inStream.method435_short();
 				membersInt = inStream.readUnsignedByte();
 				anInt1193 = inStream.method440();
 				daysSinceLastLogin = inStream.readUnsignedWord();
@@ -10400,7 +10422,7 @@ public class client extends RSApplet {
 			if(pktType == 64)
 			{
 				updRegionPlayerLocalX = inStream.method427();
-				updRegionPlayerLocalY = inStream.method428();
+				updRegionPlayerLocalY = inStream.method428_byte();
 
 				for(int x = updRegionPlayerLocalX; x < updRegionPlayerLocalX + 8; x++)
 				{
@@ -10418,7 +10440,7 @@ public class client extends RSApplet {
 					class30_sub1 != null;
 					class30_sub1 = (Class30_Sub1)aClass19_1179.reverseGetNext())
 				{
-					if(class30_sub1.anInt1297 >= updRegionPlayerLocalX && class30_sub1.anInt1297 < updRegionPlayerLocalX + 8 && class30_sub1.anInt1298 >= updRegionPlayerLocalY && class30_sub1.anInt1298 < updRegionPlayerLocalY + 8 && class30_sub1.anInt1295 == plane)
+					if(class30_sub1.x >= updRegionPlayerLocalX && class30_sub1.x < updRegionPlayerLocalX + 8 && class30_sub1.y >= updRegionPlayerLocalY && class30_sub1.y < updRegionPlayerLocalY + 8 && class30_sub1.plane == plane)
 						class30_sub1.anInt1294 = 0;
 				}
 
@@ -10531,7 +10553,7 @@ public class client extends RSApplet {
 			if(pktType == 121)
 			{
 				int j2 = inStream.method436();
-				int k10 = inStream.method435();
+				int k10 = inStream.method435_short();
 				if(musicEnabled && !lowMem)
 				{
 					nextSong = j2;
@@ -10566,13 +10588,13 @@ public class client extends RSApplet {
 				int r2 = region2;
 				if(pktType == 73)
 				{
-					r1 = inStream.method435();
+					r1 = inStream.method435_short();
 					r2 = inStream.readUnsignedWord();
 					aBoolean1159 = false;
 				}
 				if(pktType == 241)
 				{
-					r2 = inStream.method435();
+					r2 = inStream.method435_short();
 					inStream.initBitAccess();
 					for(int j16 = 0; j16 < 4; j16++)
 					{
@@ -10784,9 +10806,9 @@ public class client extends RSApplet {
 
 				for(Class30_Sub1 class30_sub1_1 = (Class30_Sub1)aClass19_1179.reverseGetFirst(); class30_sub1_1 != null; class30_sub1_1 = (Class30_Sub1)aClass19_1179.reverseGetNext())
 				{
-					class30_sub1_1.anInt1297 -= i17;
-					class30_sub1_1.anInt1298 -= j21;
-					if(class30_sub1_1.anInt1297 < 0 || class30_sub1_1.anInt1298 < 0 || class30_sub1_1.anInt1297 >= 104 || class30_sub1_1.anInt1298 >= 104)
+					class30_sub1_1.x -= i17;
+					class30_sub1_1.y -= j21;
+					if(class30_sub1_1.x < 0 || class30_sub1_1.y < 0 || class30_sub1_1.x >= 104 || class30_sub1_1.y >= 104)
 						class30_sub1_1.unlink();
 				}
 
@@ -11083,7 +11105,7 @@ public class client extends RSApplet {
 			}
 			if(pktType == 248)
 			{
-				int i5 = inStream.method435();
+				int i5 = inStream.method435_short();
 				int k12 = inStream.readUnsignedWord();
 				if(chatOverlayInteraceId != -1)
 				{
@@ -11106,7 +11128,7 @@ public class client extends RSApplet {
 			if(pktType == 79)
 			{
 				int j5 = inStream.method434();
-				int l12 = inStream.method435();
+				int l12 = inStream.method435_short();
 				RSInterface class9_3 = RSInterface.interfaceCache[j5];
 				if(class9_3 != null && class9_3.type == 0)
 				{
@@ -11189,7 +11211,7 @@ public class client extends RSApplet {
 			}
 			if(pktType == 24)
 			{
-				anInt1054 = inStream.method428();
+				anInt1054 = inStream.method428_byte();
 				if(anInt1054 == tabID)
 				{
 					if(anInt1054 == 3)
@@ -11256,7 +11278,7 @@ public class client extends RSApplet {
 			if(pktType == 126)
 			{
 				String s1 = inStream.readString();
-				int k13 = inStream.method435();
+				int k13 = inStream.method435_short();
 				RSInterface.interfaceCache[k13].message = s1;
 				if(RSInterface.interfaceCache[k13].parentID == tabInterfaceIDs[tabID])
 					needDrawTabArea = true;
@@ -11328,7 +11350,7 @@ public class client extends RSApplet {
 			}
 			if(pktType == 230)
 			{
-				int j7 = inStream.method435();
+				int j7 = inStream.method435_short();
 				int j14 = inStream.readUnsignedWord();
 				int k19 = inStream.readUnsignedWord();
 				int k22 = inStream.method436();
@@ -12198,7 +12220,7 @@ public class client extends RSApplet {
 	private String myPassword;
 	private static int anInt1175;
 	private boolean genericLoadingError;
-	private final int[] anIntArray1177 = {
+	private final int[] anIntArray1177_possibleObjectTypeTo_Something_Map = {
 		0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 
 		2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 
 		2, 2, 3
@@ -12239,7 +12261,7 @@ public class client extends RSApplet {
 	private int anInt1211;
 	private String promptInput;
 	private int anInt1213;
-	private int[][][] intGroundArray;
+	private int[][][] tileVertexHeights;
 	private long aLong1215;
 	private int loginScreenCursorPos;
 	private final Background[] modIcons;

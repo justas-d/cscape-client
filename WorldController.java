@@ -86,7 +86,7 @@ final class WorldController {
 				for(int j1 = 0; j1 < class30_sub3_1.anInt1317; j1++)
 				{
 					Object5 class28 = class30_sub3_1.obj5Array[j1];
-					if((class28.uid >> 29 & 3) == 2 && class28.anInt523 == j && class28.anInt525 == i)
+					if((class28.uid >> 29 & 3) == 2 && class28.localX == j && class28.localY == i)
 						class28.anInt517--;
 				}
 
@@ -168,7 +168,7 @@ final class WorldController {
 		class49.anInt813 = k * 128 + 64;
 		class49.anInt811 = j;
 		class49.uid = i1;
-		class49.aByte816 = byte0;
+		class49.packedTypeAndRotation = byte0;
 		if(groundArray[i][j1][k] == null)
 			groundArray[i][j1][k] = new Ground(i, j1, k);
 		groundArray[i][j1][k].obj3 = class49;
@@ -208,14 +208,14 @@ final class WorldController {
 		groundArray[plane][x][y].droppedItems = obj;
 	}
 
-	public void method282(int i, Animable class30_sub2_sub4, int j, int k, byte byte0, int l,
+	public void method282(int i, Animable class30_sub2_sub4, int j, int k, byte packedTypeAndRotation, int l,
 						  Animable class30_sub2_sub4_1, int i1, int j1, int k1)
 	{
 		if(class30_sub2_sub4 == null && class30_sub2_sub4_1 == null)
 			return;
 		Object1 object1 = new Object1();
 		object1.uid = j;
-		object1.aByte281 = byte0;
+		object1.packedTypeAndRotation = packedTypeAndRotation;
 		object1.anInt274 = l * 128 + 64;
 		object1.anInt275 = k * 128 + 64;
 		object1.anInt273 = i1;
@@ -237,7 +237,7 @@ final class WorldController {
 			return;
 		Object2 class26 = new Object2();
 		class26.uid = i;
-		class26.aByte506 = byte0;
+		class26.packedTypeAndRotation = byte0;
 		class26.anInt500 = l1 * 128 + 64 + j1;
 		class26.anInt501 = j * 128 + 64 + i2;
 		class26.anInt499 = k1;
@@ -316,15 +316,15 @@ final class WorldController {
 
 		Object5 class28 = new Object5();
 		class28.uid = j2;
-		class28.aByte530 = byte0;
+		class28.packedTypeAndRotation = byte0;
 		class28.anInt517 = i;
 		class28.anInt519 = j1;
 		class28.anInt520 = k1;
 		class28.anInt518 = l1;
 		class28.aClass30_Sub2_Sub4_521 = class30_sub2_sub4;
 		class28.anInt522 = i2;
-		class28.anInt523 = j;
-		class28.anInt525 = k;
+		class28.localX = j;
+		class28.localY = k;
 		class28.anInt524 = (j + l) - 1;
 		class28.anInt526 = (k + i1) - 1;
 		for(int i3 = j; i3 < j + l; i3++)
@@ -372,9 +372,9 @@ final class WorldController {
 
 	private void method289(Object5 class28)
 	{
-		for(int j = class28.anInt523; j <= class28.anInt524; j++)
+		for(int j = class28.localX; j <= class28.anInt524; j++)
 		{
-			for(int k = class28.anInt525; k <= class28.anInt526; k++)
+			for(int k = class28.localY; k <= class28.anInt526; k++)
 			{
 				Ground class30_sub3 = groundArray[class28.anInt517][j][k];
 				if(class30_sub3 != null)
@@ -448,7 +448,7 @@ final class WorldController {
 		for(int j1 = 0; j1 < class30_sub3.anInt1317; j1++)
 		{
 			Object5 class28 = class30_sub3.obj5Array[j1];
-			if((class28.uid >> 29 & 3) == 2 && class28.anInt523 == k && class28.anInt525 == l)
+			if((class28.uid >> 29 & 3) == 2 && class28.localX == k && class28.localY == l)
 			{
 				method289(class28);
 				return;
@@ -498,7 +498,7 @@ final class WorldController {
 		for(int l = 0; l < class30_sub3.anInt1317; l++)
 		{
 			Object5 class28 = class30_sub3.obj5Array[l];
-			if((class28.uid >> 29 & 3) == 2 && class28.anInt523 == i && class28.anInt525 == j)
+			if((class28.uid >> 29 & 3) == 2 && class28.localX == i && class28.localY == j)
 				return class28;
 		}
 		return null;
@@ -513,62 +513,69 @@ final class WorldController {
 			return class30_sub3.obj3;
 	}
 
-	public int method300(int i, int j, int k)
+	public int getObj1Uid(int plane, int x, int y)
 	{
-		Ground class30_sub3 = groundArray[i][j][k];
-		if(class30_sub3 == null || class30_sub3.obj1 == null)
+		Ground ground = groundArray[plane][x][y];
+		if(ground == null || ground.obj1 == null)
 			return 0;
 		else
-			return class30_sub3.obj1.uid;
+			return ground.obj1.uid;
 	}
 
-	public int method301(int i, int j, int l)
+	public int getObj2Uid(int plane, int x, int y)
 	{
-		Ground class30_sub3 = groundArray[i][j][l];
-		if(class30_sub3 == null || class30_sub3.obj2 == null)
+		Ground ground = groundArray[plane][x][y];
+		if(ground == null || ground.obj2 == null)
 			return 0;
 		else
-			return class30_sub3.obj2.uid;
+			return ground.obj2.uid;
 	}
 
-	public int method302(int i, int j, int k)
+	public int getObj5Uid(int plane, int x, int y)
 	{
-		Ground class30_sub3 = groundArray[i][j][k];
-		if(class30_sub3 == null)
+		Ground ground = groundArray[plane][x][y];
+
+		if(ground == null)
 			return 0;
-		for(int l = 0; l < class30_sub3.anInt1317; l++)
+
+		for(int l = 0; l < ground.anInt1317; l++)
 		{
-			Object5 class28 = class30_sub3.obj5Array[l];
-			if((class28.uid >> 29 & 3) == 2 && class28.anInt523 == j && class28.anInt525 == k)
-				return class28.uid;
+			Object5 obj = ground.obj5Array[l];
+			if((obj.uid >> 29 & 3) == 2 && obj.localX == x && obj.localY == y)
+				return obj.uid;
 		}
 
 		return 0;
 	}
 
-	public int method303(int i, int j, int k)
+	public int getObj3Uid(int plane, int x, int y)
 	{
-		Ground class30_sub3 = groundArray[i][j][k];
-		if(class30_sub3 == null || class30_sub3.obj3 == null)
+		Ground ground = groundArray[plane][x][y];
+		if(ground == null || ground.obj3 == null)
 			return 0;
 		else
-			return class30_sub3.obj3.uid;
+			return ground.obj3.uid;
 	}
 
-	public int method304(int i, int j, int k, int l)
+	public int getTopmost_1_2_3_5_typeAndRotation(int plane, int x, int y, int uid)
 	{
-		Ground class30_sub3 = groundArray[i][j][k];
-		if(class30_sub3 == null)
+		Ground ground = groundArray[plane][x][y];
+
+		if(ground == null)
 			return -1;
-		if(class30_sub3.obj1 != null && class30_sub3.obj1.uid == l)
-			return class30_sub3.obj1.aByte281 & 0xff;
-		if(class30_sub3.obj2 != null && class30_sub3.obj2.uid == l)
-			return class30_sub3.obj2.aByte506 & 0xff;
-		if(class30_sub3.obj3 != null && class30_sub3.obj3.uid == l)
-			return class30_sub3.obj3.aByte816 & 0xff;
-		for(int i1 = 0; i1 < class30_sub3.anInt1317; i1++)
-			if(class30_sub3.obj5Array[i1].uid == l)
-				return class30_sub3.obj5Array[i1].aByte530 & 0xff;
+
+		if(ground.obj1 != null && ground.obj1.uid == uid)
+			return ground.obj1.packedTypeAndRotation & 0xff;
+
+		if(ground.obj2 != null && ground.obj2.uid == uid)
+			return ground.obj2.packedTypeAndRotation & 0xff;
+
+		if(ground.obj3 != null && ground.obj3.uid == uid)
+			return ground.obj3.packedTypeAndRotation & 0xff;
+
+		for(int i1 = 0; i1 < ground.anInt1317; i1++)
+			if(ground.obj5Array[i1].uid == uid)
+				return ground.obj5Array[i1].packedTypeAndRotation & 0xff;
 
 		return -1;
 	}
@@ -605,7 +612,7 @@ final class WorldController {
 							Object5 class28 = class30_sub3.obj5Array[k2];
 							if(class28 != null && class28.aClass30_Sub2_Sub4_521 != null && class28.aClass30_Sub2_Sub4_521.aClass33Array1425 != null)
 							{
-								method307(l1, (class28.anInt524 - class28.anInt523) + 1, (class28.anInt526 - class28.anInt525) + 1, i2, j2, (Model)class28.aClass30_Sub2_Sub4_521);
+								method307(l1, (class28.anInt524 - class28.localX) + 1, (class28.anInt526 - class28.localY) + 1, i2, j2, (Model)class28.aClass30_Sub2_Sub4_521);
 								((Model)class28.aClass30_Sub2_Sub4_521).method480(j, k1, k, i, i1);
 							}
 						}
@@ -683,9 +690,9 @@ final class WorldController {
 										Object5 class28 = class30_sub3.obj5Array[j3];
 										if(class28 != null && class28.aClass30_Sub2_Sub4_521 != null && class28.aClass30_Sub2_Sub4_521.aClass33Array1425 != null)
 										{
-											int k3 = (class28.anInt524 - class28.anInt523) + 1;
-											int l3 = (class28.anInt526 - class28.anInt525) + 1;
-											method308(model, (Model)class28.aClass30_Sub2_Sub4_521, (class28.anInt523 - l) * 128 + (k3 - j) * 64, i3, (class28.anInt525 - i1) * 128 + (l3 - k) * 64, flag);
+											int k3 = (class28.anInt524 - class28.localX) + 1;
+											int l3 = (class28.anInt526 - class28.localY) + 1;
+											method308(model, (Model)class28.aClass30_Sub2_Sub4_521, (class28.localX - l) * 128 + (k3 - j) * 64, i3, (class28.localY - i1) * 128 + (l3 - k) * 64, flag);
 										}
 									}
 
@@ -1363,9 +1370,9 @@ label0:
 						Object5 class28_1 = class30_sub3_1.obj5Array[k2];
 						if(class28_1.anInt528 == anInt448)
 							continue;
-						for(int k3 = class28_1.anInt523; k3 <= class28_1.anInt524; k3++)
+						for(int k3 = class28_1.localX; k3 <= class28_1.anInt524; k3++)
 						{
-							for(int l4 = class28_1.anInt525; l4 <= class28_1.anInt526; l4++)
+							for(int l4 = class28_1.localY; l4 <= class28_1.anInt526; l4++)
 							{
 								Ground class30_sub3_21 = aclass30_sub3[k3][l4];
 								if(class30_sub3_21.aBoolean1322)
@@ -1376,11 +1383,11 @@ label0:
 									if(class30_sub3_21.anInt1325 == 0)
 										continue;
 									int l6 = 0;
-									if(k3 > class28_1.anInt523)
+									if(k3 > class28_1.localX)
 										l6++;
 									if(k3 < class28_1.anInt524)
 										l6 += 4;
-									if(l4 > class28_1.anInt525)
+									if(l4 > class28_1.localY)
 										l6 += 8;
 									if(l4 < class28_1.anInt526)
 										l6 += 2;
@@ -1394,11 +1401,11 @@ label0:
 						}
 
 						aClass28Array462[l1++] = class28_1;
-						int i5 = anInt453 - class28_1.anInt523;
+						int i5 = anInt453 - class28_1.localX;
 						int i6 = class28_1.anInt524 - anInt453;
 						if(i6 > i5)
 							i5 = i6;
-						int i7 = anInt454 - class28_1.anInt525;
+						int i7 = anInt454 - class28_1.localY;
 						int j8 = class28_1.anInt526 - anInt454;
 						if(j8 > i7)
 							class28_1.anInt527 = i5 + j8;
@@ -1434,11 +1441,11 @@ label0:
 							break;
 						Object5 class28_3 = aClass28Array462[l3];
 						class28_3.anInt528 = anInt448;
-						if(!method323(l, class28_3.anInt523, class28_3.anInt524, class28_3.anInt525, class28_3.anInt526, class28_3.aClass30_Sub2_Sub4_521.modelHeight))
+						if(!method323(l, class28_3.localX, class28_3.anInt524, class28_3.localY, class28_3.anInt526, class28_3.aClass30_Sub2_Sub4_521.modelHeight))
 							class28_3.aClass30_Sub2_Sub4_521.method443(class28_3.anInt522, anInt458, anInt459, anInt460, anInt461, class28_3.anInt519 - anInt455, class28_3.anInt518 - anInt456, class28_3.anInt520 - anInt457, class28_3.uid);
-						for(int k7 = class28_3.anInt523; k7 <= class28_3.anInt524; k7++)
+						for(int k7 = class28_3.localX; k7 <= class28_3.anInt524; k7++)
 						{
-							for(int l8 = class28_3.anInt525; l8 <= class28_3.anInt526; l8++)
+							for(int l8 = class28_3.localY; l8 <= class28_3.anInt526; l8++)
 							{
 								Ground class30_sub3_22 = aclass30_sub3[k7][l8];
 								if(class30_sub3_22.anInt1325 != 0)

@@ -18,5 +18,5 @@ public final class Object1
 	public Animable aClass30_Sub2_Sub4_278;
 	public Animable aClass30_Sub2_Sub4_279;
 	public int uid;
-	byte aByte281;
+	byte packedTypeAndRotation;
 }

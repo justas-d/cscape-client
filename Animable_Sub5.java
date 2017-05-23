@@ -32,7 +32,7 @@ final class Animable_Sub5 extends Animable {
 		if(anIntArray1600 != null)
 			class46 = method457();
 		else
-			class46 = ObjectDef.forID(anInt1610);
+			class46 = ObjectDef.forID(objectId);
 		if(class46 == null)
 		{
 			return null;
@@ -65,7 +65,7 @@ final class Animable_Sub5 extends Animable {
 	public Animable_Sub5(int i, int j, int k, int l, int i1, int j1,
 						 int k1, int l1, boolean flag)
 	{
-		anInt1610 = i;
+		objectId = i;
 		anInt1611 = k;
 		anInt1612 = j;
 		anInt1603 = j1;
@@ -83,7 +83,7 @@ final class Animable_Sub5 extends Animable {
 				anInt1608 -= (int)(Math.random() * (double) aAnimation_1607.method258(anInt1599));
 			}
 		}
-		ObjectDef class46 = ObjectDef.forID(anInt1610);
+		ObjectDef class46 = ObjectDef.forID(objectId);
 		anInt1601 = class46.anInt774;
 		anInt1602 = class46.anInt749;
 		anIntArray1600 = class46.childrenIDs;
@@ -100,7 +100,7 @@ final class Animable_Sub5 extends Animable {
 	private Animation aAnimation_1607;
 	private int anInt1608;
 	public static client clientInstance;
-	private final int anInt1610;
+	private final int objectId;
 	private final int anInt1611;
 	private final int anInt1612;
 }

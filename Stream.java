@@ -278,7 +278,7 @@ public final class Stream extends NodeSub {
 		//return -buffer[currentOffset++] & 0xff;
 	}
 
-	public int method428()
+	public int method428_byte()
 	{
 		return buffer[currentOffset++] & 0xff;
 		//return 128 - buffer[currentOffset++] & 0xff;
@@ -326,7 +326,7 @@ public final class Stream extends NodeSub {
         return ((buffer[currentOffset - 2] & 0xff) << 8) + (buffer[currentOffset - 1] & 0xff);
 	}
 
-	public int method435()
+	public int method435_short()
 	{
 		/*
 		currentOffset += 2;

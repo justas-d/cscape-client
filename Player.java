@@ -37,13 +37,13 @@ public final class Player extends Entity
 				model = new Model(aclass30_sub2_sub4_sub6_1s);
 			}
 		}
-		if(aModel_1714 != null)
+		if(transformObj != null)
 		{
 			if(client.loopCycle >= anInt1708)
-				aModel_1714 = null;
+				transformObj = null;
 			if(client.loopCycle >= anInt1707 && client.loopCycle < anInt1708)
 			{
-				Model model_1 = aModel_1714;
+				Model model_1 = transformObj;
 				model_1.method475(anInt1711 - super.x, anInt1712 - anInt1709, anInt1713 - super.y);
 				if(super.turnDirection == 512)
 				{
@@ -366,7 +366,7 @@ public final class Player extends Entity
 	int anInt1711;
 	int anInt1712;
 	int anInt1713;
-	Model aModel_1714;
+	Model transformObj;
 	private int anInt1715;
 	public final int[] equipment;
 	private long aLong1718;

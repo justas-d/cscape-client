@@ -15,9 +15,9 @@ public final class MRUNodes {
 		nodeCache = new NodeCache();
 	}
 
-	public NodeSub insertFromCache(long l)
+	public NodeSub insertFromCache(long id)
 	{
-		NodeSub nodeSub = (NodeSub) nodeCache.findNodeByID(l);
+		NodeSub nodeSub = (NodeSub) nodeCache.findNodeByID(id);
 		if(nodeSub != null)
 		{
 			nodeSubList.insertHead(nodeSub);
