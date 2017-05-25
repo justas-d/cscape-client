@@ -1,6 +1,9 @@
 cryptokey*
 
-out/*
+.idea/.
+out/.
+out
+out/.
 cache/*
 .idea/*
 *.class

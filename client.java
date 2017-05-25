@@ -5448,22 +5448,24 @@ public class client extends RSApplet {
 	}
 
 	private void pushMessage(String s, int i, String s1) {
-		if (i == 0 && dialogID != -1) {
-			aString844 = s;
-			super.clickMode3 = 0;
-		}
-		if (chatOverlayInteraceId == -1)
-			shouldDrawChatArea = true;
-		for (int j = 99; j > 0; j--) {
-			chatTypes[j] = chatTypes[j - 1];
-			chatNames[j] = chatNames[j - 1];
-			chatMessages[j] = chatMessages[j - 1];
-		}
+			if(i == 0 && dialogID != -1)
+			{
+				aString844 = s;
+				super.clickMode3 = 0;
+			}
+			if(chatOverlayInteraceId == -1)
+				shouldDrawChatArea = true;
+			for(int j = 99; j > 0; j--)
+			{
+				chatTypes[j] = chatTypes[j - 1];
+				chatNames[j] = chatNames[j - 1];
+				chatMessages[j] = chatMessages[j - 1];
+			}
 
-		chatTypes[0] = i;
-		chatNames[0] = s1;
-		chatMessages[0] = s;
-	}
+			chatTypes[0] = i;
+			chatNames[0] = s1;
+			chatMessages[0] = s;
+		}
 
 	private void processTabClick()
 	{
