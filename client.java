@@ -2239,7 +2239,7 @@ public class client extends RSApplet {
 					}
 			}
 		}
-		k1 = worldController.method302(j1, l, i);
+		k1 = worldController.getObj5Uid(j1, l, i);
 		if(k1 != 0)
 		{
 			int i2 = worldController.getTopmost_1_2_3_5_typeAndRotation(j1, l, i, k1);
@@ -2960,7 +2960,7 @@ public class client extends RSApplet {
 						stream.method433(anInt1084);
 						stream.method424(j1);
 						stream.method433(anInt1085);
-						stream.method431(mouseInvInterfaceIndex);
+						stream.method431_short(mouseInvInterfaceIndex);
 					}
 				} else
 				if((anInt1253 == 1 || menuHasAddFriend(menuActionRow - 1)) && menuActionRow > 2)
@@ -3453,7 +3453,7 @@ public class client extends RSApplet {
 				stream.createFrame(57);
 				stream.method432(anInt1285);
 				stream.method432(data1);
-				stream.method431(anInt1283);
+				stream.method431_short(anInt1283);
 				stream.method432(anInt1284);
 			}
 		}
@@ -3467,17 +3467,17 @@ public class client extends RSApplet {
 			crossType = 2;
 			crossIndex = 0;
 				stream.createFrame(236);
-			stream.method431(data3 + baseY);
+			stream.method431_short(data3 + baseY);
 			stream.writeInt16(data1);
-			stream.method431(data2 + baseX);
+			stream.method431_short(data2 + baseX);
 		}
 		if(actionId == 62 && actionWalk(data1, data3, data2))
 		{
 			stream.createFrame(192);
 			stream.writeInt16(anInt1284);
-			stream.method431(data1 >> 14 & 0x7fff);
+			stream.method431_short(data1 >> 14 & 0x7fff);
 			stream.method433(data3 + baseY);
-			stream.method431(anInt1283);
+			stream.method431_short(anInt1283);
 			stream.method433(data2 + baseX);
 			stream.writeInt16(anInt1285);
 		}
@@ -3491,7 +3491,7 @@ public class client extends RSApplet {
 			crossType = 2;
 			crossIndex = 0;
 			stream.createFrame(25);
-			stream.method431(anInt1284);
+			stream.method431_short(anInt1284);
 			stream.method432(anInt1285);
 			stream.writeInt16(data1);
 			stream.method432(data3 + baseY);
@@ -3556,7 +3556,7 @@ public class client extends RSApplet {
 				crossType = 2;
 				crossIndex = 0;
 				stream.createFrame(155);
-				stream.method431(data1);
+				stream.method431_short(data1);
 			}
 		}
 		if(actionId == 779)
@@ -3570,7 +3570,7 @@ public class client extends RSApplet {
 				crossType = 2;
 				crossIndex = 0;
 				stream.createFrame(153);
-				stream.method431(data1);
+				stream.method431_short(data1);
 			}
 		}
 		if(actionId == 516)
@@ -3634,9 +3634,9 @@ public class client extends RSApplet {
 		if(actionId == 53)
 		{
 			stream.createFrame(135);
-			stream.method431(data2);
+			stream.method431_short(data2);
 			stream.method432(data3);
-			stream.method431(data1);
+			stream.method431_short(data1);
 			atInventoryLoopCycle = 0;
 			atInventoryInterface = data3;
 			atInventoryIndex = data2;
@@ -3679,7 +3679,7 @@ public class client extends RSApplet {
 					if(actionId == 484)
 					{
 						stream.createFrame(139);
-						stream.method431(playerIndices[j3]);
+						stream.method431_short(playerIndices[j3]);
 					}
 					if(actionId == 6)
 					{
@@ -3708,7 +3708,7 @@ public class client extends RSApplet {
 			stream.method432(anInt1283);
 			stream.method433(data1);
 			stream.writeInt16(anInt1284);
-			stream.method431(anInt1285);
+			stream.method431_short(anInt1285);
 			stream.writeInt16(data3);
 
 			atInventoryLoopCycle = 0;
@@ -3763,7 +3763,7 @@ public class client extends RSApplet {
 			stream.createFrame(117);
 			stream.method433(data3);
 			stream.method433(data1);
-			stream.method431(data2);
+			stream.method431_short(data2);
 			atInventoryLoopCycle = 0;
 			atInventoryInterface = data3;
 			atInventoryIndex = data2;
@@ -3791,7 +3791,7 @@ public class client extends RSApplet {
 					anInt986 = 0;
 				}
 				stream.createFrame(73);
-				stream.method431(data1);
+				stream.method431_short(data1);
 			}
 		}
 		if(actionId == 213)
@@ -3804,7 +3804,7 @@ public class client extends RSApplet {
 			crossType = 2;
 			crossIndex = 0;
 			stream.createFrame(79);
-			stream.method431(data3 + baseY);
+			stream.method431_short(data3 + baseY);
 			stream.writeInt16(data1);
 			stream.method432(data2 + baseX);
 		}
@@ -3850,7 +3850,7 @@ public class client extends RSApplet {
 			crossIndex = 0;
 			stream.createFrame(156);
 			stream.method432(data2 + baseX);
-			stream.method431(data3 + baseY);
+			stream.method431_short(data3 + baseY);
 			stream.method433(data1);
 		}
 		if(actionId == 94)
@@ -3863,9 +3863,9 @@ public class client extends RSApplet {
 			crossType = 2;
 			crossIndex = 0;
 			stream.createFrame(181);
-			stream.method431(data3 + baseY);
+			stream.method431_short(data3 + baseY);
 			stream.writeInt16(data1);
-			stream.method431(data2 + baseX);
+			stream.method431_short(data2 + baseX);
 			stream.method432(anInt1137);
 		}
 		if(actionId == 646)
@@ -3967,7 +3967,7 @@ public class client extends RSApplet {
 			actionWalk(data1, data3, data2);
 			stream.createFrame(252);
 			stream.method433(data1 >> 14 & 0x7fff);
-			stream.method431(data3 + baseY);
+			stream.method431_short(data3 + baseY);
 			stream.method432(data2 + baseX);
 		}
 		if(actionId == 412)
@@ -3996,7 +3996,7 @@ public class client extends RSApplet {
 				crossIndex = 0;
 				stream.createFrame(249);
 				stream.method432(data1);
-				stream.method431(anInt1137);
+				stream.method431_short(anInt1137);
 			}
 		}
 		if(actionId == 729)
@@ -4010,7 +4010,7 @@ public class client extends RSApplet {
 				crossType = 2;
 				crossIndex = 0;
 				stream.createFrame(39);
-				stream.method431(data1);
+				stream.method431_short(data1);
 			}
 		}
 		if(actionId == 577)
@@ -4024,16 +4024,16 @@ public class client extends RSApplet {
 				crossType = 2;
 				crossIndex = 0;
 				stream.createFrame(139);
-				stream.method431(data1);
+				stream.method431_short(data1);
 			}
 		}
 		if(actionId == 956 && actionWalk(data1, data3, data2))
 		{
 			stream.createFrame(35);
-			stream.method431(data2 + baseX);
+			stream.method431_short(data2 + baseX);
 			stream.method432(anInt1137);
 			stream.method432(data3 + baseY);
-			stream.method431(data1 >> 14 & 0x7fff);
+			stream.method431_short(data1 >> 14 & 0x7fff);
 		}
 		if(actionId == 567)
 		{
@@ -4045,9 +4045,9 @@ public class client extends RSApplet {
 			crossType = 2;
 			crossIndex = 0;
 			stream.createFrame(23);
-			stream.method431(data3 + baseY);
-			stream.method431(data1);
-			stream.method431(data2 + baseX);
+			stream.method431_short(data3 + baseY);
+			stream.method431_short(data1);
+			stream.method431_short(data2 + baseX);
 		}
 		if(actionId == 867)
 		{
@@ -4060,7 +4060,7 @@ public class client extends RSApplet {
 				anInt1175 = 0;
 			}
 			stream.createFrame(43);
-			stream.method431(data3);
+			stream.method431_short(data3);
 			stream.method432(data1);
 			stream.method432(data2);
 			atInventoryLoopCycle = 0;
@@ -4125,7 +4125,7 @@ public class client extends RSApplet {
 				stream.method432(anInt1284);
 				stream.writeInt16(data1);
 				stream.writeInt16(anInt1285);
-				stream.method431(anInt1283);
+				stream.method431_short(anInt1283);
 			}
 		}
 		if(actionId == 639)
@@ -4190,7 +4190,7 @@ public class client extends RSApplet {
 					anInt1155 = 0;
 				}
 				stream.createFrame(18);
-				stream.method431(data1);
+				stream.method431_short(data1);
 			}
 		}
 		if(actionId == 113)
@@ -4276,7 +4276,7 @@ public class client extends RSApplet {
 			crossType = 2;
 			crossIndex = 0;
 			stream.createFrame(253);
-			stream.method431(data2 + baseX);
+			stream.method431_short(data2 + baseX);
 			stream.method433(data3 + baseY);
 			stream.method432(data1);
 		}
@@ -4334,14 +4334,14 @@ public class client extends RSApplet {
 		for(int k = 0; k < Model.anInt1687; k++)
 		{
 			int l = Model.anIntArray1688[k];
-			int i1 = l & 0x7f;
-			int j1 = l >> 7 & 0x7f;
+			int x = l & 0x7f;
+			int y = l >> 7 & 0x7f;
 			int k1 = l >> 29 & 3;
 			int l1 = l >> 14 & 0x7fff;
 			if(l == j)
 				continue;
 			j = l;
-			if(k1 == 2 && worldController.getTopmost_1_2_3_5_typeAndRotation(plane, i1, j1, l) >= 0)
+			if(k1 == 2 && worldController.getTopmost_1_2_3_5_typeAndRotation(plane, x, y, l) >= 0)
 			{
 				ObjectDef class46 = ObjectDef.forID(l1);
 				if(class46.childrenIDs != null)
@@ -4353,8 +4353,8 @@ public class client extends RSApplet {
 					menuActionName[menuActionRow] = "Use " + selectedItemName + " with @cya@" + class46.name;
 					menuActionID[menuActionRow] = 62;
 					menuActionCmd1[menuActionRow] = l;
-					menuActionCmd2[menuActionRow] = i1;
-					menuActionCmd3[menuActionRow] = j1;
+					menuActionCmd2[menuActionRow] = x;
+					menuActionCmd3[menuActionRow] = y;
 					menuActionRow++;
 				} else
 				if(spellSelected == 1)
@@ -4364,8 +4364,8 @@ public class client extends RSApplet {
 						menuActionName[menuActionRow] = spellTooltip + " @cya@" + class46.name;
 						menuActionID[menuActionRow] = 956;
 						menuActionCmd1[menuActionRow] = l;
-						menuActionCmd2[menuActionRow] = i1;
-						menuActionCmd3[menuActionRow] = j1;
+						menuActionCmd2[menuActionRow] = x;
+						menuActionCmd3[menuActionRow] = y;
 						menuActionRow++;
 					}
 				} else
@@ -4387,17 +4387,17 @@ public class client extends RSApplet {
 								if(i2 == 4)
 									menuActionID[menuActionRow] = 1062;
 								menuActionCmd1[menuActionRow] = l;
-								menuActionCmd2[menuActionRow] = i1;
-								menuActionCmd3[menuActionRow] = j1;
+								menuActionCmd2[menuActionRow] = x;
+								menuActionCmd3[menuActionRow] = y;
 								menuActionRow++;
 							}
 
 					}
-					menuActionName[menuActionRow] = "Examine @cya@" + class46.name + " @gre@(@whi@" + l1 + "@gre@) (@whi@" + (i1 + baseX) + "," + (j1 + baseY) + "@gre@)";
+					menuActionName[menuActionRow] = "Examine @cya@" + class46.name + " @gre@(@whi@" + l1 + "@gre@) (@whi@" + (x + baseX) + "," + (y + baseY) + "@gre@)";
 					menuActionID[menuActionRow] = 1226;
 					menuActionCmd1[menuActionRow] = class46.objectDefId << 14;
-					menuActionCmd2[menuActionRow] = i1;
-					menuActionCmd3[menuActionRow] = j1;
+					menuActionCmd2[menuActionRow] = x;
+					menuActionCmd3[menuActionRow] = y;
 					menuActionRow++;
 				}
 			}
@@ -4410,18 +4410,18 @@ public class client extends RSApplet {
 					{
 						NPC npc2 = npcArray[npcIndices[j2]];
 						if(npc2 != null && npc2 != npc && npc2.desc.aByte68 == 1 && npc2.x == npc.x && npc2.y == npc.y)
-							buildAtNPCMenu(npc2.desc, npcIndices[j2], j1, i1);
+							buildAtNPCMenu(npc2.desc, npcIndices[j2], y, x);
 					}
 
 					for(int l2 = 0; l2 < lastUpdateOtherPlayersCount; l2++)
 					{
 						Player player = playerArray[playerIndices[l2]];
 						if(player != null && player.x == npc.x && player.y == npc.y)
-							buildAtPlayerMenu(i1, playerIndices[l2], player, j1);
+							buildAtPlayerMenu(x, playerIndices[l2], player, y);
 					}
 
 				}
-				buildAtNPCMenu(npc.desc, l1, j1, i1);
+				buildAtNPCMenu(npc.desc, l1, y, x);
 			}
 			if(k1 == 0)
 			{
@@ -4432,22 +4432,22 @@ public class client extends RSApplet {
 					{
 						NPC class30_sub2_sub4_sub1_sub1_2 = npcArray[npcIndices[k2]];
 						if(class30_sub2_sub4_sub1_sub1_2 != null && class30_sub2_sub4_sub1_sub1_2.desc.aByte68 == 1 && class30_sub2_sub4_sub1_sub1_2.x == player.x && class30_sub2_sub4_sub1_sub1_2.y == player.y)
-							buildAtNPCMenu(class30_sub2_sub4_sub1_sub1_2.desc, npcIndices[k2], j1, i1);
+							buildAtNPCMenu(class30_sub2_sub4_sub1_sub1_2.desc, npcIndices[k2], y, x);
 					}
 
 					for(int i3 = 0; i3 < lastUpdateOtherPlayersCount; i3++)
 					{
 						Player class30_sub2_sub4_sub1_sub2_2 = playerArray[playerIndices[i3]];
 						if(class30_sub2_sub4_sub1_sub2_2 != null && class30_sub2_sub4_sub1_sub2_2 != player && class30_sub2_sub4_sub1_sub2_2.x == player.x && class30_sub2_sub4_sub1_sub2_2.y == player.y)
-							buildAtPlayerMenu(i1, playerIndices[i3], class30_sub2_sub4_sub1_sub2_2, j1);
+							buildAtPlayerMenu(x, playerIndices[i3], class30_sub2_sub4_sub1_sub2_2, y);
 					}
 
 				}
-				buildAtPlayerMenu(i1, l1, player, j1);
+				buildAtPlayerMenu(x, l1, player, y);
 			}
 			if(k1 == 3)
 			{
-				NodeList class19 = groundArray[plane][i1][j1];
+				NodeList class19 = groundArray[plane][x][y];
 				if(class19 != null)
 				{
 					for(GroundItem item = (GroundItem)class19.getFirst(); item != null; item = (GroundItem)class19.getNext())
@@ -4458,8 +4458,8 @@ public class client extends RSApplet {
 							menuActionName[menuActionRow] = "Use " + selectedItemName + " with @lre@" + itemDef.name;
 							menuActionID[menuActionRow] = 511;
 							menuActionCmd1[menuActionRow] = item.Id;
-							menuActionCmd2[menuActionRow] = i1;
-							menuActionCmd3[menuActionRow] = j1;
+							menuActionCmd2[menuActionRow] = x;
+							menuActionCmd3[menuActionRow] = y;
 							menuActionRow++;
 						} else
 						if(spellSelected == 1)
@@ -4469,8 +4469,8 @@ public class client extends RSApplet {
 								menuActionName[menuActionRow] = spellTooltip + " @lre@" + itemDef.name;
 								menuActionID[menuActionRow] = 94;
 								menuActionCmd1[menuActionRow] = item.Id;
-								menuActionCmd2[menuActionRow] = i1;
-								menuActionCmd3[menuActionRow] = j1;
+								menuActionCmd2[menuActionRow] = x;
+								menuActionCmd3[menuActionRow] = y;
 								menuActionRow++;
 							}
 						} else
@@ -4490,8 +4490,8 @@ public class client extends RSApplet {
 									if(j3 == 4)
 										menuActionID[menuActionRow] = 213;
 									menuActionCmd1[menuActionRow] = item.Id;
-									menuActionCmd2[menuActionRow] = i1;
-									menuActionCmd3[menuActionRow] = j1;
+									menuActionCmd2[menuActionRow] = x;
+									menuActionCmd3[menuActionRow] = y;
 									menuActionRow++;
 								} else
 								if(j3 == 2)
@@ -4499,16 +4499,16 @@ public class client extends RSApplet {
 									menuActionName[menuActionRow] = "Take @lre@" + itemDef.name;
 									menuActionID[menuActionRow] = 234;
 									menuActionCmd1[menuActionRow] = item.Id;
-									menuActionCmd2[menuActionRow] = i1;
-									menuActionCmd3[menuActionRow] = j1;
+									menuActionCmd2[menuActionRow] = x;
+									menuActionCmd3[menuActionRow] = y;
 									menuActionRow++;
 								}
 
 							menuActionName[menuActionRow] = "Examine @lre@" + itemDef.name + " @gre@(@whi@" + item.Id + "@gre@)";
 							menuActionID[menuActionRow] = 1448;
 							menuActionCmd1[menuActionRow] = item.Id;
-							menuActionCmd2[menuActionRow] = i1;
-							menuActionCmd3[menuActionRow] = j1;
+							menuActionCmd2[menuActionRow] = x;
+							menuActionCmd3[menuActionRow] = y;
 							menuActionRow++;
 						}
 					}
@@ -5447,25 +5447,20 @@ public class client extends RSApplet {
 
 	}
 
-	private void pushMessage(String s, int i, String s1)
-	{
-		if(i == 0 && dialogID != -1)
-		{
+	private void pushMessage(String s, int i, String s1) {
+		if (i == 0 && dialogID != -1) {
 			aString844 = s;
 			super.clickMode3 = 0;
 		}
-		if(chatOverlayInteraceId == -1)
+		if (chatOverlayInteraceId == -1)
 			shouldDrawChatArea = true;
-		for(int j = 99; j > 0; j--)
-		{
+		for (int j = 99; j > 0; j--) {
 			chatTypes[j] = chatTypes[j - 1];
 			chatNames[j] = chatNames[j - 1];
 			chatMessages[j] = chatMessages[j - 1];
 		}
 
 		chatTypes[0] = i;
-		chatNames[0] = s1;
-		chatMessages[0] = s;
 	}
 
 	private void processTabClick()
@@ -6257,7 +6252,7 @@ public class client extends RSApplet {
 			// k6 = localX
             // i7 = localY
 			//stream.method433(localX + baseX);
-			//stream.method431(localY + baseY);
+			//stream.method431_short(localY + baseY);
 
 			stream.writeByte(localX);
 			stream.writeByte(localY);
@@ -9698,26 +9693,26 @@ public class client extends RSApplet {
 	{
 		if(opcode == 84)
 		{
-			int k = stream.readUnsignedByte();
-			int j3 = updRegionPlayerLocalX + (k >> 4 & 7);
-			int i6 = updRegionPlayerLocalY + (k & 7);
-			int l8 = stream.readUnsignedWord();
-			int k11 = stream.readUnsignedWord();
-			int l13 = stream.readUnsignedWord();
-			if(j3 >= 0 && i6 >= 0 && j3 < 104 && i6 < 104)
+			int packed = stream.readUnsignedByte();
+			int x = updRegionPlayerLocalX + (packed >> 4 & 7);
+			int y = updRegionPlayerLocalY + (packed & 7);
+			int id = stream.readUnsignedWord();
+			int amount = stream.readUnsignedWord();
+			int newAmount = stream.readUnsignedWord();
+			if(x >= 0 && y >= 0 && x < 104 && y < 104)
 			{
-				NodeList class19_1 = groundArray[plane][j3][i6];
+				NodeList class19_1 = groundArray[plane][x][y];
 				if(class19_1 != null)
 				{
 					for(GroundItem item = (GroundItem)class19_1.reverseGetFirst(); item != null; item = (GroundItem)class19_1.reverseGetNext())
 					{
-						if(item.Id != (l8 & 0x7fff) || item.Amount != k11)
+						if(item.Id != (id & 0x7fff) || item.Amount != amount)
 							continue;
-						item.Amount = l13;
+						item.Amount = newAmount;
 						break;
 					}
 
-					updateGroundItem(j3, i6);
+					updateGroundItem(x, y);
 				}
 			}
 			return;
@@ -9763,26 +9758,26 @@ public class client extends RSApplet {
 		}
 		if(opcode == 156)
 		{
-			int j1 = stream.method426();
-			int i4 = updRegionPlayerLocalX + (j1 >> 4 & 7);
-			int l6 = updRegionPlayerLocalY + (j1 & 7);
-			int k9 = stream.readUnsignedWord();
-			if(i4 >= 0 && l6 >= 0 && i4 < 104 && l6 < 104)
+			int packed = stream.method426();
+			int x = updRegionPlayerLocalX + (packed >> 4 & 7);
+			int y = updRegionPlayerLocalY + (packed & 7);
+			int id = stream.readUnsignedWord();
+			if(x >= 0 && y >= 0 && x < 104 && y < 104)
 			{
-				NodeList class19 = groundArray[plane][i4][l6];
+				NodeList class19 = groundArray[plane][x][y];
 				if(class19 != null)
 				{
 					for(GroundItem item = (GroundItem)class19.reverseGetFirst(); item != null; item = (GroundItem)class19.reverseGetNext())
 					{
-						if(item.Id != (k9 & 0x7fff))
+						if(item.Id != (id & 0x7fff))
 							continue;
 						item.unlink();
 						break;
 					}
 
 					if(class19.reverseGetFirst() == null)
-						groundArray[plane][i4][l6] = null;
-					updateGroundItem(i4, l6);
+						groundArray[plane][x][y] = null;
+					updateGroundItem(x, y);
 				}
 			}
 			return;

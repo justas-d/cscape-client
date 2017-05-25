@@ -294,7 +294,7 @@ public final class Stream extends NodeSub {
 		return (byte)(128 - buffer[currentOffset++]);
 	}
 
-	public void method431(int i)
+	public void method431_short(int i)
 	{
 		buffer[currentOffset++] = (byte)(i >> 8);
 		buffer[currentOffset++] = (byte)i;
