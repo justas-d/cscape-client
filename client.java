@@ -134,7 +134,7 @@ public class client extends RSApplet {
 		} else
 		if(inputDialogState == 1)
 		{
-			chatTextDrawingArea.drawText(0, "Enter Amount:", 40, 239);
+			chatTextDrawingArea.drawText(0, "Enter amount:", 40, 239);
 			chatTextDrawingArea.drawText(128, amountOrNameInput + "*", 60, 239);
 		} else
 		if(inputDialogState == 2)
@@ -5461,6 +5461,8 @@ public class client extends RSApplet {
 		}
 
 		chatTypes[0] = i;
+		chatNames[0] = s1;
+		chatMessages[0] = s;
 	}
 
 	private void processTabClick()
