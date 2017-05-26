@@ -360,16 +360,18 @@ public final class Stream extends NodeSub {
 		return j;
 	}
 
-	public int method438()
+	public int method438_short()
 	{
 		currentOffset += 2;
-		int j = ((buffer[currentOffset - 1] & 0xff) << 8) + (buffer[currentOffset - 2] - 128 & 0xff);
+		//int j = ((buffer[currentOffset - 1] & 0xff) << 8) + (buffer[currentOffset - 2] - 128 & 0xff);
+		int j = ((buffer[currentOffset - 2] & 0xff) << 8)
+				+ (buffer[currentOffset - 1] & 0xff);
 		if(j > 32767)
 			j -= 0x10000;
 		return j;
 	}
 
-	public int method439()
+	public int method439_int()
 	{
 		/*
 			currentOffset += 4;

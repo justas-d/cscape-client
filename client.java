@@ -3523,6 +3523,7 @@ public class client extends RSApplet {
 			{
 				stream.createFrame(185);
 				stream.writeInt16(data3);
+				stream.writeInt16(class9.parentID);
 			}
 		}
 		if(actionId == 561)
@@ -3870,9 +3871,11 @@ public class client extends RSApplet {
 		}
 		if(actionId == 646)
 		{
+			RSInterface class9_2 = RSInterface.interfaceCache[data3];
+
 			stream.createFrame(185);
 			stream.writeInt16(data3);
-			RSInterface class9_2 = RSInterface.interfaceCache[data3];
+			stream.writeInt16(class9_2.parentID);
 			if(class9_2.valueIndexArray != null && class9_2.valueIndexArray[0][0] == 5)
 			{
 				int i2 = class9_2.valueIndexArray[0][1];
@@ -4233,9 +4236,12 @@ public class client extends RSApplet {
 		}
 		if(actionId == 169)
 		{
+			RSInterface class9_3 = RSInterface.interfaceCache[data3];
+
 			stream.createFrame(185);
 			stream.writeInt16(data3);
-			RSInterface class9_3 = RSInterface.interfaceCache[data3];
+			stream.writeInt16(class9_3.parentID);
+
 			if(class9_3.valueIndexArray != null && class9_3.valueIndexArray[0][0] == 5)
 			{
 				int l2 = class9_3.valueIndexArray[0][1];
@@ -10509,7 +10515,7 @@ public class client extends RSApplet {
 			{
 				needDrawTabArea = true;
 				int k1 = inStream.readUnsignedByte();
-				int i10 = inStream.method439();
+				int i10 = inStream.method439_int();
 				int l15 = inStream.readUnsignedByte();
 				currentExp[k1] = i10;
 				currentStats[k1] = l15;
@@ -10971,7 +10977,7 @@ public class client extends RSApplet {
 				}
 				pktType = -1;
 	//serverMessage(s);
-	
+
 				return true;
 			}
 			if(pktType == 1)
@@ -11452,7 +11458,7 @@ public class client extends RSApplet {
 			}
 			if(pktType == 218)
 			{
-				int i8 = inStream.method438();
+				int i8 = inStream.method438_short();
 				dialogID = i8;
 				shouldDrawChatArea = true;
 				pktType = -1;
@@ -11461,7 +11467,7 @@ public class client extends RSApplet {
 			if(pktType == 87)
 			{
 				int idx = inStream.method434();
-				int value = inStream.method439();
+				int value = inStream.method439_int();
 				settingsBuffer[idx] = value;
 				if(variousSettings[idx] != value)
 				{
