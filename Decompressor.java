@@ -26,46 +26,55 @@ final class Decompressor {
 					return null;
 			}
 
-			int i1 = ((buffer[0] & 0xff) << 16) + ((buffer[1] & 0xff) << 8) + (buffer[2] & 0xff);
-			int j1 = ((buffer[3] & 0xff) << 16) + ((buffer[4] & 0xff) << 8) + (buffer[5] & 0xff);
-			//if(i1 < 0 || i1 > 0x7a120)
+			int size = ((buffer[0] & 0xff) << 16) + ((buffer[1] & 0xff) << 8) + (buffer[2] & 0xff);
+			int blockIndex = ((buffer[3] & 0xff) << 16) + ((buffer[4] & 0xff) << 8) + (buffer[5] & 0xff);
+
+			//if(size < 0 || size > 0x7a120)
 			//	return null;
-			if(j1 <= 0 || (long)j1 > dataFile.length() / 520L)
+
+			if(blockIndex <= 0 || (long) blockIndex > dataFile.length() / 520L)
 				return null;
-			byte abyte0[] = new byte[i1];
-			int k1 = 0;
-			for(int l1 = 0; k1 < i1; l1++)
+
+			byte data[] = new byte[size];
+			int read = 0;
+
+			for(int currentBlockIndex = 0; read < size; currentBlockIndex++)
 			{
-				if(j1 == 0)
+				if(blockIndex == 0)
 					return null;
-				seekTo(dataFile, j1 * 520);
+
+				seekTo(dataFile, blockIndex * 520);
+
 				int k = 0;
-				int i2 = i1 - k1;
-				if(i2 > 512)
-					i2 = 512;
-				int j2;
-				for(; k < i2 + 8; k += j2)
+				int bytesLeft = size - read;
+				if(bytesLeft > 512)
+					bytesLeft = 512;
+
+				for(int j2; k < bytesLeft + 8; k += j2)
 				{
-					j2 = dataFile.read(buffer, k, (i2 + 8) - k);
+					j2 = dataFile.read(buffer, k, (bytesLeft + 8) - k);
 					if(j2 == -1)
 						return null;
 				}
 
-				int k2 = ((buffer[0] & 0xff) << 8) + (buffer[1] & 0xff);
-				int l2 = ((buffer[2] & 0xff) << 8) + (buffer[3] & 0xff);
-				int i3 = ((buffer[4] & 0xff) << 16) + ((buffer[5] & 0xff) << 8) + (buffer[6] & 0xff);
-				int j3 = buffer[7] & 0xff;
-				if(k2 != i || l2 != l1 || j3 != fileIndex)
-					return null;
-				if(i3 < 0 || (long)i3 > dataFile.length() / 520L)
-					return null;
-				for(int k3 = 0; k3 < i2; k3++)
-					abyte0[k1++] = buffer[k3 + 8];
+				int nextFile = ((buffer[0] & 0xff) << 8) + (buffer[1] & 0xff);
+				int currentIdx = ((buffer[2] & 0xff) << 8) + (buffer[3] & 0xff);
+				int nextIdx = ((buffer[4] & 0xff) << 16) + ((buffer[5] & 0xff) << 8) + (buffer[6] & 0xff);
+				int fileIdx = buffer[7] & 0xff;
 
-				j1 = i3;
+				if(nextFile != i || currentIdx != currentBlockIndex || fileIdx != fileIndex)
+					return null;
+
+				if(nextIdx < 0 || (long) nextIdx > dataFile.length() / 520L)
+					return null;
+
+				for(int k3 = 0; k3 < bytesLeft; k3++)
+					data[read++] = buffer[k3 + 8];
+
+				blockIndex = nextIdx;
 			}
 
-			return abyte0;
+			return data;
 		}
 		catch(IOException _ex)
 		{

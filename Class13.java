@@ -2,8 +2,6 @@
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) 
 
-import java.io.PrintStream;
-
 final class Class13
 {
 
@@ -11,12 +9,12 @@ final class Class13
 	{
 		synchronized(aClass32_305)
 		{
-			aClass32_305.aByteArray563 = abyte1;
+			aClass32_305.compressedData = abyte1;
 			aClass32_305.anInt564 = k;
-			aClass32_305.aByteArray568 = abyte0;
+			aClass32_305.decompressedData = abyte0;
 			aClass32_305.anInt569 = 0;
-			aClass32_305.anInt565 = j;
-			aClass32_305.anInt570 = i;
+			aClass32_305.compressedSize = j;
+			aClass32_305.decompressedSize = i;
 			aClass32_305.anInt577 = 0;
 			aClass32_305.anInt576 = 0;
 			aClass32_305.anInt566 = 0;
@@ -25,7 +23,7 @@ final class Class13
 			aClass32_305.anInt572 = 0;
 			aClass32_305.anInt579 = 0;
 			method227(aClass32_305);
-			i -= aClass32_305.anInt570;
+			i -= aClass32_305.decompressedSize;
 			return i;
 		}
 	}
@@ -38,9 +36,9 @@ final class Class13
 		int k = class32.anInt582;
 		int ai[] = Class32.anIntArray587;
 		int l = class32.anInt581;
-		byte abyte0[] = class32.aByteArray568;
+		byte abyte0[] = class32.decompressedData;
 		int i1 = class32.anInt569;
-		int j1 = class32.anInt570;
+		int j1 = class32.decompressedSize;
 		int k1 = j1;
 		int l1 = class32.anInt601 + 1;
 label0:
@@ -152,9 +150,9 @@ label0:
 		class32.anInt582 = k;
 		Class32.anIntArray587 = ai;
 		class32.anInt581 = l;
-		class32.aByteArray568 = abyte0;
+		class32.decompressedData = abyte0;
 		class32.anInt569 = i1;
-		class32.anInt570 = j1;
+		class32.decompressedSize = j1;
 	}
 
 	private static void method227(Class32 class32)
@@ -498,10 +496,10 @@ label0:
 				j = k;
 				break;
 			}
-			class32.anInt576 = class32.anInt576 << 8 | class32.aByteArray563[class32.anInt564] & 0xff;
+			class32.anInt576 = class32.anInt576 << 8 | class32.compressedData[class32.anInt564] & 0xff;
 			class32.anInt577 += 8;
 			class32.anInt564++;
-			class32.anInt565--;
+			class32.compressedSize--;
 			class32.anInt566++;
 			if(class32.anInt566 == 0)
 				class32.anInt567++;

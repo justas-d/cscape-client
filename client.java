@@ -8517,8 +8517,8 @@ public class client extends RSApplet {
 			drawMenu();
 		if(anInt1055 == 1)
 			headIcons[1].drawSprite(472, 296);
-		//if(fpsOn)
-		if(servStats.IsReceiving)
+
+		if(servStats.Cycle == loopCycle)
 		{
 			char c = '\u01FB';
 			int k = 20;
@@ -10995,12 +10995,10 @@ public class client extends RSApplet {
 			}
 			if(pktType == 2)
 			{
-				servStats.IsReceiving = inStream.readUnsignedByte() != 0;
-				if(servStats.IsReceiving )
-				{
-					servStats.DeltaTime = inStream.readUnsignedWord();
-					servStats.TickProcessTime = inStream.readUnsignedWord();
-				}
+				servStats.Cycle = loopCycle;
+				servStats.DeltaTime = inStream.readUnsignedWord();
+				servStats.TickProcessTime = inStream.readUnsignedWord();
+
 				pktType = -1;
 				return true;
 			}
@@ -11878,6 +11876,7 @@ public class client extends RSApplet {
 
 	private class ServerStats
 	{
+		public int Cycle;
 		public boolean IsReceiving;
 		public int DeltaTime;
 		public int TickProcessTime;

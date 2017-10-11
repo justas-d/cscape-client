@@ -2,10 +2,6 @@
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) 
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-
 public final class ItemDef
 {
 
@@ -15,7 +11,7 @@ public final class ItemDef
 		mruNodes1 = null;
 		streamIndices = null;
 		cache = null;
-		stream = null;
+		itemDefStream = null;
 	}
 
 	public boolean method192(int j)
@@ -39,15 +35,15 @@ public final class ItemDef
 
 	public static void unpackConfig(StreamLoader streamLoader)
 	{
-		stream = new Stream(streamLoader.getDataForName("obj.dat"));
-		Stream stream = new Stream(streamLoader.getDataForName("obj.idx"));
-		totalItems = stream.readUnsignedWord();
+		itemDefStream = new Stream(streamLoader.getDataForName("obj.dat"));
+		Stream itemIdxStream = new Stream(streamLoader.getDataForName("obj.idx"));
+		totalItems = itemIdxStream.readUnsignedWord();
 		streamIndices = new int[totalItems];
 		int i = 2;
 		for(int j = 0; j < totalItems; j++)
 		{
 			streamIndices[j] = i;
-			i += stream.readUnsignedWord();
+			i += itemIdxStream.readUnsignedWord();
 		}
 
 		cache = new ItemDef[10];
@@ -201,10 +197,10 @@ public final class ItemDef
 
 		cacheIndex = (cacheIndex + 1) % 10;
 		ItemDef itemDef = cache[cacheIndex];
-		stream.currentOffset = streamIndices[i];
+		itemDefStream.currentOffset = streamIndices[i];
 		itemDef.id = i;
 		itemDef.setDefaults();
-		itemDef.readValues(stream);
+		itemDef.readValues(itemDefStream);
 		if(itemDef.certTemplateID != -1)
 			itemDef.toNote();
 		if(!isMembers && itemDef.membersObject)
@@ -619,7 +615,7 @@ public final class ItemDef
 	private static int cacheIndex;
 	public int modelZoom;
 	public static boolean isMembers = true;
-	private static Stream stream;
+	private static Stream itemDefStream;
 	private int anInt184;
 	private int anInt185;
 	private int anInt188;

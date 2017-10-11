@@ -24,14 +24,14 @@ final class Class32
 		anIntArray600 = new int[6];
 	}
 
-  byte aByteArray563[];
+  byte compressedData[];
 	int anInt564;
-	int anInt565;
+	int compressedSize;
 	int anInt566;
 	int anInt567;
-	byte aByteArray568[];
+	byte decompressedData[];
 	int anInt569;
-	int anInt570;
+	int decompressedSize;
 	int anInt571;
 	int anInt572;
 	byte aByte573;
