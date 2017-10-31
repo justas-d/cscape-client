@@ -2137,7 +2137,8 @@ public class client extends RSApplet {
 			Player player = playerArray[k];
 			int l = stream.readUnsignedByte();
 			l += stream.readUnsignedByte() << 8;
-			method107(l, k, stream, player);
+			if(l != 0)
+				method107(l, k, stream, player);
 		}
 	}
 
@@ -8518,7 +8519,7 @@ public class client extends RSApplet {
 		if(anInt1055 == 1)
 			headIcons[1].drawSprite(472, 296);
 
-		if(servStats.Cycle == loopCycle)
+		if(servStats.Received)
 		{
 			char c = '\u01FB';
 			int k = 20;
@@ -8533,6 +8534,8 @@ public class client extends RSApplet {
 			aTextDrawingArea_1271.method380("Tick time: " + servStats.TickProcessTime, c, i1, k);
 			k += 15;
 		}
+
+
 		if(anInt1104 != 0)
 		{
 			int j = anInt1104 / 50;
@@ -10272,6 +10275,7 @@ public class client extends RSApplet {
 	{
 		entityRemoveQueueSize = 0;
 		localUpdatingListCount = 0;
+
 		updateLocalPlayer(stream);
 		updateOtherPlayers(stream);
 		readNewOtherPlayers(stream, i);
@@ -10995,13 +10999,16 @@ public class client extends RSApplet {
 			}
 			if(pktType == 2)
 			{
-				servStats.Cycle = loopCycle;
+				servStats.Received = true;
 				servStats.DeltaTime = inStream.readUnsignedWord();
 				servStats.TickProcessTime = inStream.readUnsignedWord();
 
 				pktType = -1;
 				return true;
 			}
+			else
+				servStats.Received = false;
+
 			if(pktType == 50)
 			{
 				long l4 = inStream.readQWord();
@@ -11876,8 +11883,7 @@ public class client extends RSApplet {
 
 	private class ServerStats
 	{
-		public int Cycle;
-		public boolean IsReceiving;
+		public boolean Received = false;
 		public int DeltaTime;
 		public int TickProcessTime;
 	}
